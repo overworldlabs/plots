@@ -1,0 +1,73 @@
+{
+    "general": {
+        "prefix": "{#3498db}[Plots] {#95a5a6}» ",
+        "no_permission": "You don't have permission to do this!",
+        "only_players": "This command can only be used by players.",
+        "not_owner": "You must be the owner of the plot to do this.",
+        "error_generic": "An unexpected error occurred. Please try again."
+    },
+    "claim": {
+        "standing_on_road": "You are standing on the road! Move to a plot to claim it.",
+        "plot_claimed": "Successfully claimed plot at %location%!",
+        "plot_auto_claimed": "Automatically claimed plot at %x%, %z%!",
+        "plot_already_claimed": "This plot is already claimed by someone else.",
+        "max_plots_reached": "You have reached your maximum plot limit!"
+    },
+    "delete": {
+        "success": "Plot has been successfully deleted.",
+        "need_permission": "You need plots.delete.* permission to delete plots by coordinates."
+    },
+    "management": {
+        "not_found": "Plot not found at this location.",
+        "renamed": "Plot renamed to %name%!",
+        "rename_provide_name": "Please provide a name for the plot."
+    },
+    "teleport": {
+        "usage": "Usage: /plot tp <name>",
+        "teleporting": "Teleporting to plot...",
+        "world_not_loaded": "Plot world is not loaded!",
+        "failed": "Teleport failed: %error%"
+    },
+    "info": {
+        "no_permission": "You don't have permission to view plot info!",
+        "not_in_plot": "You are not standing in a claimed plot!",
+        "header": "{#55ffff}--- Plot Information ---",
+        "footer": "{#55ffff}-----------------------",
+        "label": {
+            "name": "Name: ",
+            "owner": "Owner: ",
+            "grid": "Grid: ",
+            "trusted": "Trusted: ",
+            "created": "Created: "
+        }
+    },
+    "list": {
+        "header": "{#55ffff}--- Your Plots (%count%) ---",
+        "item": "{#ffffff}- {#55ff55}%name% {#95a5a6}(%x%, %z%)",
+        "empty": "You don't own any plots!"
+    },
+    "trust": {
+        "usage": "Usage: /plot trust <add|remove> <player>",
+        "player_offline": "Player must be online to update trust.",
+        "cannot_owner": "You cannot modify trust for the plot owner.",
+        "invalid_action": "Invalid action! Use 'add' or 'remove'.",
+        "added": "Added %player% to trusted players.",
+        "removed": "Removed %player% from trusted players.",
+        "already_trusted": "%player% is already trusted on this plot.",
+        "not_trusted": "%player% is not trusted on this plot."
+    },
+    "notification": {
+        "world_enter": {
+            "title": "{#55ff55}Plot World",
+            "subtitle": "{#ffffff}Build your dreams here!"
+        },
+        "plot_enter": {
+            "title": "{#55ffff}%name%",
+            "subtitle": "{#ffffff}Owner: %owner%"
+        }
+    },
+    "protection": {
+        "no_permission_break": "You don't have permission to break blocks here!",
+        "no_permission_place": "You don't have permission to place blocks here!"
+    }
+}

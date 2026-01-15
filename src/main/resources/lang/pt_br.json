@@ -1,0 +1,73 @@
+{
+    "general": {
+        "prefix": "{#3498db}[Plots] {#95a5a6}» ",
+        "no_permission": "Você não tem permissão para fazer isso!",
+        "only_players": "Este comando só pode ser usado por jogadores.",
+        "not_owner": "Você deve ser o dono do terreno para fazer isso.",
+        "error_generic": "Ocorreu um erro inesperado. Por favor, tente novamente."
+    },
+    "claim": {
+        "standing_on_road": "Você está na estrada! Vá para um terreno para reivindicá-lo.",
+        "plot_claimed": "Terreno reivindicado com sucesso em %location%!",
+        "plot_auto_claimed": "Terreno reivindicado automaticamente em %x%, %z%!",
+        "plot_already_claimed": "Este terreno já pertence a outra pessoa.",
+        "max_plots_reached": "Você atingiu seu limite máximo de terrenos!"
+    },
+    "delete": {
+        "success": "Terreno deletado com sucesso.",
+        "need_permission": "Você precisa da permissão plots.delete.* para deletar terrenos por coordenadas."
+    },
+    "management": {
+        "not_found": "Terreno não encontrado nesta localização.",
+        "renamed": "Terreno renomeado para %name%!",
+        "rename_provide_name": "Por favor, forneça um nome para o terreno."
+    },
+    "teleport": {
+        "usage": "Uso: /plot tp <nome>",
+        "teleporting": "Teletransportando para o terreno...",
+        "world_not_loaded": "O mundo de terrenos não está carregado!",
+        "failed": "Teleporte falhou: %error%"
+    },
+    "info": {
+        "no_permission": "Você não tem permissão para ver informações do terreno!",
+        "not_in_plot": "Você não está em um terreno reivindicado!",
+        "header": "{#55ffff}--- Informações do Terreno ---",
+        "footer": "{#55ffff}-----------------------",
+        "label": {
+            "name": "Nome: ",
+            "owner": "Dono: ",
+            "grid": "Grade: ",
+            "trusted": "Confiados: ",
+            "created": "Criado em: "
+        }
+    },
+    "list": {
+        "header": "{#55ffff}--- Seus Terrenos (%count%) ---",
+        "item": "{#ffffff}- {#55ff55}%name% {#95a5a6}(%x%, %z%)",
+        "empty": "Você não possui nenhum terreno!"
+    },
+    "trust": {
+        "usage": "Uso: /plot trust <add|remove> <jogador>",
+        "player_offline": "O jogador precisa estar online para alterar a confiança.",
+        "cannot_owner": "Você não pode modificar a confiança do dono do terreno.",
+        "invalid_action": "Ação inválida! Use 'add' ou 'remove'.",
+        "added": "Adicionado %player% aos jogadores confiáveis.",
+        "removed": "Removido %player% dos jogadores confiáveis.",
+        "already_trusted": "%player% já é confiável neste terreno.",
+        "not_trusted": "%player% não é confiável neste terreno."
+    },
+    "notification": {
+        "world_enter": {
+            "title": "{#55ff55}Mundo de Terrenos",
+            "subtitle": "{#ffffff}Construa seus sonhos aqui!"
+        },
+        "plot_enter": {
+            "title": "{#55ffff}%name%",
+            "subtitle": "{#ffffff}Dono: %owner%"
+        }
+    },
+    "protection": {
+        "no_permission_break": "Você não tem permissão para quebrar blocos aqui!",
+        "no_permission_place": "Você não tem permissão para colocar blocos aqui!"
+    }
+}

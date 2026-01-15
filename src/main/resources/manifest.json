@@ -1,0 +1,23 @@
+{
+  "Name": "Plots",
+  "ID": "plots",
+  "Group": "Hytale",
+  "Version": "1.0.0",
+  "Authors": [
+    {
+      "Name": "Overworld Labs",
+      "Email": "contact@overworldlabs.com",
+      "Url": "https://github.com/overworldlabs"
+    },
+    {
+      "Name": "Gustavo Will",
+      "Email": "gustavowill@overworldlabs.com",
+      "Url": "https://github.com/gitgusilva"
+    }
+  ],
+  "Website": "https://github.com/overworldlabs",
+  "Main": "com.overworldlabs.plots.Plots",
+  "ServerVersion": "*",
+  "Description": "A plot world plugin for Hytale servers - claim plots, build, and protect your creations",
+  "IncludesAssetPack": false
+}

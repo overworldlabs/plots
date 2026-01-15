@@ -1,0 +1,16 @@
+{
+    "General": {
+        "Language": "en_us",
+        "AutoSaveIntervalSeconds": 300
+    },
+    "World": {
+        "PlotWorldName": "plotworld",
+        "DefaultWorldTime": "midday"
+    },
+    "Plots": {
+        "PlotSize": 32,
+        "RoadSize": 4,
+        "MaxPlotsDefault": 1,
+        "MaxPlotLimit": 50
+    }
+}
