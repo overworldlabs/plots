@@ -1,5 +1,6 @@
 .gradle
 build/
+build_output.txt
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
