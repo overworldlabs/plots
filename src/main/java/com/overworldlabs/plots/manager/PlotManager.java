@@ -30,7 +30,7 @@ public class PlotManager {
     public static final String PERM_CLAIM = "plots.claim";
     public static final String PERM_DELETE = "plots.delete";
     public static final String PERM_DELETE_ANY = "plots.delete.*";
-    public static final String PERM_WORLD = "plots.world";
+    public static final String PERM_SPAWN = "plots.spawn";
     public static final String PERM_LIST = "plots.list";
     public static final String PERM_INFO = "plots.info";
     public static final String PERM_RENAME = "plots.rename";

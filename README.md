@@ -80,6 +80,7 @@ The `config.json` allows total control over your world. Below is a breakdown of 
 | `/plot untrust <player>` | Revokes build permission from a player |
 | `/plot info` | Shows details about the plot you are in |
 | `/plot list` | Lists all your owned plots |
+| `/plot spawn` | Teleports to the plot world spawn |
 
 ### Administration
 | Command | Description |
@@ -105,7 +106,7 @@ Plots uses a granular permission system. You can assign these nodes to players o
 | `plots.claim` | Allows claiming plots with `/plot claim` or `/plot auto` |
 | `plots.delete` | Allows deleting owned plots with `/plot delete` |
 | `plots.delete.*` | Allows deleting **any** plot (Administrator) |
-| `plots.world` | Allows visiting the dedicated plot world with `/plot world` |
+| `plots.spawn` | Allows visiting the dedicated plot world with `/plot spawn` |
 | `plots.list` | Allows listing owned plots with `/plot list` |
 | `plots.info` | Allows viewing plot information with `/plot info` |
 | `plots.rename` | Allows renaming plots with `/plot rename` |
