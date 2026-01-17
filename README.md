@@ -36,10 +36,10 @@ Plots is not just a static grid. It adapts to your specific design.
 ## Showcase
 Here is an example of what you can achieve with the dynamic prefab system. These floating islands were generated automatically using the grid system and protected with our granular masking logic.
 
-![Island Plot](libs/prefab-island-plot.png)
+![Island Plot](assets/prefab-island-plot.png)
 *A custom island plot structure perfectly integrated into the grid.*
 
-![Island Plot Map](libs/prefab-island-plot-map.png)
+![Island Plot Map](assets/prefab-island-plot-map.png)
 *Top-down view of the generated grid showcasing the island layout and road distribution.*
 
 ## Configuration
