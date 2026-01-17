@@ -1,5 +1,5 @@
 # Plots
-**A dynamic prefab-based land management system. Define grids, load complex structures, and protect your world with granular masking.**
+**A dynamic prefab-based land management system. Define grids, load complex structures, and protect your world with intelligent masking.**
 
 A simple yet powerful way to manage creative spaces, allowing you to focus on what truly matters: building.
 
@@ -9,13 +9,14 @@ A simple yet powerful way to manage creative spaces, allowing you to focus on wh
 1. [Introduction](#plots)
 2. [Installation](#installation)
 3. [Dynamic Generation](#dynamic-generation)
-4. [Configuration](#configuration)
-5. [Quick Start](#quick-start)
-6. [Commands](#commands)
-7. [The Masking System](#the-masking-system)
-8. [Permissions](#permissions)
-9. [Localization](#localization)
-10. [Data Architecture](#data-architecture)
+4. [Showcase](#showcase)
+5. [Configuration](#configuration)
+6. [Quick Start](#quick-start)
+7. [Commands](#commands)
+8. [The Masking System](#the-masking-system)
+9. [Permissions](#permissions)
+10. [Localization](#localization)
+11. [Data Architecture](#data-architecture)
 
 ---
 
@@ -31,6 +32,15 @@ Plots is not just a static grid. It adapts to your specific design.
 *   **Islands Mode (Masking)**: Perfect for floating island worlds. The system understands your construction's shape and prevents expansions that deviate from the original design.
 *   **Vacuum Protection**: Prevents players from joining separate islands or building in the "void," keeping your map's aesthetics intact.
 *   **Non-Square Support**: Full support for independent width and depth (e.g., 32x64 plots).
+
+## Showcase
+Here is an example of what you can achieve with the dynamic prefab system. These floating islands were generated automatically using the grid system and protected with our granular masking logic.
+
+![Island Plot](libs/prefab-island-plot.png)
+*A custom island plot structure perfectly integrated into the grid.*
+
+![Island Plot Map](libs/prefab-island-plot-map.png)
+*Top-down view of the generated grid showcasing the island layout and road distribution.*
 
 ## Configuration
 The `config.json` allows total control over your world. Below is a breakdown of the main settings:
