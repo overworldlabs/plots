@@ -34,13 +34,13 @@ Plots is not just a static grid. It adapts to your specific design.
 *   **Non-Square Support**: Full support for independent width and depth (e.g., 32x64 plots).
 
 ## Showcase
-Here is an example of what you can achieve with the dynamic prefab system. These floating islands were generated automatically using the grid system and protected with our granular masking logic.
+Here is an example of what you can achieve **utilizing a custom prefab for the plot** within our dynamic system. These floating islands were generated automatically using the grid system and protected with our granular masking logic.
 
 ![Island Plot](assets/prefab-island-plot.png)
-*A custom island plot structure perfectly integrated into the grid.*
+*A custom island plot structure generated from a prefab and perfectly integrated into the grid.*
 
 ![Island Plot Map](assets/prefab-island-plot-map.png)
-*Top-down view of the generated grid showcasing the island layout and road distribution.*
+*Top-down view showing how the plot prefab is distributed across the world.*
 
 ## Configuration
 The `config.json` allows total control over your world. Below is a breakdown of the main settings:
