@@ -10,8 +10,10 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.overworldlabs.plots.Plots;
 import com.overworldlabs.plots.model.Plot;
 import com.overworldlabs.plots.model.PlotConfig;
+import com.overworldlabs.plots.model.Prefab;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,6 +56,42 @@ public class PlotManager {
      */
     public PlotConfig getConfig() {
         return config;
+    }
+
+    /**
+     * Synchronizes configuration sizes with loaded prefabs
+     */
+    public void syncConfigWithPrefabs() {
+        PrefabManager pm = Plots.getInstance().getPrefabManager();
+        if (pm == null)
+            return;
+
+        Prefab roadPrefab = pm.getOrLoadPrefab(config.getRoadPrefab());
+        Prefab plotPrefab = pm.getOrLoadPrefab(config.getPlotPrefab());
+
+        if (roadPrefab != null) {
+            // detectedPlotSize (length) along X, detectedRoadSize (thickness) along Z
+            int detectedPlotSizeX = roadPrefab.getWidthX();
+            int detectedRoadSizeZ = roadPrefab.getDepthZ();
+
+            // For a road prefab, usually width is the plot side it borders, and depth is
+            // the road width.
+            config.setPlotSizeX(detectedPlotSizeX);
+            config.setRoadSizeZ(detectedRoadSizeZ);
+
+            // If it's a square-oriented system, we might want to mirror these or detect
+            // other prefabs.
+            // But let's assume if they give a road, they want that specific layout.
+            System.out.println("[Plots] Auto-adjusted dimensions from Road Prefab: PlotSizeX=" + detectedPlotSizeX
+                    + ", RoadSizeZ=" + detectedRoadSizeZ);
+        }
+
+        if (plotPrefab != null) {
+            config.setPlotSizeX(plotPrefab.getWidthX());
+            config.setPlotSizeZ(plotPrefab.getDepthZ());
+            System.out.println("[Plots] Auto-adjusted dimensions from Plot Prefab: PlotSizeX=" + config.getPlotSizeX()
+                    + ", PlotSizeZ=" + config.getPlotSizeZ());
+        }
     }
 
     /**
@@ -118,14 +156,14 @@ public class PlotManager {
         }
 
         // Check for specific limit permissions plots.limit.N
-        for (int i = config.getMaxPlotLimit(); i > 0; i--) {
+        for (int i = getMaxPlotLimit(); i > 0; i--) {
             if (PermissionsModule.get().hasPermission(playerUuid,
                     "plots.limit." + i)) {
                 return i;
             }
         }
 
-        return config.getMaxPlotsDefault();
+        return getMaxPlotsDefaultValue();
     }
 
     /**
@@ -257,12 +295,41 @@ public class PlotManager {
         }
 
         Plot plot = getPlotAt(world.getName(), worldX, worldZ);
-
         if (plot == null) {
             return false;
         }
 
-        return plot.hasPermission(player.getUuid());
+        if (!plot.hasPermission(player.getUuid())) {
+            return false;
+        }
+
+        // Prefab-based masking: If a prefab is configured, only allow building where
+        // prefab blocks exist in the column
+        String prefabPath = config.getPlotPrefab();
+        if (prefabPath != null && !prefabPath.isEmpty()) {
+            PrefabManager pm = Plots.getInstance().getPrefabManager();
+            Prefab prefab = pm.getOrLoadPrefab(prefabPath);
+            if (prefab != null) {
+                // Building under bedrock (Y < 0) is never allowed
+                if (worldY < 0)
+                    return false;
+
+                // Calculate local prefab coordinates
+                int originX = config.gridToWorldX(plot.getGridX());
+                int originZ = config.gridToWorldZ(plot.getGridZ());
+
+                int relX = worldX - originX;
+                int relZ = worldZ - originZ;
+
+                // Check vertical column for prefab block occupancy
+                // This allows vertical expansion while protecting the empty spaces.
+                if (!prefab.hasColumnAt(relX + prefab.getMinX(), relZ + prefab.getMinZ())) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -308,6 +375,27 @@ public class PlotManager {
      */
     public int getPlotCount() {
         return plots.size();
+    }
+
+    /**
+     * Gets the default maximum number of plots a player can claim if no specific
+     * permission-based limit is found.
+     *
+     * @return The default maximum plot count.
+     */
+    public int getMaxPlotsDefaultValue() {
+        return config.getMaxPlotsDefaultValue();
+    }
+
+    /**
+     * Gets the highest possible plot limit defined in the configuration.
+     * This is used as the upper bound when checking for `plots.limit.N`
+     * permissions.
+     *
+     * @return The maximum plot limit.
+     */
+    public int getMaxPlotLimit() {
+        return config.getMaxPlotLimit();
     }
 
     /**
@@ -368,8 +456,8 @@ public class PlotManager {
 
         int gridX = plot.getGridX();
         int gridZ = plot.getGridZ();
-        int worldX = plotConfig.gridToWorld(gridX) + (plotConfig.getPlotSize() / 2);
-        int worldZ = plotConfig.gridToWorld(gridZ) - 2;
+        int worldX = plotConfig.gridToWorldX(gridX) + (plotConfig.getPlotSizeX() / 2);
+        int worldZ = plotConfig.gridToWorldZ(gridZ) - 2;
         double spawnY = 66.5;
 
         Vector3d pos = new Vector3d(worldX + 0.5, spawnY, worldZ + 0.5);

@@ -233,7 +233,7 @@ public class Plot {
      * @return The minimum world X coordinate (inclusive)
      */
     public int getMinX(PlotConfig config) {
-        return gridX * (config.getPlotSize() + config.getRoadSize());
+        return gridX * (config.getPlotSizeX() + config.getRoadSizeX());
     }
 
     /**
@@ -243,7 +243,7 @@ public class Plot {
      * @return The maximum world X coordinate (exclusive)
      */
     public int getMaxX(PlotConfig config) {
-        return getMinX(config) + config.getPlotSize();
+        return getMinX(config) + config.getPlotSizeX();
     }
 
     /**
@@ -253,7 +253,7 @@ public class Plot {
      * @return The minimum world Z coordinate (inclusive)
      */
     public int getMinZ(PlotConfig config) {
-        return gridZ * (config.getPlotSize() + config.getRoadSize());
+        return gridZ * (config.getPlotSizeZ() + config.getRoadSizeZ());
     }
 
     /**
@@ -263,7 +263,7 @@ public class Plot {
      * @return The maximum world Z coordinate (exclusive)
      */
     public int getMaxZ(PlotConfig config) {
-        return getMinZ(config) + config.getPlotSize();
+        return getMinZ(config) + config.getPlotSizeZ();
     }
 
     /**
@@ -273,7 +273,7 @@ public class Plot {
      * @return The center world X coordinate
      */
     public double getCenterX(PlotConfig config) {
-        return getMinX(config) + config.getPlotSize() / 2.0;
+        return getMinX(config) + config.getPlotSizeX() / 2.0;
     }
 
     /**
@@ -283,7 +283,7 @@ public class Plot {
      * @return The center world Z coordinate
      */
     public double getCenterZ(PlotConfig config) {
-        return getMinZ(config) + config.getPlotSize() / 2.0;
+        return getMinZ(config) + config.getPlotSizeZ() / 2.0;
     }
 
     /**

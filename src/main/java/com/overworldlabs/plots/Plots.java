@@ -23,6 +23,7 @@ public class Plots extends JavaPlugin {
     private WorldManager worldManager;
     private TranslationManager translationManager;
     private com.overworldlabs.plots.manager.RadarManager radarManager;
+    private com.overworldlabs.plots.manager.PrefabManager prefabManager;
 
     public Plots(@Nonnull JavaPluginInit init) {
         super(init);
@@ -46,7 +47,10 @@ public class Plots extends JavaPlugin {
         translationManager = new TranslationManager(config.getLanguage());
 
         // Initialize managers
+        prefabManager = new com.overworldlabs.plots.manager.PrefabManager();
         plotManager = new PlotManager(config);
+        plotManager.syncConfigWithPrefabs();
+
         worldManager = new WorldManager(config);
         radarManager = new com.overworldlabs.plots.manager.RadarManager(plotManager, worldManager);
 
@@ -149,5 +153,9 @@ public class Plots extends JavaPlugin {
 
     public TranslationManager getTranslationManager() {
         return translationManager;
+    }
+
+    public com.overworldlabs.plots.manager.PrefabManager getPrefabManager() {
+        return prefabManager;
     }
 }

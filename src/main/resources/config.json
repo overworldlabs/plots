@@ -1,16 +1,34 @@
 {
+    "//": "OverworldPlots Configuration - Dynamic Prefab System",
     "General": {
         "Language": "en_us",
         "AutoSaveIntervalSeconds": 300
     },
     "World": {
+        "//": "Plot world settings and initial time",
         "PlotWorldName": "plotworld",
         "DefaultWorldTime": "midday"
     },
     "Plots": {
+        "//": "Grid size for plots and roads. Set RoadSize to 0 for no roads.",
         "PlotSize": 32,
         "RoadSize": 4,
         "MaxPlotsDefault": 1,
         "MaxPlotLimit": 50
+    },
+    "Blocks": {
+        "//": "Default floor materials. Use 'Empty' or 'Air' for a void world.",
+        "Bedrock": "Rock_Bedrock",
+        "PlotSurface": "Soil_Grass",
+        "PlotSubSurface": "Soil_Dirt",
+        "RoadSurface": "Rock_Stone_Cobble",
+        "Border": "Rock_calcite_brick_smooth_half",
+        "Filling": "Rock_Stone"
+    },
+    "Prefabs": {
+        "//": "Custom structures from 'prefabs' folder. Use the filename WITHOUT .prefab.json",
+        "Road": "road-example",
+        "Plot": "",
+        "Intersection": ""
     }
 }

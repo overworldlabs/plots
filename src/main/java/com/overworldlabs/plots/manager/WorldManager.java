@@ -69,10 +69,12 @@ public class WorldManager {
             WorldConfig config = new WorldConfig();
             config.setDisplayName(worldName);
 
-            int plotSize = plotConfig.getPlotSize();
-            int roadSize = plotConfig.getRoadSize();
+            int plotSizeX = plotConfig.getPlotSizeX();
+            int plotSizeZ = plotConfig.getPlotSizeZ();
+            int roadSizeX = plotConfig.getRoadSizeX();
+            int roadSizeZ = plotConfig.getRoadSizeZ();
 
-            PlotWorldGenProvider plotGen = new PlotWorldGenProvider(plotSize, roadSize);
+            PlotWorldGenProvider plotGen = new PlotWorldGenProvider(plotSizeX, plotSizeZ, roadSizeX, roadSizeZ);
             config.setWorldGenProvider(plotGen);
 
             config.setTicking(true);
@@ -87,8 +89,9 @@ public class WorldManager {
             config.setGameTime(parseTime(defaultTime));
 
             // Default spawn: at the center of the first road intersection
-            double intersectionCoord = plotSize + (roadSize / 2.0) + 0.5;
-            Transform spawnTransform = new Transform(intersectionCoord, 66.0, intersectionCoord);
+            double intersectionCoordX = plotSizeX + (roadSizeX / 2.0) + 0.5;
+            double intersectionCoordZ = plotSizeZ + (roadSizeZ / 2.0) + 0.5;
+            Transform spawnTransform = new Transform(intersectionCoordX, 66.0, intersectionCoordZ);
             config.setSpawnProvider(new GlobalSpawnProvider(spawnTransform));
 
             config.markChanged();
@@ -161,9 +164,3 @@ public class WorldManager {
         return Instant.parse("0001-01-01T12:00:00.00Z");
     }
 }
-
-
-
-
-
-

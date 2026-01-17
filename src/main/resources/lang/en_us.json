@@ -48,6 +48,7 @@
     },
     "trust": {
         "usage": "Usage: /plot trust <add|remove> <player>",
+        "usage_untrust": "Usage: /plot untrust <player>",
         "player_offline": "Player must be online to update trust.",
         "cannot_owner": "You cannot modify trust for the plot owner.",
         "invalid_action": "Invalid action! Use 'add' or 'remove'.",
@@ -58,12 +59,12 @@
     },
     "notification": {
         "world_enter": {
-            "title": "{#55ff55}Plot World",
-            "subtitle": "{#ffffff}Build your dreams here!"
+            "title": "Plot World",
+            "subtitle": "Build your dreams here!"
         },
         "plot_enter": {
-            "title": "{#55ffff}%name%",
-            "subtitle": "{#ffffff}Owner: %owner%"
+            "title": "%name%",
+            "subtitle": "Owner: %owner%"
         }
     },
     "protection": {

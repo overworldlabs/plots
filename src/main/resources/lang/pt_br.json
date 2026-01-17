@@ -1,21 +1,21 @@
 {
     "general": {
-        "prefix": "{#3498db}[Plots] {#95a5a6}» ",
+        "prefix": "{#3498db}[Terrenos] {#95a5a6}» ",
         "no_permission": "Você não tem permissão para fazer isso!",
         "only_players": "Este comando só pode ser usado por jogadores.",
         "not_owner": "Você deve ser o dono do terreno para fazer isso.",
-        "error_generic": "Ocorreu um erro inesperado. Por favor, tente novamente."
+        "error_generic": "An unexpected error occurred. Please try again."
     },
     "claim": {
         "standing_on_road": "Você está na estrada! Vá para um terreno para reivindicá-lo.",
         "plot_claimed": "Terreno reivindicado com sucesso em %location%!",
         "plot_auto_claimed": "Terreno reivindicado automaticamente em %x%, %z%!",
-        "plot_already_claimed": "Este terreno já pertence a outra pessoa.",
-        "max_plots_reached": "Você atingiu seu limite máximo de terrenos!"
+        "plot_already_claimed": "Este terreno já foi reivindicado por outra pessoa.",
+        "max_plots_reached": "Você atingiu o limite máximo de terrenos!"
     },
     "delete": {
-        "success": "Terreno deletado com sucesso.",
-        "need_permission": "Você precisa da permissão plots.delete.* para deletar terrenos por coordenadas."
+        "success": "Terreno foi excluído com sucesso.",
+        "need_permission": "Você precisa da permissão plots.delete.* para excluir terrenos por coordenadas."
     },
     "management": {
         "not_found": "Terreno não encontrado nesta localização.",
@@ -24,9 +24,9 @@
     },
     "teleport": {
         "usage": "Uso: /plot tp <nome>",
-        "teleporting": "Teletransportando para o terreno...",
+        "teleporting": "Teleportando para o terreno...",
         "world_not_loaded": "O mundo de terrenos não está carregado!",
-        "failed": "Teleporte falhou: %error%"
+        "failed": "O teleporte falhou: %error%"
     },
     "info": {
         "no_permission": "Você não tem permissão para ver informações do terreno!",
@@ -36,25 +36,26 @@
         "label": {
             "name": "Nome: ",
             "owner": "Dono: ",
-            "grid": "Grade: ",
-            "trusted": "Confiados: ",
+            "grid": "Grid: ",
+            "trusted": "Ajudantes: ",
             "created": "Criado em: "
         }
     },
     "list": {
         "header": "{#55ffff}--- Seus Terrenos (%count%) ---",
         "item": "{#ffffff}- {#55ff55}%name% {#95a5a6}(%x%, %z%)",
-        "empty": "Você não possui nenhum terreno!"
+        "empty": "Você não possui terrenos!"
     },
     "trust": {
         "usage": "Uso: /plot trust <add|remove> <jogador>",
-        "player_offline": "O jogador precisa estar online para alterar a confiança.",
-        "cannot_owner": "Você não pode modificar a confiança do dono do terreno.",
+        "usage_untrust": "Uso: /plot untrust <jogador>",
+        "player_offline": "O jogador deve estar online para atualizar as permissões.",
+        "cannot_owner": "Você não pode modificar permissões do dono do terreno.",
         "invalid_action": "Ação inválida! Use 'add' ou 'remove'.",
-        "added": "Adicionado %player% aos jogadores confiáveis.",
-        "removed": "Removido %player% dos jogadores confiáveis.",
-        "already_trusted": "%player% já é confiável neste terreno.",
-        "not_trusted": "%player% não é confiável neste terreno."
+        "added": "Adicionado %player% aos ajudantes.",
+        "removed": "Removido %player% dos ajudantes.",
+        "already_trusted": "%player% já é um ajudantes neste terreno.",
+        "not_trusted": "%player% não é um ajudante neste terreno."
     },
     "notification": {
         "world_enter": {

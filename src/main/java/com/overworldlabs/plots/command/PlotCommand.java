@@ -23,6 +23,7 @@ public class PlotCommand extends AbstractCommandCollection {
         addSubCommand(new PlotWorldCommand(plotManager));
         addSubCommand(new PlotRenameCommand(plotManager));
         addSubCommand(new PlotTrustCommand(plotManager));
+        addSubCommand(new PlotUntrustCommand(plotManager));
         addSubCommand(new PlotTpCommand(plotManager));
     }
 }
