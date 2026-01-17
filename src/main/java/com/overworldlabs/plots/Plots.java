@@ -24,6 +24,8 @@ public class Plots extends JavaPlugin {
     private TranslationManager translationManager;
     private com.overworldlabs.plots.manager.RadarManager radarManager;
     private com.overworldlabs.plots.manager.PrefabManager prefabManager;
+    private com.overworldlabs.plots.integration.BuilderToolsIntegration builderToolsIntegration;
+    private com.overworldlabs.plots.integration.BuilderToolsSystem builderToolsSystem;
 
     public Plots(@Nonnull JavaPluginInit init) {
         super(init);
@@ -66,6 +68,22 @@ public class Plots extends JavaPlugin {
             ConsoleColors.error("Failed to register world generator: " + e.getMessage());
         }
 
+        // Initialize BuilderTools Integration
+        try {
+            Class.forName("com.hypixel.hytale.builtin.buildertools.BuilderToolsPlugin");
+            builderToolsIntegration = new com.overworldlabs.plots.integration.BuilderToolsIntegration();
+            builderToolsIntegration.initialize();
+
+            builderToolsSystem = new com.overworldlabs.plots.integration.BuilderToolsSystem(worldManager,
+                    builderToolsIntegration);
+            getEntityStoreRegistry().registerSystem(builderToolsSystem);
+            ConsoleColors.success("BuilderTools integration enabled.");
+        } catch (ClassNotFoundException e) {
+            ConsoleColors.info("BuilderTools not found, skipping integration.");
+        } catch (Exception e) {
+            ConsoleColors.error("Error initializing BuilderTools integration: " + e.getMessage());
+        }
+
         File dataDirectory = getDataDirectory().toFile();
         dataManager = new DataManager(dataDirectory, plotManager);
 
@@ -79,9 +97,11 @@ public class Plots extends JavaPlugin {
         getEntityStoreRegistry()
                 .registerSystem(new com.overworldlabs.plots.listener.BreakProtectionSystem(plotManager, worldManager));
         getEntityStoreRegistry()
-                .registerSystem(new com.overworldlabs.plots.listener.PlaceProtectionSystem(plotManager, worldManager));
-        getEntityStoreRegistry()
                 .registerSystem(new com.overworldlabs.plots.listener.PlotNotificationSystem(plotManager, worldManager));
+
+        // Register Prefab Paste Protection
+        getEntityStoreRegistry().registerSystem(
+                new com.overworldlabs.plots.listener.PrefabPasteProtectionSystem(plotManager, worldManager));
 
         ConsoleColors.success("Setup complete! Plugin is ready.");
     }
@@ -102,6 +122,9 @@ public class Plots extends JavaPlugin {
         System.out.println("[Plots] Shutting down...");
         if (dataManager != null) {
             dataManager.savePlots();
+        }
+        if (builderToolsIntegration != null) {
+            builderToolsIntegration.shutdown();
         }
         super.shutdown();
         System.out.println("[Plots] Shutdown complete!");

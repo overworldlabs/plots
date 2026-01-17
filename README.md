@@ -69,53 +69,37 @@ The `config.json` allows total control over your world. Below is a breakdown of 
 *   `/plot trust <player>` - Give a friend permission to build with you.
 *   `/plot rename <name>` - Give your project a unique name.
 
-## Commands
-### Players
-| Command | Description |
-| :--- | :--- |
-| `/plot claim` | Claims the current plot |
-| `/plot auto` | Finds and claims the nearest free plot |
-| `/plot home` | Teleports to your primary plot |
-| `/plot trust <player>` | Grants build permission to another player |
-| `/plot untrust <player>` | Revokes build permission from a player |
-| `/plot info` | Shows details about the plot you are in |
-| `/plot list` | Lists all your owned plots |
-| `/plot spawn` | Teleports to the plot world spawn |
-
-### Administration
-| Command | Description |
-| :--- | :--- |
-| `/plot delete` | Removes a plot record (admins only) |
-| `/plot reload` | Reloads configurations and prefabs |
-| `/plot bypass` | Enables free-build mode for admins |
-
 ## The Masking System
 We created an advanced protection logic for creative servers:
 *   **Vacuum Respect**: If the space between islands isn't part of your original prefab, no one can build there. This maintains the "isolated island" look.
 *   **Vertical Freedom**: If a column already contains ground from your prefab, the player is free to build up or down, allowing for basements or towers.
 *   **Lower Limit**: Building below level 0 is automatically blocked to prevent visual clutter at the bottom of the map.
 
-## Permissions
-Plots uses a granular permission system. You can assign these nodes to players or groups:
+## Commands & Permissions
+Below is a list of all available commands and their respective permissions.
 
-### General Permissions
+| Command | Description | Permission |
+| :--- | :--- | :--- |
+| `/plot claim` | Claims the plot you are standing on | `plots.claim` |
+| `/plot auto` | Finds and claims the nearest free plot | `plots.claim` |
+| `/plot info` | Shows details about the plot you are in | `plots.info` |
+| `/plot list` | Lists all your owned plots | `plots.list` |
+| `/plot spawn` | Teleports to the plot world spawn | `plots.spawn` |
+| `/plot rename <name>` | Renames the plot you are standing on | `plots.rename` |
+| `/plot trust <player>` | Grants build permission to another player | `plots.trust` |
+| `/plot untrust <player>` | Revokes build permission from a player | `plots.trust` |
+| `/plot tp <name>` | Teleports to a specific plot by name | `plots.user` |
+| `/plot delete` | Deletes the current plot (Owner only) | `plots.delete` |
+| `/plot delete <x> <z>` | Deletes plot at coordinates (Admin) | `plots.delete.*` |
+
+### Administrative & Limit Permissions
+These permissions are used for group management and administrative bypass.
+
 | Permission | Description |
 | :--- | :--- |
-| `plots.*` | Full administrative access (unlimited plots, bypass protection) |
-| `plots.user` | Base permission for common users |
-| `plots.claim` | Allows claiming plots with `/plot claim` or `/plot auto` |
-| `plots.delete` | Allows deleting owned plots with `/plot delete` |
-| `plots.delete.*` | Allows deleting **any** plot (Administrator) |
-| `plots.spawn` | Allows visiting the dedicated plot world with `/plot spawn` |
-| `plots.list` | Allows listing owned plots with `/plot list` |
-| `plots.info` | Allows viewing plot information with `/plot info` |
-| `plots.rename` | Allows renaming plots with `/plot rename` |
-| `plots.trust` | Allows managing trusted members with `/plot trust` |
-
-### Limit Permissions
-| Permission | Description |
-| :--- | :--- |
+| `plots.*` | Full administrative access (bypass all protections, delete any plot) |
 | `plots.limit.X` | Sets the maximum number of plots a player can own (e.g., `plots.limit.5`) |
+| `plots.user` | Base permission for common users (granted by default in many systems) |
 
 ## Localization
 We are committed to supporting as many languages as possible.

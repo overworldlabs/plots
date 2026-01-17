@@ -68,6 +68,7 @@
         }
     },
     "protection": {
+        "no_permission": "You don't have permission to build here!",
         "no_permission_break": "You don't have permission to break blocks here!",
         "no_permission_place": "You don't have permission to place blocks here!"
     }
