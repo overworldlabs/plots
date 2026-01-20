@@ -45,7 +45,7 @@ Here is an example of what you can achieve **utilizing a custom prefab for the p
 *Top-down view showing how the plot prefab is distributed across the world.*
 
 ![Holograms](assets/holograms.png)
-*Plot holograms displaying plot names and owners with configurable colors.*
+*Plot holograms displaying plot names and owners.*
 
 ## Configuration
 The `config.json` allows total control over your world. Below is a breakdown of the main settings:
