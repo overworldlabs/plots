@@ -1,6 +1,7 @@
 package com.overworldlabs.plots.command;
 
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractCommandCollection;
+import com.overworldlabs.plots.command.sub.*;
 import com.overworldlabs.plots.manager.PlotManager;
 
 import javax.annotation.Nonnull;
@@ -13,6 +14,7 @@ public class PlotCommand extends AbstractCommandCollection {
 
     public PlotCommand(@Nonnull PlotManager plotManager) {
         super("plot", "Plot management commands");
+        requirePermission(PlotManager.PERM_BASE);
 
         // Add all subcommands
         addSubCommand(new PlotClaimCommand(plotManager));
@@ -24,6 +26,5 @@ public class PlotCommand extends AbstractCommandCollection {
         addSubCommand(new PlotRenameCommand(plotManager));
         addSubCommand(new PlotTrustCommand(plotManager));
         addSubCommand(new PlotUntrustCommand(plotManager));
-        addSubCommand(new PlotTpCommand(plotManager));
     }
 }

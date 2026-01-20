@@ -25,8 +25,9 @@ import java.util.stream.Collectors;
  * Manages all plots in the world
  */
 public class PlotManager {
+    public static final String PERM_BASE = "plots";
+    public static final String PERM_PLOT = "plots";
     public static final String PERM_ADMIN = "plots.*";
-    public static final String PERM_USER = "plots.user";
     public static final String PERM_CLAIM = "plots.claim";
     public static final String PERM_DELETE = "plots.delete";
     public static final String PERM_DELETE_ANY = "plots.delete.*";
@@ -120,19 +121,20 @@ public class PlotManager {
      * @return {@code true} if the plot was successfully claimed, {@code false}
      *         otherwise
      */
-    public boolean claimPlot(@Nonnull UUID playerUuid, @Nonnull String ownerName, int gridX, int gridZ) {
+    public boolean claimPlot(@Nonnull com.hypixel.hytale.server.core.command.system.CommandSender sender,
+            @Nonnull PlayerRef playerRef, int gridX, int gridZ) {
         String key = getPlotKey(gridX, gridZ);
         if (plots.containsKey(key))
             return false;
 
         long playerPlotCount = plots.values().stream()
-                .filter(plot -> playerUuid.equals(plot.getOwner()))
+                .filter(plot -> playerRef.getUuid().equals(plot.getOwner()))
                 .count();
 
-        if (playerPlotCount >= getMaxPlots(playerUuid))
+        if (playerPlotCount >= getMaxPlots(sender))
             return false;
 
-        Plot plot = new Plot(gridX, gridZ, playerUuid, ownerName);
+        Plot plot = new Plot(gridX, gridZ, playerRef.getUuid(), playerRef.getUsername());
         plots.put(key, plot);
         return true;
     }
@@ -150,15 +152,14 @@ public class PlotManager {
      * @param playerUuid The UUID of the player
      * @return The maximum number of plots the player can claim
      */
-    public int getMaxPlots(@Nonnull UUID playerUuid) {
-        if (PermissionsModule.get().hasPermission(playerUuid, PERM_ADMIN)) {
+    public int getMaxPlots(@Nonnull com.hypixel.hytale.server.core.command.system.CommandSender sender) {
+        if (sender.hasPermission(PERM_ADMIN)) {
             return Integer.MAX_VALUE;
         }
 
         // Check for specific limit permissions plots.limit.N
         for (int i = getMaxPlotLimit(); i > 0; i--) {
-            if (PermissionsModule.get().hasPermission(playerUuid,
-                    "plots.limit." + i)) {
+            if (sender.hasPermission("plots.limit." + i)) {
                 return i;
             }
         }

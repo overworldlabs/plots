@@ -47,7 +47,7 @@
         "empty": "Você não possui terrenos!"
     },
     "trust": {
-        "usage": "Uso: /plot trust <add|remove> <jogador>",
+        "usage": "Uso: /plot trust <jogador>",
         "usage_untrust": "Uso: /plot untrust <jogador>",
         "player_offline": "O jogador deve estar online para atualizar as permissões.",
         "cannot_owner": "Você não pode modificar permissões do dono do terreno.",
@@ -59,13 +59,17 @@
     },
     "notification": {
         "world_enter": {
-            "title": "{#55ff55}Mundo de Terrenos",
-            "subtitle": "{#ffffff}Construa seus sonhos aqui!"
+            "title": "Mundo de Plots",
+            "subtitle": "Construa seus sonhos aqui!"
         },
         "plot_enter": {
-            "title": "{#55ffff}%name%",
-            "subtitle": "{#ffffff}Dono: %owner%"
+            "title": "%name%",
+            "subtitle": "Plot de %owner%"
         }
+    },
+    "hologram": {
+        "title": "%name%",
+        "subtitle": "Dono: %owner%"
     },
     "protection": {
         "no_permission_break": "Você não tem permissão para quebrar blocos aqui!",

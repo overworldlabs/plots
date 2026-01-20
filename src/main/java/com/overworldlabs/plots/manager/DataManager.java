@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.overworldlabs.plots.model.Plot;
+import com.overworldlabs.plots.util.ConsoleColors;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -40,9 +41,9 @@ public class DataManager {
         try (FileWriter writer = new FileWriter(dataFile)) {
             Map<String, Plot> plots = plotManager.getPlotsMap();
             gson.toJson(plots, writer);
-            System.out.println("[Plots] Saved " + plots.size() + " plots to disk");
+            ConsoleColors.success("Saved " + plots.size() + " plots to disk");
         } catch (IOException e) {
-            System.err.println("[Plots] Failed to save plots: " + e.getMessage());
+            ConsoleColors.error("Failed to save plots: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -52,7 +53,7 @@ public class DataManager {
      */
     public void loadPlots() {
         if (!dataFile.exists()) {
-            System.out.println("[Plots] No plots file found, starting fresh");
+            ConsoleColors.info("No plots file found, starting fresh");
             return;
         }
 
@@ -63,12 +64,12 @@ public class DataManager {
 
             if (loadedPlots != null) {
                 plotManager.loadPlots(loadedPlots);
-                System.out.println("[Plots] Loaded " + loadedPlots.size() + " plots from disk");
+                ConsoleColors.success("Loaded " + loadedPlots.size() + " plots from disk");
             } else {
-                System.out.println("[Plots] Plots file was empty or invalid");
+                ConsoleColors.error("Plots file was empty or invalid");
             }
         } catch (IOException e) {
-            System.err.println("[Plots] Failed to load plots: " + e.getMessage());
+            ConsoleColors.error("Failed to load plots: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -80,9 +81,3 @@ public class DataManager {
         return dataFile;
     }
 }
-
-
-
-
-
-

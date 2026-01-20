@@ -88,16 +88,21 @@ public class WorldManager {
             // Set the world time
             config.setGameTime(parseTime(defaultTime));
 
-            // Default spawn: at the center of the first road intersection
-            double intersectionCoordX = plotSizeX + (roadSizeX / 2.0) + 0.5;
-            double intersectionCoordZ = plotSizeZ + (roadSizeZ / 2.0) + 0.5;
+            // Default spawn: at the center of the road intersection at origin
+            // Roads are between plots, so the intersection at (0,0) is actually at negative
+            // coordinates
+            // The road before plot (0,0) starts at -(roadSize) and goes to 0
+            // So the center of the intersection is at -(roadSize/2)
+            double intersectionCoordX = -(roadSizeX / 2.0);
+            double intersectionCoordZ = -(roadSizeZ / 2.0);
+
             Transform spawnTransform = new Transform(intersectionCoordX, 66.0, intersectionCoordZ);
             config.setSpawnProvider(new GlobalSpawnProvider(spawnTransform));
 
             config.markChanged();
 
             Universe.get()
-                    .makeWorld(worldName, worldPath, config)
+                    .makeWorld(worldName, java.util.Objects.requireNonNull(worldPath), config)
                     .thenAccept(world -> {
                         if (world != null) {
                             System.out.println("[Plots] Successfully created plot world '" + worldName + "'");

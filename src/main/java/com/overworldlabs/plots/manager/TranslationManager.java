@@ -5,9 +5,12 @@ import com.google.gson.reflect.TypeToken;
 import com.overworldlabs.plots.util.ConsoleColors;
 
 import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,9 +21,17 @@ public class TranslationManager {
     private final Map<String, String> translations = new HashMap<>();
     private final String language;
     private final Gson gson = new Gson();
+    private final File langDir;
 
-    public TranslationManager(@Nonnull String language) {
+    public TranslationManager(@Nonnull File dataDir, @Nonnull String language) {
+        this.langDir = new File(dataDir, "lang");
         this.language = language.toLowerCase();
+
+        if (!langDir.exists()) {
+            langDir.mkdirs();
+        }
+
+        exportDefaultLanguages();
         load();
     }
 
@@ -34,25 +45,61 @@ public class TranslationManager {
         }
     }
 
+    private void exportDefaultLanguages() {
+        exportResource("en_us.json");
+        exportResource("pt_br.json");
+    }
+
+    private void exportResource(String name) {
+        File target = new File(langDir, name);
+        if (target.exists()) {
+            return;
+        }
+
+        try (InputStream is = getClass().getResourceAsStream("/lang/" + name)) {
+            if (is != null) {
+                Files.copy(is, target.toPath());
+            }
+        } catch (Exception e) {
+            ConsoleColors.error("Failed to export " + name + ": " + e.getMessage());
+        }
+    }
+
     private void loadLanguage(String lang) {
-        String path = "/lang/" + lang + ".json";
-        try (InputStream is = getClass().getResourceAsStream(path)) {
+        String fileName = lang + ".json";
+        File file = new File(langDir, fileName);
+
+        InputStream is = null;
+        try {
+            if (file.exists()) {
+                is = new FileInputStream(file);
+            } else {
+                is = getClass().getResourceAsStream("/lang/" + fileName);
+            }
+
             if (is == null) {
-                ConsoleColors.error("Could not find language file: " + path);
+                ConsoleColors.error("Could not find language file: " + fileName);
                 return;
             }
 
             Type type = new TypeToken<Map<String, Object>>() {
             }.getType();
+
             Map<String, Object> loaded = gson.fromJson(new InputStreamReader(is), type);
+
             if (loaded != null) {
                 flattenAndPut("", loaded);
-                ConsoleColors.success("Loaded " + translations.size()
-                        + " translation entries for language: " + lang);
             }
         } catch (Exception e) {
             ConsoleColors.error("Failed to load language " + lang + ": " + e.getMessage());
             e.printStackTrace();
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Exception ignored) {
+                }
+            }
         }
     }
 
@@ -79,6 +126,7 @@ public class TranslationManager {
     @Nonnull
     public String get(@Nonnull String key, Object... args) {
         String text = get(key);
+
         for (int i = 0; i < args.length; i += 2) {
             if (i + 1 < args.length) {
                 String placeholder = "%" + args[i] + "%";
@@ -87,6 +135,7 @@ public class TranslationManager {
                 text = text.replace(placeholder, value);
             }
         }
+
         return text;
     }
 }
