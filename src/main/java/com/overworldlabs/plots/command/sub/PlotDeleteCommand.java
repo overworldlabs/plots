@@ -9,6 +9,7 @@ import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalAr
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.overworldlabs.plots.Plots;
@@ -60,7 +61,7 @@ public class PlotDeleteCommand extends CommandBase {
         if (senderUuid == null)
             return;
 
-        PlayerRef playerObj = com.hypixel.hytale.server.core.universe.Universe.get().getPlayer(senderUuid);
+        PlayerRef playerObj = Universe.get().getPlayer(senderUuid);
         if (playerObj == null)
             return;
 
@@ -68,7 +69,7 @@ public class PlotDeleteCommand extends CommandBase {
         if (worldUuid == null)
             return;
 
-        World currentWorld = com.hypixel.hytale.server.core.universe.Universe.get().getWorld(worldUuid);
+        World currentWorld = Universe.get().getWorld(worldUuid);
         if (currentWorld == null)
             return;
 

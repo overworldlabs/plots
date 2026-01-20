@@ -9,28 +9,31 @@ java {
 }
 
 group = "com.overworldlabs.plots"
-version = "1.1.0"
+version = "1.1.1"
 
 repositories {
     mavenCentral()
+    flatDir { dirs("libs") }
 }
 
 dependencies {
     compileOnly(files("libs/HytaleServer.jar"))
     compileOnly(files("libs/hylograms.jar"))
     implementation("com.google.code.gson:gson:2.10.1")
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-tasks.test {
-    useJUnitPlatform()
+tasks.processResources {
+    inputs.property("version", project.version)
+    
+    filesMatching("manifest.json") {
+        expand("version" to project.version)
+    }
 }
 
 tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveBaseName.set("Plots")
-    archiveVersion.set("1.1.0")
+    archiveVersion.set(project.version.toString())
 
     manifest {
         attributes(

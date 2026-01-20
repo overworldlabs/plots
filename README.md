@@ -18,7 +18,8 @@ A simple yet powerful way to manage creative spaces, allowing you to focus on wh
 8. [The Masking System](#the-masking-system)
 9. [Permissions](#permissions)
 10. [Localization](#localization)
-11. [Data Architecture](#data-architecture)
+11. [Public API](#public-api)
+12. [Data Architecture](#data-architecture)
 
 ---
 
@@ -45,7 +46,7 @@ Here is an example of what you can achieve **utilizing a custom prefab for the p
 *Top-down view showing how the plot prefab is distributed across the world.*
 
 ![Holograms](assets/holograms.png)
-*Plot holograms displaying plot names and owners with configurable colors.*
+*Plot holograms displaying plot names and owners.*
 
 ## Configuration
 The `config.json` allows total control over your world. Below is a breakdown of the main settings:
@@ -125,6 +126,56 @@ Plots uses a granular permission system. You can assign these nodes to players o
 We are committed to supporting as many languages as possible.
 *   **Help us translate**: Visit our [Crowdin Project](https://crowdin.com/project/hytaleplots) to contribute.
 *   Full message customization is available in the `lang/` directory within the plugin folder.
+
+## Public API
+Plots provides a comprehensive public API for external plugins to interact with the plot system programmatically.
+
+### Getting Started
+```java
+import com.overworldlabs.plots.api.PlotsAPI;
+
+// Get API instance
+PlotsAPI api = PlotsAPI.getInstance();
+```
+
+### Available APIs
+
+#### PlotAPI
+Query and manage plots:
+
+// Get plot at location
+Optional<Plot> plot = api.plot().getPlotAt(world, x, z);
+
+// Check ownership
+boolean isOwner = api.plot().isOwner(plot, playerUuid);
+
+// Get trusted players
+List<UUID> trusted = api.plot().getTrustedPlayers(plot);
+```
+
+#### PlotEventAPI
+Listen to plot events:
+```java
+api.events().onClaim(event -> {
+    Plot plot = event.getPlot();
+    UUID owner = event.getOwner();
+    // Handle claim event
+});
+
+api.events().onRename(event -> {
+    String oldName = event.getOldName();
+    String newName = event.getNewName();
+    // Handle rename event
+});
+```
+
+### Events
+Available events:
+- `ClaimEvent` - Fired when a plot is claimed
+- `UnclaimEvent` - Fired when a plot is unclaimed
+- `TrustEvent` - Fired when a player is trusted
+- `UntrustEvent` - Fired when a player is untrusted
+- `RenameEvent` - Fired when a plot is renamed
 
 ## Future Documentation
 A more comprehensive and organized documentation site is currently under development. Stay tuned for advanced tutorials, API references, and design tips!

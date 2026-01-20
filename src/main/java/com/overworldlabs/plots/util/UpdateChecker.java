@@ -56,7 +56,7 @@ public class UpdateChecker {
 
                 return latestVersion;
             } catch (Exception e) {
-                System.err.println("[Plots] Failed to check for updates: " + e.getMessage());
+                ConsoleColors.error("Failed to check for updates: " + e.getMessage());
                 return null;
             }
         });
