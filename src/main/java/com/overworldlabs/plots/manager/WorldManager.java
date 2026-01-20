@@ -6,6 +6,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.WorldConfig;
 import com.hypixel.hytale.server.core.universe.world.spawn.GlobalSpawnProvider;
 import com.overworldlabs.plots.model.PlotConfig;
+import com.overworldlabs.plots.util.ConsoleColors;
 import com.overworldlabs.plots.worldgen.PlotWorldGenProvider;
 
 import javax.annotation.Nonnull;
@@ -56,11 +57,11 @@ public class WorldManager {
      */
     public void createWorldIfNeeded() {
         if (worldExists()) {
-            System.out.println("[Plots] Plot world '" + worldName + "' already exists");
+            ConsoleColors.info("Plot world '" + worldName + "' already exists");
             return;
         }
 
-        System.out.println("[Plots] Creating plot world '" + worldName + "' with time: " + defaultTime);
+        ConsoleColors.info("Creating plot world '" + worldName + "' with time: " + defaultTime);
 
         try {
             Path universePath = Universe.get().getPath();
@@ -105,16 +106,16 @@ public class WorldManager {
                     .makeWorld(worldName, java.util.Objects.requireNonNull(worldPath), config)
                     .thenAccept(world -> {
                         if (world != null) {
-                            System.out.println("[Plots] Successfully created plot world '" + worldName + "'");
+                            ConsoleColors.success("Successfully created plot world '" + worldName + "'");
                         }
                     })
                     .exceptionally(throwable -> {
-                        System.err.println("[Plots] ERROR: Failed to create plot world '" + worldName + "'!");
+                        ConsoleColors.error("Failed to create plot world '" + worldName + "'!");
                         throwable.printStackTrace();
                         return null;
                     });
         } catch (Exception e) {
-            System.err.println("[Plots] ERROR: Exception while creating plot world!");
+            ConsoleColors.error("Exception while creating plot world!");
             e.printStackTrace();
         }
     }

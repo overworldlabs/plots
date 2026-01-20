@@ -2,9 +2,8 @@ package com.overworldlabs.plots;
 
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
-import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.worldgen.provider.IWorldGenProvider;
+import com.overworldlabs.plots.api.impl.PlotsAPIImpl;
 import com.overworldlabs.plots.command.PlotCommand;
 import com.overworldlabs.plots.manager.DataManager;
 import com.overworldlabs.plots.manager.PlotManager;
@@ -13,12 +12,15 @@ import com.overworldlabs.plots.manager.WorldManager;
 import com.overworldlabs.plots.manager.RadarManager;
 import com.overworldlabs.plots.manager.PrefabManager;
 import com.overworldlabs.plots.integration.holograms.HologramManager;
+import com.overworldlabs.plots.integration.buildertools.BuilderToolsIntegration;
 import com.overworldlabs.plots.model.PlotConfig;
 import com.overworldlabs.plots.system.BreakProtectionSystem;
 import com.overworldlabs.plots.system.PlaceProtectionSystem;
+
 import com.overworldlabs.plots.system.PlotNotificationSystem;
 import com.overworldlabs.plots.system.UpdateNotificationSystem;
 import com.overworldlabs.plots.system.RadarMarkerSystem;
+import com.overworldlabs.plots.system.BuilderToolsMaskSystem;
 import com.overworldlabs.plots.util.ConsoleColors;
 import com.overworldlabs.plots.util.UpdateChecker;
 import com.overworldlabs.plots.worldgen.PlotWorldGenProvider;
@@ -31,6 +33,8 @@ import java.io.File;
  */
 public class Plots extends JavaPlugin {
     private static Plots instance;
+    private static PlotsAPIImpl api;
+
     private PlotManager plotManager;
     private DataManager dataManager;
     private WorldManager worldManager;
@@ -38,6 +42,7 @@ public class Plots extends JavaPlugin {
     private RadarManager radarManager;
     private PrefabManager prefabManager;
     private HologramManager hologramManager;
+    private BuilderToolsIntegration builderToolsIntegration;
 
     public Plots(@Nonnull JavaPluginInit init) {
         super(init);
@@ -48,27 +53,51 @@ public class Plots extends JavaPlugin {
         return instance;
     }
 
+    /**
+     * Get the public API for external plugins
+     * 
+     * @return The Plots API instance
+     */
+    public static PlotsAPIImpl getAPI() {
+        return api;
+    }
+
     @Override
     protected void setup() {
         super.setup();
-
         ConsoleColors.info("Setting up Plots plugin...");
 
-        // Initialize configuration
         PlotConfig config = loadConfig();
-
-        // Initialize translation manager
         File dataDir = getDataDirectory().toFile();
+
+        initializeTranslationManager(dataDir, config);
+        printBanner();
+        initializeManagers(dataDir, config);
+        registerWorldGenerator();
+        registerSystems();
+
+        ConsoleColors.success("Setup complete! Plugin is ready.");
+
+        checkForUpdates();
+        radarManager.clearAllMarkers();
+    }
+
+    /**
+     * Initialize the translation manager
+     */
+    private void initializeTranslationManager(File dataDir, PlotConfig config) {
         if (!dataDir.exists()) {
             dataDir.mkdirs();
         }
 
         String lang = (String) config.getLanguage();
         translationManager = new TranslationManager(dataDir, lang != null ? lang : "en_us");
+    }
 
-        // Initialize managers
-        printBanner();
-
+    /**
+     * Initialize all plugin managers
+     */
+    private void initializeManagers(File dataDir, PlotConfig config) {
         prefabManager = new PrefabManager(dataDir);
         plotManager = new PlotManager(config);
         plotManager.syncConfigWithPrefabs();
@@ -78,17 +107,17 @@ public class Plots extends JavaPlugin {
             worldManager = new WorldManager(config);
             radarManager = new RadarManager(pm, worldManager);
             hologramManager = new HologramManager(pm);
-
             dataManager = new DataManager(dataDir, pm);
 
-            // Load plots from disk
             dataManager.loadPlots();
-
-            // Register the main plot command collection
             getCommandRegistry().registerCommand(new PlotCommand(pm));
         }
+    }
 
-        // Register custom world generator provider
+    /**
+     * Register the custom world generator provider
+     */
+    private void registerWorldGenerator() {
         try {
             IWorldGenProvider.CODEC.register(
                     PlotWorldGenProvider.ID,
@@ -98,8 +127,12 @@ public class Plots extends JavaPlugin {
         } catch (Exception e) {
             ConsoleColors.error("Failed to register world generator: " + e.getMessage());
         }
+    }
 
-        // Register protection systems
+    /**
+     * Register all entity systems
+     */
+    private void registerSystems() {
         var registry = getEntityStoreRegistry();
         registry.registerSystem(new BreakProtectionSystem(plotManager, worldManager));
         registry.registerSystem(new PlaceProtectionSystem(plotManager, worldManager));
@@ -107,9 +140,17 @@ public class Plots extends JavaPlugin {
         registry.registerSystem(new UpdateNotificationSystem(getVersion()));
         registry.registerSystem(new RadarMarkerSystem(radarManager));
 
-        ConsoleColors.success("Setup complete! Plugin is ready.");
+        if (worldManager != null) {
+            builderToolsIntegration = new BuilderToolsIntegration();
+            builderToolsIntegration.initialize();
+            registry.registerSystem(new BuilderToolsMaskSystem(worldManager, builderToolsIntegration));
+        }
+    }
 
-        // Check for updates on startup
+    /**
+     * Check for plugin updates
+     */
+    private void checkForUpdates() {
         UpdateChecker.checkForUpdates(getVersion()).thenAccept(latestVersion -> {
             if (latestVersion != null && UpdateChecker.isNewerVersion(getVersion(), latestVersion)) {
                 ConsoleColors.info("A new version is available: " + latestVersion);
@@ -118,12 +159,6 @@ public class Plots extends JavaPlugin {
                 ConsoleColors.success("You are running the latest version (" + getVersion() + ")");
             }
         });
-
-        // Clear all existing markers first (removes stale markers from deleted worlds)
-        radarManager.clearAllMarkers();
-
-        // Spawn holograms for all existing plots
-        hologramManager.spawnAllHologramsForOnlinePlayers();
     }
 
     public RadarManager getRadarManager() {
@@ -133,18 +168,20 @@ public class Plots extends JavaPlugin {
     @Override
     protected void start() {
         super.start();
-        System.out.println("[Plots] Starting Plots...");
+        ConsoleColors.info("Starting Plots...");
         worldManager.createWorldIfNeeded();
     }
 
     @Override
     protected void shutdown() {
-        System.out.println("[Plots] Shutting down...");
+        ConsoleColors.info("Shutting down...");
+
         if (dataManager != null) {
             dataManager.savePlots();
         }
+
         super.shutdown();
-        System.out.println("[Plots] Shutdown complete!");
+        ConsoleColors.success("Shutdown complete!");
     }
 
     /**
@@ -161,12 +198,14 @@ public class Plots extends JavaPlugin {
 
         if (!configFile.exists()) {
             PlotConfig defaultConfig = PlotConfig.getDefault();
+
             try (java.io.FileWriter writer = new java.io.FileWriter(configFile)) {
                 gson.toJson(defaultConfig, writer);
-                System.out.println("[Plots] Created default config.json");
+                ConsoleColors.info("Created default config.json");
             } catch (java.io.IOException e) {
-                System.err.println("[Plots] Failed to save default config: " + e.getMessage());
+                ConsoleColors.error("Failed to save default config: " + e.getMessage());
             }
+
             return defaultConfig;
         }
 
@@ -174,7 +213,7 @@ public class Plots extends JavaPlugin {
             PlotConfig config = gson.fromJson(reader, PlotConfig.class);
             return (config != null) ? config : PlotConfig.getDefault();
         } catch (java.io.IOException e) {
-            System.err.println("[Plots] Failed to load config: " + e.getMessage());
+            ConsoleColors.error("Failed to load config: " + e.getMessage());
             return PlotConfig.getDefault();
         }
     }

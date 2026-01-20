@@ -2,7 +2,7 @@
   "Name": "Plots",
   "ID": "plots",
   "Group": "Hytale",
-  "Version": "1.0.0",
+  "Version": "${version}",
   "Authors": [
     {
       "Name": "Overworld Labs",
@@ -17,5 +17,8 @@
   "Main": "com.overworldlabs.plots.Plots",
   "ServerVersion": "*",
   "Description": "A plot world plugin for Hytale servers - claim plots, build, and protect your creations",
-  "IncludesAssetPack": true
+  "IncludesAssetPack": true,
+  "OptionalDependencies": {
+    "ehko:Hylograms": "*"
+  }
 }

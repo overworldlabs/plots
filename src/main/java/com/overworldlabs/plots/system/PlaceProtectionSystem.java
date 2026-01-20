@@ -48,10 +48,18 @@ public class PlaceProtectionSystem extends EntityEventSystem<EntityStore, PlaceB
 
         Vector3i pos = event.getTargetBlock();
 
+        com.overworldlabs.plots.util.ConsoleColors.warning("[PlaceProtection] ⚡ PlaceBlockEvent at [" + pos.x + ","
+                + pos.y + "," + pos.z + "] by " + playerRef.getUuid());
+
         if (!plotManager.canModify(playerRef, world, pos.x, pos.y, pos.z)) {
             event.setCancelled(true);
             TranslationManager tm = Plots.getInstance().getTranslationManager();
             playerRef.sendMessage(ChatUtil.error(tm.get("protection.no_permission_place")));
+            com.overworldlabs.plots.util.ConsoleColors
+                    .error("[PlaceProtection] ✖ BLOCKED placement at [" + pos.x + "," + pos.y + "," + pos.z + "]");
+        } else {
+            com.overworldlabs.plots.util.ConsoleColors
+                    .success("[PlaceProtection] ✓ ALLOWED placement at [" + pos.x + "," + pos.y + "," + pos.z + "]");
         }
     }
 

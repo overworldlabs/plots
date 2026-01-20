@@ -14,6 +14,7 @@ import com.overworldlabs.plots.Plots;
 import com.overworldlabs.plots.model.Plot;
 import com.overworldlabs.plots.model.PlotConfig;
 import com.overworldlabs.plots.model.Prefab;
+import com.overworldlabs.plots.util.ConsoleColors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -83,14 +84,14 @@ public class PlotManager {
             // If it's a square-oriented system, we might want to mirror these or detect
             // other prefabs.
             // But let's assume if they give a road, they want that specific layout.
-            System.out.println("[Plots] Auto-adjusted dimensions from Road Prefab: PlotSizeX=" + detectedPlotSizeX
+            ConsoleColors.info("Auto-adjusted dimensions from Road Prefab: PlotSizeX=" + detectedPlotSizeX
                     + ", RoadSizeZ=" + detectedRoadSizeZ);
         }
 
         if (plotPrefab != null) {
             config.setPlotSizeX(plotPrefab.getWidthX());
             config.setPlotSizeZ(plotPrefab.getDepthZ());
-            System.out.println("[Plots] Auto-adjusted dimensions from Plot Prefab: PlotSizeX=" + config.getPlotSizeX()
+            ConsoleColors.info("Auto-adjusted dimensions from Plot Prefab: PlotSizeX=" + config.getPlotSizeX()
                     + ", PlotSizeZ=" + config.getPlotSizeZ());
         }
     }
