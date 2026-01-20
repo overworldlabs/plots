@@ -1,6 +1,8 @@
 # Plots
 **A dynamic prefab-based land management system. Define grids, load complex structures, and protect your world with intelligent masking.**
 
+[See the Changelog](CHANGELOG.md)
+
 A simple yet powerful way to manage creative spaces, allowing you to focus on what truly matters: building.
 
 ---
@@ -41,6 +43,9 @@ Here is an example of what you can achieve **utilizing a custom prefab for the p
 
 ![Island Plot Map](assets/prefab-island-plot-map.png)
 *Top-down view showing how the plot prefab is distributed across the world.*
+
+![Holograms](assets/holograms.png)
+*Plot holograms displaying plot names and owners with configurable colors.*
 
 ## Configuration
 The `config.json` allows total control over your world. Below is a breakdown of the main settings:
@@ -102,7 +107,6 @@ Plots uses a granular permission system. You can assign these nodes to players o
 | Permission | Description |
 | :--- | :--- |
 | `plots.*` | Full administrative access (unlimited plots, bypass protection) |
-| `plots.user` | Base permission for common users |
 | `plots.claim` | Allows claiming plots with `/plot claim` or `/plot auto` |
 | `plots.delete` | Allows deleting owned plots with `/plot delete` |
 | `plots.delete.*` | Allows deleting **any** plot (Administrator) |
@@ -135,3 +139,14 @@ plugins/Hytale_Plots/
 ```
 
 ---
+---
+
+## Hylograms Integration
+Enhance your server with dynamic [Hylograms](https://www.curseforge.com/hytale/mods/hylograms) that automatically display plot information at the corner of each claimed plot.
+
+*   **Dynamic Information**: Automatically shows the Plot Name and Owner's Name.
+*   **Localized Text**: Uses your selected language for all hologram labels.
+*   **Fully Configurable**: Toggle holograms on/off or adjust their height offset in `config.json`.
+*   **Instant Updates**: Holograms update the moment a plot is renamed or transferred.
+
+To enable this feature, simply include the `hylograms.jar` library in your server's `libs` or `mods` folder.

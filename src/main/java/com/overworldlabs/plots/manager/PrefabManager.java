@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -22,8 +21,8 @@ public class PrefabManager {
     private final Gson gson = new Gson();
     private final Path prefabDir;
 
-    public PrefabManager() {
-        this.prefabDir = Paths.get("prefabs");
+    public PrefabManager(File dataDir) {
+        this.prefabDir = dataDir.toPath().resolve("prefabs");
         ensureDirectoryExists();
     }
 

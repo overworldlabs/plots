@@ -1,4 +1,4 @@
-package com.overworldlabs.plots.listener;
+package com.overworldlabs.plots.system;
 
 import com.hypixel.hytale.component.Archetype;
 import com.hypixel.hytale.component.ArchetypeChunk;
@@ -7,7 +7,6 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.EventTitleUtil;
@@ -52,15 +51,19 @@ public class PlotNotificationSystem extends EntityTickingSystem<EntityStore> {
         if (playerRef == null)
             return;
 
+        UUID uuid = playerRef.getUuid();
+        UUID worldUuid = playerRef.getWorldUuid();
+        if (worldUuid == null || plotWorld.getWorldConfig() == null)
+            return;
+
         // Only notify if in plot world
-        if (!playerRef.getWorldUuid().equals(plotWorld.getWorldConfig().getUuid())) {
+        if (!worldUuid.equals(plotWorld.getWorldConfig().getUuid())) {
             // Cleanup if they left the world
-            notifiedWorld.remove(playerRef.getUuid());
-            lastPlotId.remove(playerRef.getUuid());
+            notifiedWorld.remove(uuid);
+            lastPlotId.remove(uuid);
             return;
         }
 
-        UUID uuid = playerRef.getUuid();
         TranslationManager tm = Plots.getInstance().getTranslationManager();
 
         // World entry notification
@@ -71,6 +74,9 @@ public class PlotNotificationSystem extends EntityTickingSystem<EntityStore> {
                     ChatUtil.colorize(tm.get("notification.world_enter.subtitle")),
                     true);
             notifiedWorld.add(uuid);
+
+            // Refresh radar markers
+            Plots.getInstance().getRadarManager().refreshPlayerMarkers(playerRef);
         }
 
         // Plot entry notification

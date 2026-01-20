@@ -41,11 +41,18 @@ public class PlotConfig {
         public String Intersection = "";
     }
 
+    public static class HologramSettings {
+        public double HeightOffset = 2.0;
+        public boolean Enabled = true;
+        public String TitleColor = "#55ff55";
+    }
+
     private GeneralSettings General = new GeneralSettings();
     private WorldSettings World = new WorldSettings();
     private PlotSettings Plots = new PlotSettings();
     private BlockSettings Blocks = new BlockSettings();
     private PrefabSettings Prefabs = new PrefabSettings();
+    private HologramSettings Holograms = new HologramSettings();
 
     public static PlotConfig getDefault() {
         return new PlotConfig();
@@ -137,6 +144,18 @@ public class PlotConfig {
 
     public String getIntersectionPrefab() {
         return Prefabs.Intersection;
+    }
+
+    public double getHologramHeightOffset() {
+        return Holograms.HeightOffset;
+    }
+
+    public boolean isHologramEnabled() {
+        return Holograms.Enabled;
+    }
+
+    public String getHologramTitleColor() {
+        return Holograms.TitleColor;
     }
 
     private String normalizeBlockName(String name) {

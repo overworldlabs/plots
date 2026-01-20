@@ -7,6 +7,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.universe.world.worldmap.WorldMapManager;
+import com.hypixel.hytale.server.core.util.PositionUtil;
 import com.overworldlabs.plots.model.Plot;
 import com.overworldlabs.plots.model.PlotConfig;
 
@@ -48,9 +49,10 @@ public class RadarManager {
         marker.id = markerId;
         marker.name = plot.getName();
         marker.markerImage = "Home.png"; // Bed icon
-        marker.transform = com.hypixel.hytale.server.core.util.PositionUtil.toTransformPacket(new Transform(center));
+        marker.transform = PositionUtil.toTransformPacket(new Transform(center));
 
         // Use WorldMapManager to add it to player data
+        // We ensure the marker is registered for the plot world specifically
         WorldMapManager.createPlayerMarker(playerEntityRef, marker, playerEntityRef.getStore());
     }
 
@@ -58,13 +60,11 @@ public class RadarManager {
      * Remove a radar marker for a plot
      */
     public void removePlotMarker(@Nonnull Plot plot) {
-        PlayerRef ownerRef = Universe.get().getPlayer(plot.getOwner());
-        if (ownerRef == null)
-            return;
-
         String markerId = "plot_" + plot.getGridX() + "_" + plot.getGridZ();
 
-        // Marker reference for removal
+        // Marker reference for removal - handles removal even if player is offline
+        // This is world-specific, so it avoids clearing markers in other worlds if
+        // names collide
         new WorldMapManager.PlayerMarkerReference(plot.getOwner(), worldManager.getWorldName(), markerId).remove();
     }
 
@@ -76,10 +76,29 @@ public class RadarManager {
             updatePlotMarker(plot);
         }
     }
+
+    /**
+     * Clear all plot markers for all players
+     * Useful when world is deleted or on server startup
+     */
+    public void clearAllMarkers() {
+        for (PlayerRef player : Universe.get().getPlayers()) {
+            if (player != null) {
+                clearPlayerMarkers(player);
+            }
+        }
+    }
+
+    /**
+     * Clear all plot markers for a specific player
+     */
+    public void clearPlayerMarkers(@Nonnull PlayerRef playerRef) {
+        for (Plot plot : plotManager.getAllPlots()) {
+            if (plot != null) {
+                String markerId = "plot_" + plot.getGridX() + "_" + plot.getGridZ();
+                new WorldMapManager.PlayerMarkerReference(playerRef.getUuid(), worldManager.getWorldName(), markerId)
+                        .remove();
+            }
+        }
+    }
 }
-
-
-
-
-
-

@@ -47,7 +47,7 @@
         "empty": "You don't own any plots!"
     },
     "trust": {
-        "usage": "Usage: /plot trust <add|remove> <player>",
+        "usage": "Usage: /plot trust <player>",
         "usage_untrust": "Usage: /plot untrust <player>",
         "player_offline": "Player must be online to update trust.",
         "cannot_owner": "You cannot modify trust for the plot owner.",
@@ -64,8 +64,12 @@
         },
         "plot_enter": {
             "title": "%name%",
-            "subtitle": "Owner: %owner%"
+            "subtitle": "%owner%'s Plot"
         }
+    },
+    "hologram": {
+        "title": "%name%",
+        "subtitle": "Owner: %owner%"
     },
     "protection": {
         "no_permission_break": "You don't have permission to break blocks here!",

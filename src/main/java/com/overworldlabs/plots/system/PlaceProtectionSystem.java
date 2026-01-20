@@ -1,4 +1,4 @@
-package com.overworldlabs.plots.listener;
+package com.overworldlabs.plots.system;
 
 import com.hypixel.hytale.component.Archetype;
 import com.hypixel.hytale.component.ArchetypeChunk;
@@ -7,7 +7,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.EntityEventSystem;
 import com.hypixel.hytale.math.vector.Vector3i;
-import com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent;
+import com.hypixel.hytale.server.core.event.events.ecs.PlaceBlockEvent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -20,21 +20,21 @@ import com.overworldlabs.plots.util.ChatUtil;
 import javax.annotation.Nonnull;
 
 /**
- * System to protect blocks from being broken.
+ * System to protect blocks from being placed.
  */
-public class BreakProtectionSystem extends EntityEventSystem<EntityStore, BreakBlockEvent> {
+public class PlaceProtectionSystem extends EntityEventSystem<EntityStore, PlaceBlockEvent> {
     private final PlotManager plotManager;
     private final WorldManager worldManager;
 
-    public BreakProtectionSystem(PlotManager plotManager, WorldManager worldManager) {
-        super(BreakBlockEvent.class);
+    public PlaceProtectionSystem(PlotManager plotManager, WorldManager worldManager) {
+        super(PlaceBlockEvent.class);
         this.plotManager = plotManager;
         this.worldManager = worldManager;
     }
 
     @Override
     public void handle(int index, @Nonnull ArchetypeChunk<EntityStore> chunk, @Nonnull Store<EntityStore> store,
-            @Nonnull CommandBuffer<EntityStore> buffer, @Nonnull BreakBlockEvent event) {
+            @Nonnull CommandBuffer<EntityStore> buffer, @Nonnull PlaceBlockEvent event) {
 
         World world = ((EntityStore) store.getExternalData()).getWorld();
         if (!world.getName().equals(worldManager.getWorldName())) {
@@ -51,7 +51,7 @@ public class BreakProtectionSystem extends EntityEventSystem<EntityStore, BreakB
         if (!plotManager.canModify(playerRef, world, pos.x, pos.y, pos.z)) {
             event.setCancelled(true);
             TranslationManager tm = Plots.getInstance().getTranslationManager();
-            playerRef.sendMessage(ChatUtil.error(tm.get("protection.no_permission_break")));
+            playerRef.sendMessage(ChatUtil.error(tm.get("protection.no_permission_place")));
         }
     }
 

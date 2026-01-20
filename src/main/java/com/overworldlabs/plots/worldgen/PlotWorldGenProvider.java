@@ -228,6 +228,7 @@ public class PlotWorldGenProvider implements IWorldGenProvider {
                 var assetMap = BlockType.getAssetMap();
                 if (assetMap == null)
                     return fallback;
+
                 int id = assetMap.getIndex(name);
                 return (id == Integer.MIN_VALUE) ? fallback : id;
             } catch (Exception e) {

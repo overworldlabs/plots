@@ -17,5 +17,5 @@
   "Main": "com.overworldlabs.plots.Plots",
   "ServerVersion": "*",
   "Description": "A plot world plugin for Hytale servers - claim plots, build, and protect your creations",
-  "IncludesAssetPack": false
+  "IncludesAssetPack": true
 }
