@@ -15,7 +15,6 @@ All notable changes to this project will be documented in this file.
 - **Redundant Logic**: Removed multiple redundant permission checks across all subcommand classes.
 
 ### Removed
-- **Unused Commands**: Removed `PlotTpCommand` as it was no longer needed in the current workflow.
 - **Cleaned Up**: Removed unused imports and deprecated logic in various command files.
 
 ### Fixed
