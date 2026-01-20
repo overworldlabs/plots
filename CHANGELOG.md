@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.1.0] - 2026-01-19
+## [1.1.0] - 2026-01-20
 ### Added
 - **Holograms Integration**: Added support for [Hylograms](https://www.curseforge.com/hytale/mods/hylograms) to display plot information at the corner of claimed plots.
   
