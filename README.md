@@ -25,7 +25,7 @@ A simple yet powerful way to manage creative spaces, allowing you to focus on wh
 
 ## Installation
 1. Place the `.jar` file in your mods folder.
-2. (Optional) Add your `.prefab.json` files to `plugins/Hytale_Plots/prefabs/`.
+2. (Optional) Add your `.prefab.json` files to `mods/Hytale_Plots/prefabs/`.
 3. Start the server to generate the default configuration.
 
 ## Dynamic Generation
@@ -183,7 +183,7 @@ A more comprehensive and organized documentation site is currently under develop
 ## Data Architecture
 Everything is saved in simple, lightweight formats:
 ```
-plugins/Hytale_Plots/
+mods/Hytale_Plots/
 ├── prefabs/                <- Your JSON designs
 ├── plots.json          <- Registry of all ownerships
 └── config.json             <- General settings
