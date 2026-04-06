@@ -1,6 +1,8 @@
 package com.overworldlabs.plots.util;
 
 import com.hypixel.hytale.server.core.Message;
+import com.overworldlabs.plots.Plots;
+import com.overworldlabs.plots.manager.TranslationManager;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +21,7 @@ public final class ChatUtil {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("\\{#([A-Fa-f0-9]{6})\\}");
 
-    /**
-     * The default plugin prefix used for all chat messages.
-     */
-    public static final String PREFIX = ColorConstants.PRIMARY + "[Plots] " + ColorConstants.SECONDARY + "» ";
+    private static final String DEFAULT_PREFIX = ColorConstants.PRIMARY + "[Plots] " + ColorConstants.SECONDARY + "» ";
 
     private ChatUtil() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
@@ -85,32 +84,6 @@ public final class ChatUtil {
     }
 
     /**
-     * Shortcut for {@link #colorize(String)}.
-     * Legacy support for existing codebase.
-     * 
-     * @param text The text to process
-     * @return A colored {@link Message}
-     */
-    @Nonnull
-    public static Message raw(@Nonnull String text) {
-        return colorize(text);
-    }
-
-    /**
-     * Processes formatted text with arguments and applies colors.
-     * Uses {@link String#format(String, Object...)} internally.
-     *
-     * @param text The format string
-     * @param args The arguments
-     * @return A colored {@link Message}
-     */
-    @Nonnull
-    public static Message raw(@Nonnull String text, Object... args) {
-        String formatted = String.format(text, args);
-        return colorize(formatted != null ? formatted : "");
-    }
-
-    /**
      * Creates a standardized informational message with the plugin prefix.
      *
      * @param text The message text
@@ -118,7 +91,7 @@ public final class ChatUtil {
      */
     @Nonnull
     public static Message info(@Nonnull String text) {
-        return colorize(PREFIX + ColorConstants.INFO + text);
+        return colorize(resolvePrefix() + ColorConstants.INFO + text);
     }
 
     /**
@@ -129,7 +102,7 @@ public final class ChatUtil {
      */
     @Nonnull
     public static Message success(@Nonnull String text) {
-        return colorize(PREFIX + ColorConstants.SUCCESS + text);
+        return colorize(resolvePrefix() + ColorConstants.SUCCESS + text);
     }
 
     /**
@@ -140,7 +113,7 @@ public final class ChatUtil {
      */
     @Nonnull
     public static Message error(@Nonnull String text) {
-        return colorize(PREFIX + ColorConstants.ERROR + text);
+        return colorize(resolvePrefix() + ColorConstants.ERROR + text);
     }
 
     /**
@@ -151,7 +124,27 @@ public final class ChatUtil {
      */
     @Nonnull
     public static Message warning(@Nonnull String text) {
-        return colorize(PREFIX + ColorConstants.WARNING + text);
+        return colorize(resolvePrefix() + ColorConstants.WARNING + text);
+    }
+
+    @Nonnull
+    private static String resolvePrefix() {
+        try {
+            Plots plots = Plots.getInstance();
+            if (plots == null) {
+                return DEFAULT_PREFIX;
+            }
+
+            TranslationManager tm = plots.getTranslationManager();
+            if (tm == null) {
+                return DEFAULT_PREFIX;
+            }
+
+            String configured = tm.get("general.prefix");
+            return configured != null && !configured.isBlank() ? configured + " " : DEFAULT_PREFIX;
+        } catch (Exception ignored) {
+            return DEFAULT_PREFIX;
+        }
     }
 
     /**

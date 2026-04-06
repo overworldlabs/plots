@@ -1,48 +1,65 @@
 package com.overworldlabs.plots;
-
-import com.hypixel.hytale.server.core.plugin.JavaPlugin;
-import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
-import com.hypixel.hytale.server.core.universe.world.worldgen.provider.IWorldGenProvider;
+import com.google.gson.GsonBuilder;
+import com.google.gson.Gson;
+import com.overworldlabs.plots.api.IPlotManager;
+import com.overworldlabs.plots.api.IPlotRepository;
+import com.overworldlabs.plots.api.IRadarManager;
+import com.overworldlabs.plots.api.IServiceRegistry;
+import com.overworldlabs.plots.api.IWorldManager;
+import com.overworldlabs.plots.api.PlotsAPI;
 import com.overworldlabs.plots.api.impl.PlotsAPIImpl;
 import com.overworldlabs.plots.command.PlotCommand;
-import com.overworldlabs.plots.manager.DataManager;
+import com.overworldlabs.plots.config.PlotConfig;
+import com.overworldlabs.plots.core.ServiceRegistryImpl;
+import com.overworldlabs.plots.data.JsonPlotRepository;
+import com.overworldlabs.plots.data.SqlPlotRepository;
+import com.overworldlabs.plots.integration.buildertools.BuilderToolsIntegration;
+import com.overworldlabs.plots.integration.economy.PlotEconomyService;
+import com.overworldlabs.plots.integration.holograms.HologramManager;
+import com.overworldlabs.plots.integration.mixin.MixinBridgeStatus;
+import com.overworldlabs.plots.integration.mixin.PlotsMixinsCompatibility;
 import com.overworldlabs.plots.manager.PlotManager;
+import com.overworldlabs.plots.manager.PrefabManager;
+import com.overworldlabs.plots.manager.RadarManager;
 import com.overworldlabs.plots.manager.TranslationManager;
 import com.overworldlabs.plots.manager.WorldManager;
-import com.overworldlabs.plots.manager.RadarManager;
-import com.overworldlabs.plots.manager.PrefabManager;
-import com.overworldlabs.plots.integration.holograms.HologramManager;
-import com.overworldlabs.plots.integration.buildertools.BuilderToolsIntegration;
-import com.overworldlabs.plots.model.PlotConfig;
 import com.overworldlabs.plots.system.BreakProtectionSystem;
-import com.overworldlabs.plots.system.PlaceProtectionSystem;
-
-import com.overworldlabs.plots.system.PlotNotificationSystem;
-import com.overworldlabs.plots.system.UpdateNotificationSystem;
-import com.overworldlabs.plots.system.RadarMarkerSystem;
 import com.overworldlabs.plots.system.BuilderToolsMaskSystem;
+import com.overworldlabs.plots.system.BuilderToolsPacketInterceptor;
+import com.overworldlabs.plots.system.DamageBlockProtectionSystem;
+import com.overworldlabs.plots.system.PlaceProtectionSystem;
+import com.overworldlabs.plots.system.PlotCraftingSystem;
+import com.overworldlabs.plots.system.PlotDamageFlagSystem;
+import com.overworldlabs.plots.system.PlotItemDropSystem;
+import com.overworldlabs.plots.system.PlotItemPickupSystem;
+import com.overworldlabs.plots.system.PlotMobProtectionSystem;
+import com.overworldlabs.plots.system.PlotNotificationSystem;
+import com.overworldlabs.plots.system.RadarMarkerSystem;
+import com.overworldlabs.plots.system.ServerBlockProtectionSystem;
+import com.overworldlabs.plots.system.UpdateNotificationSystem;
 import com.overworldlabs.plots.util.ConsoleColors;
 import com.overworldlabs.plots.util.UpdateChecker;
 import com.overworldlabs.plots.worldgen.PlotWorldGenProvider;
+import com.hypixel.hytale.server.core.plugin.JavaPlugin;
+import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
+import com.hypixel.hytale.server.core.universe.world.worldgen.provider.IWorldGenProvider;
+
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.util.logging.Logger;
 
 /**
  * Main plugin class for the Plots system
  */
 public class Plots extends JavaPlugin {
+    private static final Logger LOGGER = Logger.getLogger("Plots");
     private static Plots instance;
-    private static PlotsAPIImpl api;
+    private static PlotsAPI api;
+    private static volatile boolean started;
 
-    private PlotManager plotManager;
-    private DataManager dataManager;
-    private WorldManager worldManager;
-    private TranslationManager translationManager;
-    private RadarManager radarManager;
-    private PrefabManager prefabManager;
-    private HologramManager hologramManager;
-    private BuilderToolsIntegration builderToolsIntegration;
+    private IServiceRegistry serviceRegistry;
+    private PlotEconomyService economyService;
 
     public Plots(@Nonnull JavaPluginInit init) {
         super(init);
@@ -53,13 +70,29 @@ public class Plots extends JavaPlugin {
         return instance;
     }
 
+    public IServiceRegistry getServiceRegistry() {
+        return serviceRegistry;
+    }
+
+    public PlotEconomyService getEconomyService() {
+        return economyService;
+    }
+
     /**
      * Get the public API for external plugins
      * 
      * @return The Plots API instance
      */
-    public static PlotsAPIImpl getAPI() {
+    public static PlotsAPI getAPI() {
         return api;
+    }
+
+    public static boolean enabled() {
+        Plots plugin = getInstance();
+        return plugin != null
+                && plugin.getServiceRegistry() != null
+                && api != null
+                && started;
     }
 
     @Override
@@ -67,8 +100,13 @@ public class Plots extends JavaPlugin {
         super.setup();
         ConsoleColors.info("Setting up Plots plugin...");
 
+        serviceRegistry = new ServiceRegistryImpl();
         PlotConfig config = loadConfig();
         File dataDir = getDataDirectory().toFile();
+
+        economyService = new PlotEconomyService(config);
+        economyService.initialize();
+        serviceRegistry.register(PlotEconomyService.class, economyService);
 
         initializeTranslationManager(dataDir, config);
         printBanner();
@@ -76,42 +114,89 @@ public class Plots extends JavaPlugin {
         registerWorldGenerator();
         registerSystems();
 
+        if (MixinBridgeStatus.isReadyForMixinFlags()) {
+            if (MixinBridgeStatus.isMixinsLoaded()) {
+                ConsoleColors.info("Plots mixins loaded.");
+            } else {
+                ConsoleColors.info("Plots Mixin bridge bootstrap is ready. Mixins will be applied as target classes load.");
+            }
+        } else if (MixinBridgeStatus.isActive()) {
+            ConsoleColors.warning("Plots Mixin bridge detected, but bootstrap is not ready.");
+        } else {
+            ConsoleColors.warning("No Plots Mixin bridge detected. Mixin-required flags will be blocked.");
+            ConsoleColors.warning(
+                    "Install Plots-MixinBridge for full protection coverage: https://github.com/overworldlabs/plots-mixin-bridge/releases");
+        }
+        PlotsMixinsCompatibility.register(getPlotManager());
+
         ConsoleColors.success("Setup complete! Plugin is ready.");
 
         checkForUpdates();
-        radarManager.clearAllMarkers();
     }
 
     /**
      * Initialize the translation manager
      */
-    private void initializeTranslationManager(File dataDir, PlotConfig config) {
+    private void initializeTranslationManager(@Nonnull File dataDir, @Nonnull PlotConfig config) {
         if (!dataDir.exists()) {
             dataDir.mkdirs();
         }
 
         String lang = (String) config.getLanguage();
-        translationManager = new TranslationManager(dataDir, lang != null ? lang : "en_us");
+        TranslationManager translationManager = new TranslationManager(dataDir, lang != null ? lang : "en_us");
+        serviceRegistry.register(TranslationManager.class, translationManager);
     }
 
     /**
      * Initialize all plugin managers
      */
-    private void initializeManagers(File dataDir, PlotConfig config) {
-        prefabManager = new PrefabManager(dataDir);
-        plotManager = new PlotManager(config);
+    private void initializeManagers(@Nonnull File dataDir, @Nonnull PlotConfig config) {
+        PrefabManager prefabManager = new PrefabManager(dataDir);
+        serviceRegistry.register(PrefabManager.class, prefabManager);
+
+        IPlotRepository repository = createRepository(dataDir, config);
+        serviceRegistry.register(IPlotRepository.class, repository);
+
+        PlotManager plotManager = new PlotManager(config, repository);
         plotManager.syncConfigWithPrefabs();
+        serviceRegistry.register(IPlotManager.class, plotManager);
 
-        PlotManager pm = this.plotManager;
-        if (pm != null) {
-            worldManager = new WorldManager(config);
-            radarManager = new RadarManager(pm, worldManager);
-            hologramManager = new HologramManager(pm);
-            dataManager = new DataManager(dataDir, pm);
+        WorldManager worldManager = new WorldManager(config);
+        serviceRegistry.register(IWorldManager.class, worldManager);
 
-            dataManager.loadPlots();
-            getCommandRegistry().registerCommand(new PlotCommand(pm));
+        RadarManager radarManager = new RadarManager(plotManager, worldManager);
+        serviceRegistry.register(IRadarManager.class, radarManager);
+
+        HologramManager hologramManager = new HologramManager(plotManager);
+        serviceRegistry.register(HologramManager.class, hologramManager);
+
+        api = new PlotsAPIImpl(plotManager, worldManager);
+
+        plotManager.loadPlots();
+
+        PlotCommand plotCommand = new PlotCommand("plot", plotManager);
+        plotCommand.addAliases("plots", "plotme", "p");
+        getCommandRegistry().registerCommand(plotCommand);
+
+        // Integrations
+        BuilderToolsIntegration builderToolsIntegration = new BuilderToolsIntegration();
+        builderToolsIntegration.initialize();
+
+        serviceRegistry.register(BuilderToolsIntegration.class, builderToolsIntegration);
+    }
+
+    private IPlotRepository createRepository(@Nonnull File dataDir, @Nonnull PlotConfig config) {
+        PlotConfig.DatabaseSettings db = config.getDatabase();
+        if (db != null && db.Enabled) {
+            String jdbcUrl = db.JdbcUrl;
+            if (jdbcUrl != null && jdbcUrl.startsWith("jdbc:sqlite:") && !jdbcUrl.contains("/") && !jdbcUrl.contains("\\")) {
+                jdbcUrl = "jdbc:sqlite:" + new File(dataDir, jdbcUrl.substring("jdbc:sqlite:".length())).getAbsolutePath();
+            }
+            ConsoleColors.info("Using SQL repository (HikariCP): " + jdbcUrl);
+            return new SqlPlotRepository(jdbcUrl, db.Username, db.Password, db.MaxPoolSize);
         }
+        ConsoleColors.info("Using JSON repository.");
+        return new JsonPlotRepository(new File(dataDir, "plots.json"));
     }
 
     /**
@@ -134,17 +219,40 @@ public class Plots extends JavaPlugin {
      */
     private void registerSystems() {
         var registry = getEntityStoreRegistry();
+        @Nonnull
+        IPlotManager plotManager = getPlotManager();
+        @Nonnull
+        IWorldManager worldManager = getWorldManager();
+
         registry.registerSystem(new BreakProtectionSystem(plotManager, worldManager));
+        registry.registerSystem(new DamageBlockProtectionSystem(plotManager, worldManager));
         registry.registerSystem(new PlaceProtectionSystem(plotManager, worldManager));
+        registry.registerSystem(new ServerBlockProtectionSystem(plotManager, worldManager));
+
         registry.registerSystem(new PlotNotificationSystem(plotManager, worldManager));
         registry.registerSystem(new UpdateNotificationSystem(getVersion()));
-        registry.registerSystem(new RadarMarkerSystem(radarManager));
+        registry.registerSystem(new RadarMarkerSystem(getRadarManager()));
 
-        if (worldManager != null) {
-            builderToolsIntegration = new BuilderToolsIntegration();
-            builderToolsIntegration.initialize();
+        registry.registerSystem(new PlotDamageFlagSystem(plotManager, worldManager));
+        registry.registerSystem(new PlotCraftingSystem(plotManager, worldManager));
+        registry.registerSystem(new PlotMobProtectionSystem(plotManager, worldManager));
+        registry.registerSystem(new PlotItemDropSystem(plotManager, worldManager));
+        registry.registerSystem(new PlotItemPickupSystem(plotManager, worldManager));
+
+        BuilderToolsIntegration builderToolsIntegration = serviceRegistry.getService(BuilderToolsIntegration.class)
+                .orElse(null);
+        if (builderToolsIntegration != null) {
             registry.registerSystem(new BuilderToolsMaskSystem(worldManager, builderToolsIntegration));
         }
+
+        // Initialize packet interceptor
+        TranslationManager translationManager = getTranslationManager();
+        BuilderToolsPacketInterceptor interceptor = new BuilderToolsPacketInterceptor(
+                (PlotManager) plotManager, translationManager);
+        if (!interceptor.hookPacketHandler()) {
+            ConsoleColors.warning("BuilderTools packet interceptor hook was not applied. Using mask/accessor protection only.");
+        }
+
     }
 
     /**
@@ -161,32 +269,41 @@ public class Plots extends JavaPlugin {
         });
     }
 
-    public RadarManager getRadarManager() {
-        return radarManager;
+    public IRadarManager getRadarManager() {
+        return serviceRegistry.getServiceOrThrow(IRadarManager.class);
     }
 
     @Override
     protected void start() {
         super.start();
         ConsoleColors.info("Starting Plots...");
-        worldManager.createWorldIfNeeded();
+        getWorldManager().createWorldIfNeeded();
+        getRadarManager().refreshAllPlotMarkers();
+        started = true;
     }
 
     @Override
     protected void shutdown() {
         ConsoleColors.info("Shutting down...");
 
-        if (dataManager != null) {
-            dataManager.savePlots();
+        IPlotManager plotManager = getPlotManager();
+        if (plotManager != null) {
+            plotManager.savePlots();
+        }
+        IPlotRepository repo = getPlotRepository();
+        if (repo != null) {
+            repo.close();
         }
 
         super.shutdown();
+        started = false;
         ConsoleColors.success("Shutdown complete!");
     }
 
     /**
      * Load configuration from config.json
      */
+    @Nonnull
     private PlotConfig loadConfig() {
         File dataDir = getDataDirectory().toFile();
         if (!dataDir.exists()) {
@@ -194,7 +311,7 @@ public class Plots extends JavaPlugin {
         }
 
         File configFile = new File(dataDir, "config.json");
-        com.google.gson.Gson gson = new com.google.gson.GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         if (!configFile.exists()) {
             PlotConfig defaultConfig = PlotConfig.getDefault();
@@ -218,28 +335,49 @@ public class Plots extends JavaPlugin {
         }
     }
 
-    public PlotManager getPlotManager() {
-        return plotManager;
+    @Nonnull
+    public PlotConfig getConfig() {
+        return loadConfig();
     }
 
-    public DataManager getDataManager() {
-        return dataManager;
+    public void saveConfig(@Nonnull PlotConfig config) {
+        File dataDir = getDataDirectory().toFile();
+        File configFile = new File(dataDir, "config.json");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        try (java.io.FileWriter writer = new java.io.FileWriter(configFile)) {
+            gson.toJson(config, writer);
+            ConsoleColors.success("Successfully saved config.json");
+        } catch (java.io.IOException e) {
+            ConsoleColors.error("Failed to save config: " + e.getMessage());
+        }
     }
 
-    public WorldManager getWorldManager() {
-        return worldManager;
+    @Nonnull
+    public IPlotManager getPlotManager() {
+        return serviceRegistry.getServiceOrThrow(IPlotManager.class);
     }
 
+    public IPlotRepository getPlotRepository() {
+        return serviceRegistry.getService(IPlotRepository.class).orElse(null);
+    }
+
+    @Nonnull
+    public IWorldManager getWorldManager() {
+        return serviceRegistry.getServiceOrThrow(IWorldManager.class);
+    }
+
+    @Nonnull
     public TranslationManager getTranslationManager() {
-        return translationManager;
+        return serviceRegistry.getServiceOrThrow(TranslationManager.class);
     }
 
     public PrefabManager getPrefabManager() {
-        return prefabManager;
+        return serviceRegistry.getServiceOrThrow(PrefabManager.class);
     }
 
     public HologramManager getHologramManager() {
-        return hologramManager;
+        return serviceRegistry.getServiceOrThrow(HologramManager.class);
     }
 
     /**
@@ -249,7 +387,8 @@ public class Plots extends JavaPlugin {
         String version = getClass().getPackage().getImplementationVersion();
 
         if (version == null) {
-            throw new RuntimeException("Failed to read plugin version from JAR manifest");
+            // Fallback for development environments
+            return "1.0.0-DEV";
         }
 
         return version;
@@ -259,18 +398,13 @@ public class Plots extends JavaPlugin {
      * Prints the plugin banner on startup
      */
     private void printBanner() {
-        String cyan = "\u001B[36m";
-        String green = "\u001B[32m";
-        String white = "\u001B[37m";
-        String reset = "\u001B[0m";
-
-        System.out.println();
-        System.out.println(cyan + "  ____  _       _       " + reset);
-        System.out.println(cyan + " |  _ \\| |     | |      " + reset);
-        System.out.println(cyan + " | |_) | | ___ | |_ ___ " + reset + green + "  Plots v" + getVersion() + reset);
-        System.out.println(cyan + " |  __/| |/ _ \\| __/ __|" + reset + white + "  Running on Hytale" + reset);
-        System.out.println(cyan + " | |   | | (_) | |_\\__ \\" + reset);
-        System.out.println(cyan + " |_|   |_|\\___/ \\__|___/" + reset);
-        System.out.println();
+        LOGGER.info(" ");
+        LOGGER.info("  ____  _       _");
+        LOGGER.info(" |  _ \\| |     | |");
+        LOGGER.info(" | |_) | | ___ | |_ ___   Plots v" + getVersion());
+        LOGGER.info(" |  __/| |/ _ \\| __/ __|  Running on Hytale");
+        LOGGER.info(" | |   | | (_) | |_\\__ \\");
+        LOGGER.info(" |_|   |_|\\___/ \\__|___/");
+        LOGGER.info(" ");
     }
 }

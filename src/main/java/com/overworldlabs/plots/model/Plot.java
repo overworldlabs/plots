@@ -1,9 +1,9 @@
 package com.overworldlabs.plots.model;
 
+import com.overworldlabs.plots.config.PlotConfig;
+import com.overworldlabs.plots.flag.PlotFlag;
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Represents a single plot in the world.
@@ -28,6 +28,8 @@ public class Plot {
     @Nonnull
     private String name;
     private final List<UUID> trustedPlayers;
+    private final Map<String, Object> flags;
+    private final Set<String> mergedPlots;
     private final long createdAt;
 
     /**
@@ -49,6 +51,8 @@ public class Plot {
         this.owner = owner;
         this.ownerName = ownerName;
         this.trustedPlayers = new ArrayList<>();
+        this.flags = new HashMap<>();
+        this.mergedPlots = new HashSet<>();
         this.createdAt = System.currentTimeMillis();
         this.name = "Plot (" + gridX + ", " + gridZ + ")";
     }
@@ -70,7 +74,7 @@ public class Plot {
      *                       since epoch)
      */
     public Plot(int gridX, int gridZ, UUID owner, @Nonnull String ownerName, @Nonnull String name,
-            List<UUID> trustedPlayers,
+            List<UUID> trustedPlayers, Map<String, Object> flags,
             long createdAt) {
         this.gridX = gridX;
         this.gridZ = gridZ;
@@ -78,6 +82,21 @@ public class Plot {
         this.ownerName = ownerName;
         this.name = name;
         this.trustedPlayers = trustedPlayers != null ? new ArrayList<>(trustedPlayers) : new ArrayList<>();
+        this.flags = flags != null ? new HashMap<>(flags) : new HashMap<>();
+        this.mergedPlots = new HashSet<>();
+        this.createdAt = createdAt;
+    }
+
+    public Plot(int gridX, int gridZ, UUID owner, @Nonnull String ownerName, @Nonnull String name,
+            List<UUID> trustedPlayers, Map<String, Object> flags, Set<String> mergedPlots, long createdAt) {
+        this.gridX = gridX;
+        this.gridZ = gridZ;
+        this.owner = owner;
+        this.ownerName = ownerName;
+        this.name = name;
+        this.trustedPlayers = trustedPlayers != null ? new ArrayList<>(trustedPlayers) : new ArrayList<>();
+        this.flags = flags != null ? new HashMap<>(flags) : new HashMap<>();
+        this.mergedPlots = mergedPlots != null ? new HashSet<>(mergedPlots) : new HashSet<>();
         this.createdAt = createdAt;
     }
 
@@ -211,6 +230,70 @@ public class Plot {
     }
 
     /**
+     * Gets the value of a specific flag.
+     *
+     * @param flag The flag to get
+     * @param <T>  The value type
+     * @return The current value, or the default value if not set
+     */
+    @SuppressWarnings("unchecked")
+    @Nonnull
+    public <T> T getFlagValue(@Nonnull PlotFlag<T> flag) {
+        Object value = flags.get(flag.getName());
+        if (value == null) {
+            return flag.getDefaultValue();
+        }
+        return (T) value;
+    }
+
+    /**
+     * Sets the value of a specific flag.
+     *
+     * @param flag  The flag to set
+     * @param value The value to set
+     * @param <T>   The value type
+     */
+    public <T> void setFlagValue(@Nonnull PlotFlag<T> flag, @Nonnull T value) {
+        flags.put(flag.getName(), value);
+    }
+
+    /**
+     * Removes a flag setting from this plot, reverting it to default.
+     *
+     * @param flag The flag to remove
+     */
+    public void removeFlag(@Nonnull PlotFlag<?> flag) {
+        flags.remove(flag.getName());
+    }
+
+    /**
+     * Gets a map of all custom flags set on this plot.
+     *
+     * @return A map of flag names to their custom values
+     */
+    @Nonnull
+    public Map<String, Object> getFlags() {
+        return new HashMap<>(flags);
+    }
+
+    @Nonnull
+    public Set<String> getMergedPlots() {
+        return new HashSet<>(mergedPlots);
+    }
+
+    public void addMergedPlot(int gridX, int gridZ) {
+        mergedPlots.add(gridX + "," + gridZ);
+    }
+
+    public void removeMergedPlot(int gridX, int gridZ) {
+        mergedPlots.remove(gridX + "," + gridZ);
+    }
+
+    public boolean isMergedWith(int gridX, int gridZ) {
+        return mergedPlots.contains(gridX + "," + gridZ);
+    }
+
+    /**
      * Checks if a player has permission to build in this plot.
      * <p>
      * A player has permission if they are either the owner or a trusted player.
@@ -224,6 +307,17 @@ public class Plot {
             return false;
         }
         return playerUuid.equals(owner) || trustedPlayers.contains(playerUuid);
+    }
+
+    /**
+     * Alias for hasPermission, checks if a player is the owner or a trusted member.
+     *
+     * @param playerUuid The UUID of the player to check
+     * @return {@code true} if the player is owner or member, {@code false}
+     *         otherwise
+     */
+    public boolean isOwnerOrMember(UUID playerUuid) {
+        return hasPermission(playerUuid);
     }
 
     /**

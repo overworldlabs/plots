@@ -1,10 +1,13 @@
 package com.overworldlabs.plots.api.impl;
+import com.hypixel.hytale.server.core.command.system.CommandSender;
 
 import com.overworldlabs.plots.api.*;
 import com.overworldlabs.plots.api.events.*;
+import com.overworldlabs.plots.api.PlotWorldGenOverride;
 import com.overworldlabs.plots.manager.PlotManager;
 import com.overworldlabs.plots.manager.WorldManager;
 import com.overworldlabs.plots.model.Plot;
+import com.overworldlabs.plots.worldgen.WorldGenOverrideRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -16,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Implementation of all Plot API interfaces
  */
-public class PlotsAPIImpl implements PlotsAPI, PlotAPI, PlotEventAPI {
+public class PlotsAPIImpl implements PlotsAPI {
     private final PlotManager plotManager;
     private final WorldManager worldManager;
 
@@ -99,12 +102,28 @@ public class PlotsAPIImpl implements PlotsAPI, PlotAPI, PlotEventAPI {
 
     @Override
     public int getPlotSize() {
-        return plotManager.getConfig().getPlotSize();
+        return plotManager.getConfig().getPlotSizeX();
     }
 
     @Override
     public int getRoadWidth() {
-        return plotManager.getConfig().getRoadSize();
+        return plotManager.getConfig().getRoadSizeX();
+    }
+
+    @Override
+    public void setWorldGenOverride(@Nullable PlotWorldGenOverride worldGenOverride) {
+        WorldGenOverrideRegistry.setOverride(worldGenOverride);
+    }
+
+    @Override
+    @Nullable
+    public PlotWorldGenOverride getWorldGenOverride() {
+        return WorldGenOverrideRegistry.getOverride();
+    }
+
+    @Override
+    public void clearWorldGenOverride() {
+        WorldGenOverrideRegistry.clear();
     }
 
     // ========== PlotAPI Implementation ==========
@@ -170,8 +189,8 @@ public class PlotsAPIImpl implements PlotsAPI, PlotAPI, PlotEventAPI {
 
     @Override
     public int[] getPlotMinCorner(@Nonnull Plot plot) {
-        int plotSize = plotManager.getConfig().getPlotSize();
-        int roadWidth = plotManager.getConfig().getRoadSize();
+        int plotSize = plotManager.getConfig().getPlotSizeX();
+        int roadWidth = plotManager.getConfig().getRoadSizeX();
         int totalSize = plotSize + roadWidth;
 
         int minX = plot.getGridX() * totalSize;
@@ -182,8 +201,8 @@ public class PlotsAPIImpl implements PlotsAPI, PlotAPI, PlotEventAPI {
 
     @Override
     public int[] getPlotMaxCorner(@Nonnull Plot plot) {
-        int plotSize = plotManager.getConfig().getPlotSize();
-        int roadWidth = plotManager.getConfig().getRoadSize();
+        int plotSize = plotManager.getConfig().getPlotSizeX();
+        int roadWidth = plotManager.getConfig().getRoadSizeX();
         int totalSize = plotSize + roadWidth;
 
         int maxX = plot.getGridX() * totalSize + plotSize - 1;
@@ -194,8 +213,8 @@ public class PlotsAPIImpl implements PlotsAPI, PlotAPI, PlotEventAPI {
 
     @Override
     public int[] getPlotCenter(@Nonnull Plot plot) {
-        int plotSize = plotManager.getConfig().getPlotSize();
-        int roadWidth = plotManager.getConfig().getRoadSize();
+        int plotSize = plotManager.getConfig().getPlotSizeX();
+        int roadWidth = plotManager.getConfig().getRoadSizeX();
         int totalSize = plotSize + roadWidth;
 
         int centerX = plot.getGridX() * totalSize + plotSize / 2;

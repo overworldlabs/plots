@@ -1,68 +1,52 @@
 package com.overworldlabs.plots.manager;
 
+import com.overworldlabs.plots.util.PlayerIdentity;
+import com.hypixel.hytale.server.core.command.system.CommandSender;
+
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
-import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.overworldlabs.plots.Plots;
+import com.overworldlabs.plots.api.IPlotManager;
+import com.overworldlabs.plots.api.IPlotRepository;
+import com.overworldlabs.plots.flag.FlagRegistry;
 import com.overworldlabs.plots.model.Plot;
-import com.overworldlabs.plots.model.PlotConfig;
+import com.overworldlabs.plots.config.PlotConfig;
 import com.overworldlabs.plots.model.Prefab;
 import com.overworldlabs.plots.util.ConsoleColors;
+import com.overworldlabs.plots.util.PermissionUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 /**
  * Manages all plots in the world
  */
-public class PlotManager {
-    public static final String PERM_BASE = "plots";
-    public static final String PERM_PLOT = "plots";
-    public static final String PERM_ADMIN = "plots.*";
-    public static final String PERM_CLAIM = "plots.claim";
-    public static final String PERM_DELETE = "plots.delete";
-    public static final String PERM_DELETE_ANY = "plots.delete.*";
-    public static final String PERM_SPAWN = "plots.spawn";
-    public static final String PERM_LIST = "plots.list";
-    public static final String PERM_INFO = "plots.info";
-    public static final String PERM_RENAME = "plots.rename";
-    public static final String PERM_TRUST = "plots.trust";
-
-    private final Map<String, Plot> plots;
+public class PlotManager implements IPlotManager {
+    private final IPlotRepository repository;
     private final PlotConfig config;
+    private final PlotMergeService mergeService;
+    private final PlotTerrainService terrainService;
 
-    /**
-     * Constructs a new PlotManager with the specified configuration.
-     *
-     * @param config The plot configuration containing world settings and limits
-     */
-    public PlotManager(PlotConfig config) {
-        this.plots = new ConcurrentHashMap<>();
+    public PlotManager(PlotConfig config, IPlotRepository repository) {
         this.config = config;
+        this.repository = repository;
+        this.mergeService = new PlotMergeService(this);
+        this.terrainService = new PlotTerrainService(this, config, this.mergeService);
     }
 
-    /**
-     * Gets the plot configuration.
-     *
-     * @return The current PlotConfig instance
-     */
+    @Override
     public PlotConfig getConfig() {
         return config;
     }
 
-    /**
-     * Synchronizes configuration sizes with loaded prefabs
-     */
     public void syncConfigWithPrefabs() {
         PrefabManager pm = Plots.getInstance().getPrefabManager();
         if (pm == null)
@@ -72,18 +56,10 @@ public class PlotManager {
         Prefab plotPrefab = pm.getOrLoadPrefab(config.getPlotPrefab());
 
         if (roadPrefab != null) {
-            // detectedPlotSize (length) along X, detectedRoadSize (thickness) along Z
             int detectedPlotSizeX = roadPrefab.getWidthX();
             int detectedRoadSizeZ = roadPrefab.getDepthZ();
-
-            // For a road prefab, usually width is the plot side it borders, and depth is
-            // the road width.
             config.setPlotSizeX(detectedPlotSizeX);
             config.setRoadSizeZ(detectedRoadSizeZ);
-
-            // If it's a square-oriented system, we might want to mirror these or detect
-            // other prefabs.
-            // But let's assume if they give a road, they want that specific layout.
             ConsoleColors.info("Auto-adjusted dimensions from Road Prefab: PlotSizeX=" + detectedPlotSizeX
                     + ", RoadSizeZ=" + detectedRoadSizeZ);
         }
@@ -96,100 +72,48 @@ public class PlotManager {
         }
     }
 
-    /**
-     * Generates a unique key for a plot based on its grid coordinates.
-     *
-     * @param gridX The X coordinate in the plot grid
-     * @param gridZ The Z coordinate in the plot grid
-     * @return A string key in the format "gridX,gridZ"
-     */
-    private String getPlotKey(int gridX, int gridZ) {
-        return gridX + "," + gridZ;
-    }
-
-    /**
-     * Claims a plot for a player at the specified grid coordinates.
-     * <p>
-     * This method checks if:
-     * - The plot is not already claimed
-     * - The player hasn't reached their maximum plot limit
-     * </p>
-     *
-     * @param playerUuid The UUID of the player claiming the plot
-     * @param ownerName  The display name of the player
-     * @param gridX      The X coordinate in the plot grid
-     * @param gridZ      The Z coordinate in the plot grid
-     * @return {@code true} if the plot was successfully claimed, {@code false}
-     *         otherwise
-     */
-    public boolean claimPlot(@Nonnull com.hypixel.hytale.server.core.command.system.CommandSender sender,
+    @Override
+    public boolean claimPlot(@Nonnull CommandSender sender,
             @Nonnull PlayerRef playerRef, int gridX, int gridZ) {
-        String key = getPlotKey(gridX, gridZ);
-        if (plots.containsKey(key))
+        if (repository.getPlot(gridX, gridZ) != null)
             return false;
 
-        long playerPlotCount = plots.values().stream()
-                .filter(plot -> playerRef.getUuid().equals(plot.getOwner()))
+        long playerPlotCount = repository.getAllPlots().stream()
+                .filter(plot -> PlayerIdentity.uuid(playerRef).equals(plot.getOwner()))
                 .count();
 
         if (playerPlotCount >= getMaxPlots(sender))
             return false;
 
-        Plot plot = new Plot(gridX, gridZ, playerRef.getUuid(), playerRef.getUsername());
-        plots.put(key, plot);
+        Plot plot = new Plot(gridX, gridZ, PlayerIdentity.uuid(playerRef), playerRef.getUsername());
+        plot.setName(config.formatDefaultPlotName(playerRef.getUsername(), gridX, gridZ));
+        repository.savePlot(plot);
         return true;
     }
 
-    /**
-     * Gets the maximum number of plots a player can claim based on their
-     * permissions.
-     * <p>
-     * Permission hierarchy:
-     * 1. plots.* - Unlimited plots
-     * 2. plots.limit.N - Specific limit (checks from max down to 1)
-     * 3. Default limit from config
-     * </p>
-     *
-     * @param playerUuid The UUID of the player
-     * @return The maximum number of plots the player can claim
-     */
-    public int getMaxPlots(@Nonnull com.hypixel.hytale.server.core.command.system.CommandSender sender) {
-        if (sender.hasPermission(PERM_ADMIN)) {
+    public int getMaxPlots(@Nonnull CommandSender sender) {
+        if (PermissionUtil.hasAdminPermission(sender)) {
             return Integer.MAX_VALUE;
         }
 
-        // Check for specific limit permissions plots.limit.N
-        for (int i = getMaxPlotLimit(); i > 0; i--) {
+        for (int i = 100; i > 0; i--) { // Fixed upper bound for check
             if (sender.hasPermission("plots.limit." + i)) {
                 return i;
             }
         }
 
-        return getMaxPlotsDefaultValue();
+        return config.getMaxPlotsDefaultValue();
     }
 
-    /**
-     * Unclaims (deletes) a plot at the specified grid coordinates.
-     *
-     * @param gridX The X coordinate in the plot grid
-     * @param gridZ The Z coordinate in the plot grid
-     * @return {@code true} if the plot was successfully unclaimed, {@code false} if
-     *         no plot existed
-     */
+    @Override
     public boolean unclaimPlot(int gridX, int gridZ) {
-        String key = getPlotKey(gridX, gridZ);
-        return plots.remove(key) != null;
+        if (repository.getPlot(gridX, gridZ) == null)
+            return false;
+        repository.deletePlot(gridX, gridZ);
+        return true;
     }
 
-    /**
-     * Renames a plot at the specified grid coordinates.
-     *
-     * @param gridX The X coordinate in the plot grid
-     * @param gridZ The Z coordinate in the plot grid
-     * @param name  The new name for the plot
-     * @return {@code true} if the plot was successfully renamed, {@code false} if
-     *         no plot existed
-     */
+    @Override
     public boolean renamePlot(int gridX, int gridZ, @Nonnull String name) {
         Plot plot = getPlot(gridX, gridZ);
         if (plot == null)
@@ -198,101 +122,242 @@ public class PlotManager {
         return true;
     }
 
-    /**
-     * Gets a plot by its grid coordinates.
-     *
-     * @param gridX The X coordinate in the plot grid
-     * @param gridZ The Z coordinate in the plot grid
-     * @return The Plot at the specified coordinates, or {@code null} if no plot
-     *         exists
-     */
+    @Override
     @Nullable
     public Plot getPlot(int gridX, int gridZ) {
-        return plots.get(getPlotKey(gridX, gridZ));
+        return repository.getPlot(gridX, gridZ);
     }
 
-    /**
-     * Gets a plot by its grid coordinates (alias for {@link #getPlot(int, int)}).
-     *
-     * @param gridX The X coordinate in the plot grid
-     * @param gridZ The Z coordinate in the plot grid
-     * @return The Plot at the specified coordinates, or {@code null} if no plot
-     *         exists
-     */
+    @Override
     @Nullable
     public Plot getPlotByGrid(int gridX, int gridZ) {
         return getPlot(gridX, gridZ);
     }
 
-    /**
-     * Saves all plots to persistent storage.
-     * <p>
-     * Note: This is a placeholder method. Actual persistence is handled by
-     * DataManager.
-     * </p>
-     */
+    @Override
     public void savePlots() {
-        // TODO: Implement actual save logic
-        // This should trigger your PlotDataManager to save plots to disk
+        repository.saveAll();
     }
 
-    /**
-     * Gets the plot at the specified world coordinates.
-     * <p>
-     * This method first checks if the coordinates are within the plot world,
-     * then converts world coordinates to grid coordinates to find the plot.
-     * </p>
-     *
-     * @param worldName The name of the world
-     * @param worldX    The X coordinate in world space
-     * @param worldZ    The Z coordinate in world space
-     * @return The Plot at the specified world coordinates, or {@code null} if not
-     *         in a plot
-     */
+    @Override
     @Nullable
     public Plot getPlotAt(String worldName, int worldX, int worldZ) {
-        if (!config.isInPlot(worldName, worldX, worldZ))
+        Plot raw = getRawPlotAt(worldName, worldX, worldZ);
+        if (raw == null) {
             return null;
+        }
+        return getCanonicalPlot(raw);
+    }
+
+    @Override
+    public boolean isInPlot(@Nonnull String worldName, int worldX, int worldZ) {
+        if (!config.isManagedWorld(worldName)) {
+            return false;
+        }
+        if (config.isInPlot(worldName, worldX, worldZ)) {
+            return true;
+        }
+        return getRawPlotAt(worldName, worldX, worldZ) != null;
+    }
+
+    @Nullable
+    private Plot getRawPlotAt(String worldName, int worldX, int worldZ) {
+        Plot direct = null;
+        if (config.isInPlot(worldName, worldX, worldZ)) {
+            int[] grid = config.getPlotGridAt(worldX, worldZ);
+            direct = getPlot(grid[0], grid[1]);
+        }
+        if (direct != null) {
+            return direct;
+        }
+        if (!config.isManagedWorld(worldName)) {
+            return null;
+        }
+
+        int totalSizeX = config.getPlotSizeX() + config.getRoadSizeX();
+        int totalSizeZ = config.getPlotSizeZ() + config.getRoadSizeZ();
+        int localX = Math.floorMod(worldX, totalSizeX);
+        int localZ = Math.floorMod(worldZ, totalSizeZ);
+
+        // Only bridge merge logic on roads between plots.
+        if (localX < config.getPlotSizeX() && localZ < config.getPlotSizeZ()) {
+            return null;
+        }
+
         int[] grid = config.getPlotGridAt(worldX, worldZ);
-        return getPlot(grid[0], grid[1]);
+        int gx = grid[0];
+        int gz = grid[1];
+
+        Plot a = null;
+        Plot b = null;
+
+        // Vertical road strip (between west/east plots)
+        if (localX >= config.getPlotSizeX() && localZ < config.getPlotSizeZ()) {
+            a = getPlot(gx, gz);
+            b = getPlot(gx + 1, gz);
+        }
+        // Horizontal road strip (between north/south plots)
+        else if (localZ >= config.getPlotSizeZ() && localX < config.getPlotSizeX()) {
+            a = getPlot(gx, gz);
+            b = getPlot(gx, gz + 1);
+        } else {
+            return resolveIntersectionOwner(gx, gz);
+        }
+
+        if (a != null && b != null && a.getOwner().equals(b.getOwner()) && arePlotsMerged(a, b)) {
+            return a;
+        }
+        return null;
     }
 
-    /**
-     * Gets all plots owned by a specific player.
-     *
-     * @param playerUuid The UUID of the player
-     * @return A list of all plots owned by the player (may be empty)
-     */
+    @Nullable
+    private Plot resolveIntersectionOwner(int gx, int gz) {
+        Plot nw = getPlot(gx, gz);
+        Plot ne = getPlot(gx + 1, gz);
+        Plot sw = getPlot(gx, gz + 1);
+        Plot se = getPlot(gx + 1, gz + 1);
+        if (nw == null || ne == null || sw == null || se == null) {
+            return null;
+        }
+        UUID owner = nw.getOwner();
+        if (!owner.equals(ne.getOwner()) || !owner.equals(sw.getOwner()) || !owner.equals(se.getOwner())) {
+            return null;
+        }
+
+        List<Plot> component = getMergedComponent(nw);
+        boolean hasNe = false;
+        boolean hasSw = false;
+        boolean hasSe = false;
+        for (Plot plot : component) {
+            if (plot == ne) {
+                hasNe = true;
+            } else if (plot == sw) {
+                hasSw = true;
+            } else if (plot == se) {
+                hasSe = true;
+            }
+            if (hasNe && hasSw && hasSe) {
+                return nw;
+            }
+        }
+        return null;
+    }
+
+    @Nonnull
+    public List<Plot> getMergedComponent(@Nonnull Plot start) {
+        List<Plot> result = new ArrayList<>();
+        Set<String> visited = new HashSet<>();
+        ArrayDeque<Plot> queue = new ArrayDeque<>();
+        queue.add(start);
+
+        while (!queue.isEmpty()) {
+            Plot current = queue.removeFirst();
+            String currentKey = current.getGridX() + "," + current.getGridZ();
+            if (!visited.add(currentKey)) {
+                continue;
+            }
+            result.add(current);
+
+            for (int[] d : new int[][] { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } }) {
+                Plot neighbor = getPlotByGrid(current.getGridX() + d[0], current.getGridZ() + d[1]);
+                if (neighbor == null) {
+                    continue;
+                }
+                if (!current.getOwner().equals(neighbor.getOwner())) {
+                    continue;
+                }
+                if (!arePlotsMerged(current, neighbor)) {
+                    continue;
+                }
+                String neighborKey = neighbor.getGridX() + "," + neighbor.getGridZ();
+                if (!visited.contains(neighborKey)) {
+                    queue.addLast(neighbor);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    @Nonnull
+    public Plot getCanonicalPlot(@Nonnull Plot start) {
+        List<Plot> component = getMergedComponent(start);
+        Plot canonical = start;
+        for (Plot plot : component) {
+            if (plot.getGridX() < canonical.getGridX()
+                    || (plot.getGridX() == canonical.getGridX() && plot.getGridZ() < canonical.getGridZ())) {
+                canonical = plot;
+            }
+        }
+        return canonical;
+    }
+
+    private boolean isMergedPairWithSameOwner(@Nullable Plot a, @Nullable Plot b) {
+        return mergeService.isMergedPairWithSameOwner(a, b);
+    }
+
+    public boolean mergePlots(@Nonnull Plot a, @Nonnull Plot b) {
+        return mergeService.mergePlots(a, b);
+    }
+
+    public boolean unmergePlots(@Nonnull Plot a, @Nonnull Plot b) {
+        return mergeService.unmergePlots(a, b);
+    }
+
+    public boolean arePlotsMerged(@Nonnull Plot a, @Nonnull Plot b) {
+        return mergeService.arePlotsMerged(a, b);
+    }
+
+    public boolean mergePlotsWithRoadPolicy(@Nonnull World world, @Nonnull Plot a, @Nonnull Plot b, boolean removeRoads) {
+        return mergeService.mergePlotsWithRoadPolicy(world, a, b, removeRoads);
+    }
+
+    public boolean unmergePlotsWithRoadPolicy(@Nonnull World world, @Nonnull Plot a, @Nonnull Plot b, boolean createRoad) {
+        return mergeService.unmergePlotsWithRoadPolicy(world, a, b, createRoad);
+    }
+
+    public int applyMergePipeline(@Nonnull World world, @Nonnull java.util.List<Plot[]> pairs, boolean removeRoads) {
+        return mergeService.applyMergePipeline(world, pairs, removeRoads);
+    }
+
+    public int applyUnmergePipeline(@Nonnull World world, @Nonnull java.util.List<Plot[]> pairs, boolean createRoad) {
+        return mergeService.applyUnmergePipeline(world, pairs, createRoad);
+    }
+
+    @Nonnull
+    public java.util.List<Plot> getMergedNeighbors(@Nonnull Plot plot) {
+        return mergeService.getMergedNeighbors(plot);
+    }
+
+    public void regeneratePlotCell(@Nonnull World world, int gridX, int gridZ) {
+        terrainService.regeneratePlotCell(world, gridX, gridZ);
+    }
+
+    public boolean deletePlotAndRegenerate(@Nonnull World world, int gridX, int gridZ) {
+        return terrainService.deletePlotAndRegenerate(world, gridX, gridZ);
+    }
+
+    public void refreshBoundarySurface(@Nonnull World world, @Nonnull Plot a, @Nonnull Plot b, boolean merged) {
+        terrainService.refreshBoundarySurface(world, a, b, merged);
+    }
+
+    @Override
     public List<Plot> getPlayerPlots(@Nonnull UUID playerUuid) {
-        return plots.values().stream()
-                .filter(plot -> playerUuid.equals(plot.getOwner()))
-                .collect(Collectors.toList());
+        return repository.getPlotsByOwner(playerUuid);
     }
 
-    /**
-     * Checks if a player can modify blocks at the specified world coordinates.
-     * <p>
-     * A player can modify if:
-     * - They have admin permission (plots.*)
-     * - The location is in a plot they own
-     * - The location is in a plot where they are trusted
-     * </p>
-     *
-     * @param player The player attempting to modify
-     * @param world  The world where the modification is attempted
-     * @param worldX The X coordinate in world space
-     * @param worldY The Y coordinate in world space (currently unused)
-     * @param worldZ The Z coordinate in world space
-     * @return {@code true} if the player can modify at this location, {@code false}
-     *         otherwise
-     */
-    public boolean canModify(@Nonnull PlayerRef player, @Nonnull World world, int worldX, int worldY, int worldZ) {
-        if (PermissionsModule.get().hasPermission(player.getUuid(),
-                PERM_ADMIN)) {
+    @Override
+    public boolean canModify(@Nonnull PlayerRef player, @Nonnull World world, int worldX, int worldY, int worldZ,
+            @Nonnull ActionType action) {
+        if (PermissionUtil.hasAdminPermission(PlayerIdentity.uuid(player))) {
             return true;
         }
 
-        if (!config.isInPlot(world.getName(), worldX, worldZ)) {
+        if (!config.isManagedWorld(world.getName())) {
+            return false;
+        }
+
+        if (!isInPlot(world.getName(), worldX, worldZ)) {
             return false;
         }
 
@@ -301,30 +366,44 @@ public class PlotManager {
             return false;
         }
 
-        if (!plot.hasPermission(player.getUuid())) {
+        // Flag checks
+        UUID playerUuid = PlayerIdentity.uuid(player);
+        if (action == ActionType.BREAK) {
+            boolean val = plot.getFlagValue(FlagRegistry.BLOCK_BREAK);
+            if (!val && !plot.isOwnerOrMember(playerUuid))
+                return false;
+        }
+
+        if (action == ActionType.PLACE) {
+            boolean val = plot.getFlagValue(FlagRegistry.BLOCK_PLACE);
+            if (!val && !plot.isOwnerOrMember(playerUuid))
+                return false;
+        }
+
+        if (action == ActionType.INTERACT) {
+            boolean interact = plot.getFlagValue(FlagRegistry.INTERACT);
+            boolean use = plot.getFlagValue(FlagRegistry.USE);
+            if ((!interact || !use) && !plot.isOwnerOrMember(playerUuid))
+                return false;
+        }
+
+        if (!plot.hasPermission(playerUuid)) {
             return false;
         }
 
-        // Prefab-based masking: If a prefab is configured, only allow building where
-        // prefab blocks exist in the column
+        // Prefab-based masking inside a plot cell.
         String prefabPath = config.getPlotPrefab();
-        if (prefabPath != null && !prefabPath.isEmpty()) {
+        if (config.isInPlot(world.getName(), worldX, worldZ) && prefabPath != null && !prefabPath.isEmpty()) {
             PrefabManager pm = Plots.getInstance().getPrefabManager();
             Prefab prefab = pm.getOrLoadPrefab(prefabPath);
             if (prefab != null) {
-                // Building under bedrock (Y < 0) is never allowed
                 if (worldY < 0)
                     return false;
-
-                // Calculate local prefab coordinates
-                int originX = config.gridToWorldX(plot.getGridX());
-                int originZ = config.gridToWorldZ(plot.getGridZ());
-
+                int[] currentGrid = config.getPlotGridAt(worldX, worldZ);
+                int originX = config.gridToWorldX(currentGrid[0]);
+                int originZ = config.gridToWorldZ(currentGrid[1]);
                 int relX = worldX - originX;
                 int relZ = worldZ - originZ;
-
-                // Check vertical column for prefab block occupancy
-                // This allows vertical expansion while protecting the empty spaces.
                 if (!prefab.hasColumnAt(relX + prefab.getMinX(), relZ + prefab.getMinZ())) {
                     return false;
                 }
@@ -334,82 +413,52 @@ public class PlotManager {
         return true;
     }
 
-    /**
-     * Gets all plots currently managed by this PlotManager.
-     *
-     * @return A collection of all plots (returns a copy to prevent external
-     *         modification)
-     */
+    @Override
+    public boolean canUseBuilderTools(@Nonnull UUID playerUuid, @Nonnull String worldName, int worldX, int worldZ) {
+        if (PermissionUtil.hasAdminPermission(playerUuid)) {
+            return true;
+        }
+        if (!config.isManagedWorld(worldName)) {
+            return true;
+        }
+        if (!isInPlot(worldName, worldX, worldZ)) {
+            return false;
+        }
+
+        int[] grid = config.getPlotGridAt(worldX, worldZ);
+        Plot plot = getPlotByGrid(grid[0], grid[1]);
+        if (plot == null) {
+            return false;
+        }
+
+        if (playerUuid.equals(plot.getOwner())) {
+            return true;
+        }
+        if (!plot.isTrusted(playerUuid)) {
+            return false;
+        }
+        return plot.getFlagValue(FlagRegistry.BUILD) && plot.getFlagValue(FlagRegistry.HAMMER);
+    }
+
+    @Override
     public Collection<Plot> getAllPlots() {
-        return new ArrayList<>(plots.values());
+        return repository.getAllPlots();
     }
 
-    /**
-     * Loads plots from a map, replacing all currently managed plots.
-     * <p>
-     * This method is typically called by DataManager during server startup.
-     * </p>
-     *
-     * @param loadedPlots A map of plot keys to Plot objects to load
-     */
-    public void loadPlots(@Nonnull Map<String, Plot> loadedPlots) {
-        plots.clear();
-        plots.putAll(loadedPlots);
+    public void loadPlots() {
+        repository.loadAll();
     }
 
-    /**
-     * Gets a copy of the internal plots map.
-     * <p>
-     * Returns a new HashMap to prevent external modification of the internal state.
-     * </p>
-     *
-     * @return A map of plot keys to Plot objects
-     */
     @Nonnull
     public Map<String, Plot> getPlotsMap() {
-        return new HashMap<>(plots);
+        Map<String, Plot> map = new HashMap<>();
+        for (Plot plot : repository.getAllPlots()) {
+            map.put(plot.getGridX() + "," + plot.getGridZ(), plot);
+        }
+        return map;
     }
 
-    /**
-     * Gets the total number of claimed plots.
-     *
-     * @return The number of plots currently managed
-     */
-    public int getPlotCount() {
-        return plots.size();
-    }
-
-    /**
-     * Gets the default maximum number of plots a player can claim if no specific
-     * permission-based limit is found.
-     *
-     * @return The default maximum plot count.
-     */
-    public int getMaxPlotsDefaultValue() {
-        return config.getMaxPlotsDefaultValue();
-    }
-
-    /**
-     * Gets the highest possible plot limit defined in the configuration.
-     * This is used as the upper bound when checking for `plots.limit.N`
-     * permissions.
-     *
-     * @return The maximum plot limit.
-     */
-    public int getMaxPlotLimit() {
-        return config.getMaxPlotLimit();
-    }
-
-    /**
-     * Finds the next available (unclaimed) plot using a spiral search pattern.
-     * <p>
-     * The search starts at (0,0) and spirals outward, checking up to 10,000 plots.
-     * This ensures plots are claimed in a compact, organized pattern.
-     * </p>
-     *
-     * @return An array containing [gridX, gridZ] of the next free plot, or
-     *         {@code null} if none found
-     */
+    @Override
     public int[] findNextFreePlot() {
         int x = 0;
         int z = 0;
@@ -418,7 +467,7 @@ public class PlotManager {
         int maxChecks = 10000;
 
         for (int i = 0; i < maxChecks; i++) {
-            if (!plots.containsKey(getPlotKey(x, z))) {
+            if (repository.getPlot(x, z) == null) {
                 return new int[] { x, z };
             }
 
@@ -435,19 +484,8 @@ public class PlotManager {
         return null;
     }
 
-    /**
-     * Teleports a player to the specified plot.
-     * <p>
-     * The player is teleported to the center-front of the plot (on the road),
-     * facing south (into the plot) for optimal orientation.
-     * </p>
-     *
-     * @param store The entity store containing the player entity
-     * @param ref   The reference to the player entity
-     * @param plot  The plot to teleport to
-     */
-    public void teleportPlayerToPlot(@Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref,
-            @Nonnull Plot plot) {
+    public void teleportPlayerToPlot(Store<EntityStore> store, Ref<EntityStore> ref,
+            Plot plot) {
         PlotConfig plotConfig = getConfig();
         String plotWorldName = plotConfig.getPlotWorldName();
         World plotWorld = Universe.get().getWorlds().get(plotWorldName);
@@ -463,8 +501,6 @@ public class PlotManager {
         double spawnY = 66.5;
 
         Vector3d pos = new Vector3d(worldX + 0.5, spawnY, worldZ + 0.5);
-        // Rotation: Y=180 means facing south (into the plot), X=0 (level), Z=0 (no
-        // tilt)
         Vector3f rot = new Vector3f(0, 180, 0);
 
         try {

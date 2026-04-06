@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.3] - 2026-02-20
+### Added
+- New translation bundles: Spanish (`es_es`) and Russian (`ru_ru`).
+- Economy bypass permission node: `plots.economy.bypass`.
+- Root command alias `/p` (alongside `/plot`, `/plots`, `/plotme`).
+
+### Changed
+- BuilderTools protection now also covers scripted brushes and extrude flows.
+- Permission checks were centralized through `PermissionUtil` for consistent behavior across native server permissions and LuckPerms-backed setups.
+- Admin bypass logic is standardized across integrations and command flows.
+
+### Fixed
+- Economy provider resolution now retries at runtime, improving compatibility when economy plugins initialize after Plots.
+- Economy validation/charging in claim/auto/merge/unmerge flows now respects dedicated economy bypass without weakening admin protections.
+- Multiple null-type safety and command nullability warnings resolved.
+
+## [1.1.2] - 2026-02-19
+### Added
+- Command aliases:
+  - `/plot f` for `/plot flag`
+  - `/plot link` for `/plot merge`
+  - `/plot unlink` for `/plot unmerge`
+- Centralized command feedback utility for usage/error formatting.
+- Centralized typed command-argument utility to consolidate unchecked generic casts.
+- Root command dispatcher improvements for:
+  - invalid subcommand handling with usage + subcommand list
+  - global command exception handling with full input logging
+
+### Changed
+- Moved `unlink` implementation to alias on `unmerge` subcommand class (no duplicated command registration).
+- Standardized messaging behavior for `flag`, `merge`, `unmerge`, `trust`, `untrust`, and `delete`.
+- Updated documentation for command aliases, protections, and Hylograms integration behavior.
+
+### Fixed
+- Fixed `/plot flag` world-thread safety issue (`Store` component access on wrong thread).
+- Fixed multiple null-safety edge cases in command argument normalization and UUID handling.
+- Added trust/untrust safeguards for null target UUID resolution.
+- Improved Hylograms API compatibility handling to avoid runtime class errors.
+
 ## [1.1.1] - 2026-01-20
 ### Fixed
 - **Hylograms Detection**: Fixed runtime detection of Hylograms plugin using `PluginManager.getPlugin()` instead of `Class.forName()` for proper plugin dependency resolution.

@@ -1,5 +1,8 @@
 package com.overworldlabs.plots.command.sub;
 
+import com.overworldlabs.plots.util.CommandSenderIdentity;
+import com.hypixel.hytale.server.core.universe.Universe;
+
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Vector3d;
@@ -11,11 +14,12 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.overworldlabs.plots.Plots;
-import com.overworldlabs.plots.manager.PlotManager;
+import com.overworldlabs.plots.api.IPlotManager;
 import com.overworldlabs.plots.manager.TranslationManager;
 import com.overworldlabs.plots.model.Plot;
 import com.overworldlabs.plots.util.ColorConstants;
 import com.overworldlabs.plots.util.ChatUtil;
+import com.overworldlabs.plots.util.PermissionUtil;
 
 import javax.annotation.Nonnull;
 import java.text.SimpleDateFormat;
@@ -27,20 +31,20 @@ import java.util.Date;
  * system.
  */
 public class PlotInfoCommand extends CommandBase {
-        private final PlotManager plotManager;
+        private final IPlotManager plotManager;
 
-        public PlotInfoCommand(@Nonnull PlotManager plotManager) {
+        public PlotInfoCommand(@Nonnull IPlotManager plotManager) {
                 super("info", "Show plot information");
                 this.plotManager = plotManager;
-                requirePermission(PlotManager.PERM_PLOT);
+                requirePermission(IPlotManager.PERM_PLOT);
         }
 
         @Override
         protected void executeSync(@Nonnull CommandContext context) {
                 TranslationManager tm = Plots.getInstance().getTranslationManager();
 
-                if (!context.sender().hasPermission(PlotManager.PERM_ADMIN)) {
-                        CommandUtil.requirePermission(context.sender(), PlotManager.PERM_INFO);
+                if (!PermissionUtil.hasAdminPermission(context.sender())) {
+                        CommandUtil.requirePermission(context.sender(), IPlotManager.PERM_INFO);
                 }
 
                 if (!context.isPlayer()) {
@@ -53,11 +57,11 @@ public class PlotInfoCommand extends CommandBase {
                         return;
 
                 // Get the player object from Universe (thread-safe) to find their world
-                java.util.UUID senderUuid = context.sender().getUuid();
+                java.util.UUID senderUuid = CommandSenderIdentity.uuid(context.sender());
                 if (senderUuid == null)
                         return;
 
-                PlayerRef playerObj = com.hypixel.hytale.server.core.universe.Universe.get().getPlayer(senderUuid);
+                PlayerRef playerObj = Universe.get().getPlayer(senderUuid);
                 if (playerObj == null)
                         return;
 
@@ -65,7 +69,7 @@ public class PlotInfoCommand extends CommandBase {
                 if (worldUuid == null)
                         return;
 
-                World currentWorld = com.hypixel.hytale.server.core.universe.Universe.get().getWorld(worldUuid);
+                World currentWorld = Universe.get().getWorld(worldUuid);
                 if (currentWorld == null)
                         return;
 

@@ -1,5 +1,9 @@
 package com.overworldlabs.plots.command.sub;
 
+import com.overworldlabs.plots.util.CommandSenderIdentity;
+
+import com.overworldlabs.plots.util.PlayerIdentity;
+
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -10,10 +14,11 @@ import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.overworldlabs.plots.Plots;
-import com.overworldlabs.plots.manager.PlotManager;
+import com.overworldlabs.plots.api.IPlotManager;
 import com.overworldlabs.plots.manager.TranslationManager;
 import com.overworldlabs.plots.model.Plot;
 import com.overworldlabs.plots.util.ChatUtil;
+import com.overworldlabs.plots.util.PermissionUtil;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -24,20 +29,21 @@ import java.util.stream.Collectors;
  * Lists plots owned by the player in chat using the new color system.
  */
 public class PlotListCommand extends CommandBase {
-    private final PlotManager plotManager;
+    private final IPlotManager plotManager;
 
-    public PlotListCommand(@Nonnull PlotManager plotManager) {
+    public PlotListCommand(@Nonnull IPlotManager plotManager) {
         super("list", "List your plots");
         this.plotManager = plotManager;
-        requirePermission(PlotManager.PERM_PLOT);
+        requirePermission(IPlotManager.PERM_PLOT);
     }
 
     @Override
     protected void executeSync(@Nonnull CommandContext context) {
         TranslationManager tm = Plots.getInstance().getTranslationManager();
 
-        if (!context.sender().hasPermission(PlotManager.PERM_ADMIN)) {
-            CommandUtil.requirePermission(context.sender(), PlotManager.PERM_LIST);
+        if (!PermissionUtil.hasAdminPermission(context.sender())) {
+            CommandUtil.requirePermission(context.sender(),
+                    IPlotManager.PERM_LIST);
         }
 
         if (!context.isPlayer()) {
@@ -50,7 +56,7 @@ public class PlotListCommand extends CommandBase {
             return;
 
         // Get the player object from Universe (thread-safe) to find their world
-        java.util.UUID senderUuid = context.sender().getUuid();
+        java.util.UUID senderUuid = CommandSenderIdentity.uuid(context.sender());
         if (senderUuid == null)
             return;
 
@@ -73,7 +79,7 @@ public class PlotListCommand extends CommandBase {
             if (playerRef == null)
                 return;
 
-            String uuidStr = playerRef.getUuid().toString();
+            String uuidStr = PlayerIdentity.uuid(playerRef).toString();
             List<Plot> myPlots = this.plotManager.getAllPlots().stream()
                     .filter(p -> p.getOwner().toString().equals(uuidStr))
                     .collect(Collectors.toList());
@@ -87,6 +93,7 @@ public class PlotListCommand extends CommandBase {
             for (Plot plot : myPlots) {
                 playerRef.sendMessage(ChatUtil.colorize(tm.get("list.item",
                         "name", plot.getName(),
+                        "plot_name", plot.getName(),
                         "x", String.valueOf(plot.getGridX()),
                         "z", String.valueOf(plot.getGridZ()))));
             }

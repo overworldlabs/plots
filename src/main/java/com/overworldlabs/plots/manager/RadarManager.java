@@ -1,22 +1,26 @@
 package com.overworldlabs.plots.manager;
 
-import com.hypixel.hytale.math.vector.Transform;
-import com.hypixel.hytale.math.vector.Vector3d;
+import com.overworldlabs.plots.util.PlayerIdentity;
+import com.hypixel.hytale.protocol.Direction;
+import com.hypixel.hytale.protocol.Position;
+import com.hypixel.hytale.protocol.Transform;
 import com.hypixel.hytale.protocol.packets.worldmap.MapMarker;
+
+import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
-import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.universe.world.worldmap.WorldMapManager;
-import com.hypixel.hytale.server.core.util.PositionUtil;
+import com.hypixel.hytale.server.core.universe.world.World;
+import com.overworldlabs.plots.api.IRadarManager;
 import com.overworldlabs.plots.model.Plot;
-import com.overworldlabs.plots.model.PlotConfig;
+import com.overworldlabs.plots.config.PlotConfig;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 
 /**
- * Manages radar markers for plots
+ * Manages radar markers for plots using packets
  */
-public class RadarManager {
+public class RadarManager implements IRadarManager {
     private final PlotManager plotManager;
     private final WorldManager worldManager;
 
@@ -25,62 +29,53 @@ public class RadarManager {
         this.worldManager = worldManager;
     }
 
-    /**
-     * Add or update a radar marker for a plot for its owner
-     */
+    @Override
     public void updatePlotMarker(@Nonnull Plot plot) {
-        PlayerRef ownerRef = Universe.get().getPlayer(plot.getOwner());
-        if (ownerRef == null)
-            return;
-
-        com.hypixel.hytale.component.Ref<EntityStore> playerEntityRef = ownerRef.getReference();
-        if (playerEntityRef == null)
-            return;
-
         PlotConfig config = plotManager.getConfig();
         Vector3d center = new Vector3d(plot.getCenterX(config), 64.0, plot.getCenterZ(config));
 
-        // Remove existing marker if any
-        removePlotMarker(plot);
+        World world = worldManager.getPlotWorld();
+        if (world == null || world.getWorldMapManager() == null) {
+            return;
+        }
 
-        // Create new marker
-        String markerId = "plot_" + plot.getGridX() + "_" + plot.getGridZ();
+        String markerId = markerId(plot);
         MapMarker marker = new MapMarker();
-        marker.id = markerId;
-        marker.name = plot.getName();
-        marker.markerImage = "Home.png"; // Bed icon
-        marker.transform = PositionUtil.toTransformPacket(new Transform(center));
-
-        // Use WorldMapManager to add it to player data
-        // We ensure the marker is registered for the plot world specifically
-        WorldMapManager.createPlayerMarker(playerEntityRef, marker, playerEntityRef.getStore());
+        writeField(marker, "id", markerId);
+        writeField(marker, "markerImage", "Home.png");
+        writeField(marker, "transform", new Transform(
+                new Position(center.x, center.y, center.z),
+                new Direction(0f, 0f, 0f)));
+        writeMarkerName(marker, plot.getName());
+        world.getWorldMapManager().getPointsOfInterest().put(markerId, marker);
     }
 
-    /**
-     * Remove a radar marker for a plot
-     */
+    @Override
     public void removePlotMarker(@Nonnull Plot plot) {
-        String markerId = "plot_" + plot.getGridX() + "_" + plot.getGridZ();
-
-        // Marker reference for removal - handles removal even if player is offline
-        // This is world-specific, so it avoids clearing markers in other worlds if
-        // names collide
-        new WorldMapManager.PlayerMarkerReference(plot.getOwner(), worldManager.getWorldName(), markerId).remove();
+        World world = worldManager.getPlotWorld();
+        if (world == null || world.getWorldMapManager() == null) {
+            return;
+        }
+        world.getWorldMapManager().getPointsOfInterest().remove(markerId(plot));
     }
 
-    /**
-     * Refresh all plot markers for a player (e.g. on join)
-     */
+    @Override
     public void refreshPlayerMarkers(@Nonnull PlayerRef playerRef) {
-        for (Plot plot : plotManager.getPlayerPlots(playerRef.getUuid())) {
+        for (Plot plot : plotManager.getPlayerPlots(PlayerIdentity.uuid(playerRef))) {
             updatePlotMarker(plot);
         }
     }
 
-    /**
-     * Clear all plot markers for all players
-     * Useful when world is deleted or on server startup
-     */
+    @Override
+    public void refreshAllPlotMarkers() {
+        for (Plot plot : plotManager.getAllPlots()) {
+            if (plot != null) {
+                updatePlotMarker(plot);
+            }
+        }
+    }
+
+    @Override
     public void clearAllMarkers() {
         for (PlayerRef player : Universe.get().getPlayers()) {
             if (player != null) {
@@ -89,16 +84,43 @@ public class RadarManager {
         }
     }
 
-    /**
-     * Clear all plot markers for a specific player
-     */
+    @Override
     public void clearPlayerMarkers(@Nonnull PlayerRef playerRef) {
-        for (Plot plot : plotManager.getAllPlots()) {
+        for (Plot plot : plotManager.getPlayerPlots(PlayerIdentity.uuid(playerRef))) {
             if (plot != null) {
-                String markerId = "plot_" + plot.getGridX() + "_" + plot.getGridZ();
-                new WorldMapManager.PlayerMarkerReference(playerRef.getUuid(), worldManager.getWorldName(), markerId)
-                        .remove();
+                removePlotMarker(plot);
             }
+        }
+    }
+
+    private String markerId(@Nonnull Plot plot) {
+        return "plot_" + plot.getGridX() + "_" + plot.getGridZ();
+    }
+
+    private void writeMarkerName(@Nonnull MapMarker marker, @Nonnull String name) {
+        try {
+            Field field = marker.getClass().getField("name");
+            Class<?> type = field.getType();
+            if (type.equals(String.class)) {
+                field.set(marker, name);
+                return;
+            }
+            // Newer protocol versions may require FormattedMessage in this field.
+            if ("com.hypixel.hytale.protocol.FormattedMessage".equals(type.getName())) {
+                Object fm = type.getDeclaredConstructor().newInstance();
+                Field rawText = type.getField("rawText");
+                rawText.set(fm, name);
+                field.set(marker, fm);
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void writeField(@Nonnull Object target, @Nonnull String fieldName, Object value) {
+        try {
+            Field field = target.getClass().getField(fieldName);
+            field.set(target, value);
+        } catch (Exception ignored) {
         }
     }
 }

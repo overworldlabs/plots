@@ -1,32 +1,129 @@
 {
     "general": {
-        "prefix": "{#3498db}[Plots] {#95a5a6}» ",
+        "prefix": "{#f5c542}[Plots] {#95a5a6}",
         "no_permission": "You don't have permission to do this!",
         "only_players": "This command can only be used by players.",
         "not_owner": "You must be the owner of the plot to do this.",
-        "error_generic": "An unexpected error occurred. Please try again."
+        "error_generic": "An unexpected error occurred. Please try again.",
+        "world_not_found": "World not found."
+    },
+    "commandsystem": {
+        "command_not_recognized": "Command not recognized: %command%",
+        "usage_header": "--- Command Usage ---",
+        "arguments_header": "--- Arguments ---",
+        "root_usage": "Usage: %root% <subcommand>",
+        "subcommands_hint": "Use one of the subcommands below.",
+        "subcommands_header": "--- Subcommands ---",
+        "subcommand_item": "- %command%",
+        "help_title": "Plots",
+        "help_section_basic": "Basic",
+        "help_section_management": "Management",
+        "help_section_trust_flags": "Trust & Flags",
+        "help_section_confirmation": "Confirmation",
+        "help_sub_usage_title": "Correct syntax",
+        "help_tip_root": "Tip: use /plot to view all subcommands."
     },
     "claim": {
         "standing_on_road": "You are standing on the road! Move to a plot to claim it.",
-        "plot_claimed": "Successfully claimed plot at %location%!",
-        "plot_auto_claimed": "Automatically claimed plot at %x%, %z%!",
+        "plot_claimed": "Successfully claimed plot at x=%x%, y=%y%.",
+        "plot_auto_claimed": "Automatically claimed plot at x=%x%, y=%y%.",
         "plot_already_claimed": "This plot is already claimed by someone else.",
         "max_plots_reached": "You have reached your maximum plot limit!"
     },
     "delete": {
+        "usage": "Usage: /plot delete [gridX] [gridZ]",
         "success": "Plot has been successfully deleted.",
         "need_permission": "You need plots.delete.* permission to delete plots by coordinates."
     },
     "management": {
         "not_found": "Plot not found at this location.",
-        "renamed": "Plot renamed to %name%!",
-        "rename_provide_name": "Please provide a name for the plot."
+        "renamed": "Plot renamed to %plot_name%!",
+        "rename_provide_name": "Please provide a name for the plot.",
+        "no_permission": "You don't have permission to manage this plot."
+    },
+    "rename": {
+        "usage": "/plot rename <name>"
+    },
+    "refresh": {
+        "usage": "Usage: /plot refresh",
+        "success": "Plots configuration and caches reloaded successfully.",
+        "failed": "Failed to reload: %error%"
+    },
+    "transfer": {
+        "usage": "Usage: /plot transfer <player>",
+        "already_owner": "This player already owns this plot.",
+        "success": "Transferred %count% plot(s) to %player%."
+    },
+    "confirm": {
+        "usage_confirm": "Usage: /plot confirm",
+        "usage_cancel": "Usage: /plot cancel",
+        "request": "Pending action: %action%. Type %confirm_cmd% to continue or %cancel_cmd% to abort. Expires in %seconds%s.",
+        "command_confirm": "{#55ffff}/plot confirm{#3498db}",
+        "command_cancel": "{#55ffff}/plot cancel{#3498db}",
+        "command_deny": "{#55ffff}/plot deny{#3498db}",
+        "none": "You have no pending action to confirm.",
+        "expired": "Your pending action has expired. Run the command again.",
+        "confirmed": "Confirmed: %action%.",
+        "cancelled": "Cancelled: %action%.",
+        "action_rename": "rename plot to %plot_name%",
+        "action_delete": "delete plot at x=%x%, y=%y%",
+        "action_transfer": "transfer %count% plot(s) to %player%",
+        "action_flag_apply_merged": "apply flag %flag%=%value% to %count% merged plots (this overwrites differences between them)",
+        "action_flag_remove_merged": "remove flag %flag% from %count% merged plots (this overwrites differences between them)"
+    },
+    "merge": {
+        "usage": "Usage: /plot merge <north|south|east|west|all> [true|false]",
+        "none": "No adjacent plots were merged.",
+        "merged_count": "Merged %count% adjacent plot(s).",
+        "no_adjacent_claimed": "No claimed adjacent plot in that direction.",
+        "owner_mismatch": "Adjacent plot must have the same owner.",
+        "already_merged": "These plots are already merged.",
+        "failed": "Failed to merge plots.",
+        "success": "Plots merged successfully."
+    },
+    "unmerge": {
+        "usage": "Usage: /plot unmerge <north|south|east|west|all> [true|false]",
+        "none": "No adjacent plots were unmerged.",
+        "unmerged_count": "Unmerged %count% adjacent plot(s).",
+        "no_adjacent_claimed": "No claimed adjacent plot in that direction.",
+        "owner_mismatch": "Adjacent plot must have the same owner.",
+        "not_merged": "These plots are not merged.",
+        "failed": "Failed to unmerge plots.",
+        "success": "Plots unmerged successfully."
+    },
+    "flag": {
+        "usage": "Usage: /plot flag <set|remove|list>",
+        "usage_set": "Usage: /plot flag set <flag> <value>",
+        "usage_remove": "Usage: /plot flag remove <flag>",
+        "usage_list": "Usage: /plot flag list",
+        "unknown": "Unknown flag: %flag%",
+        "requires_mixin_bridge": "Flag %flag% requires Plots mixins to be loaded (early bridge + mixin runtime).",
+        "set": "Set flag %flag% to %value%",
+        "invalid_value": "Invalid value for flag %flag%: %value%",
+        "invalid_value_with_hint": "Invalid value for flag %flag%: %value% (expected: %expected%)",
+        "value_hint": {
+            "generic": "valid value",
+            "boolean": "true/false",
+            "integer": "integer number",
+            "string": "text",
+            "weather": "weather asset id (use /weather list)",
+            "greet_message": "text",
+            "allowed_cmds": "CSV command list, e.g. spawn,home,msg",
+            "blocked_cmds": "CSV command list, e.g. kill,tp,plot"
+        },
+        "removed": "Removed flag %flag% (reverted to default)",
+        "list_header": "--- Available Flags ---",
+        "list_item": "- %flag%: %value% %status%",
+        "list_footer": "----------------------"
     },
     "teleport": {
         "usage": "Usage: /plot tp <name>",
         "teleporting": "Teleporting to plot...",
         "world_not_loaded": "Plot world is not loaded!",
-        "failed": "Teleport failed: %error%"
+        "failed": "Teleport failed: %error%",
+        "set_spawn": "Spawn point for world %world% has been set!",
+        "set_spawn_error": "Failed to set spawn point: %error%",
+        "position_unavailable": "Could not retrieve your position!"
     },
     "info": {
         "no_permission": "You don't have permission to view plot info!",
@@ -43,7 +140,7 @@
     },
     "list": {
         "header": "{#55ffff}--- Your Plots (%count%) ---",
-        "item": "{#ffffff}- {#55ff55}%name% {#95a5a6}(%x%, %z%)",
+        "item": "{#ffffff}- {#55ff55}%plot_name% {#95a5a6}(%x%, %z%)",
         "empty": "You don't own any plots!"
     },
     "trust": {
@@ -58,21 +155,42 @@
         "not_trusted": "%player% is not trusted on this plot."
     },
     "notification": {
+        "hud_name_line": "{#55ffff}%plot_name%",
+        "hud_owner_line": "{#ffffff}%owner_name%'s Plot",
         "world_enter": {
             "title": "Plot World",
             "subtitle": "Build your dreams here!"
         },
         "plot_enter": {
-            "title": "%name%",
-            "subtitle": "%owner%'s Plot"
+            "title": "%plot_name%",
+            "subtitle": "%owner_name%'s Plot"
         }
     },
     "hologram": {
-        "title": "%name%",
-        "subtitle": "Owner: %owner%"
+        "title": "%plot_name%",
+        "subtitle": "Owner: %owner_name%"
+    },
+    "economy": {
+        "not_available": "No supported economy provider is currently available.",
+        "insufficient_funds": "You need %amount% to perform this action.",
+        "withdraw_failed": "Failed to process payment. Please try again.",
+        "charged": "Charged %amount%.",
+        "reason": {
+            "claim": "Plot claim",
+            "auto_claim": "Plot auto claim",
+            "merge": "Plot merge",
+            "unmerge": "Plot unmerge"
+        }
     },
     "protection": {
         "no_permission_break": "You don't have permission to break blocks here!",
-        "no_permission_place": "You don't have permission to place blocks here!"
+        "no_permission_interact": "You don't have permission to interact here!",
+        "no_permission_place": "You don't have permission to place blocks here!",
+        "no_permission_place_liquid": "You cannot place liquids at plot borders that would flow outside your plot!",
+        "no_permission_buildertools": "You don't have permission to use BuilderTools here!",
+        "no_permission_pvp": "PvP is disabled in this plot!",
+        "item_drop_disabled": "Item dropping is disabled in this plot!",
+        "item_pickup_disabled": "Item pickup is disabled in this plot!",
+        "chat_disabled": "Chatting is disabled in this plot!"
     }
 }

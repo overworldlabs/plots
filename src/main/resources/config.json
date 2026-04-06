@@ -1,5 +1,5 @@
 {
-    "//": "OverworldPlots Configuration - Dynamic Prefab System",
+    "//": "Plots Configuration - Dynamic Prefab System",
     "General": {
         "Language": "en_us",
         "AutoSaveIntervalSeconds": 300
@@ -10,9 +10,11 @@
         "DefaultWorldTime": "midday"
     },
     "Plots": {
-        "//": "Grid size for plots and roads. Set RoadSize to 0 for no roads.",
-        "PlotSize": 32,
-        "RoadSize": 4,
+        "//": "Grid size for plots and roads. Set RoadSizeX/Z to 0 for no roads.",
+        "PlotSizeX": 32,
+        "PlotSizeZ": 32,
+        "RoadSizeX": 4,
+        "RoadSizeZ": 4,
         "MaxPlotsDefault": 1,
         "MaxPlotLimit": 50
     },
@@ -27,8 +29,45 @@
     },
     "Prefabs": {
         "//": "Custom structures from 'prefabs' folder. Use the filename WITHOUT .prefab.json",
-        "Road": "road-example",
+        "Road": "",
         "Plot": "",
-        "Intersection": ""
+        "Intersection": "",
+        "PasteRoadOnTop": true,
+        "AutoHeight": true,
+        "PasteMismatches": true,
+        "Rotation": 0,
+        "OffsetX": 0,
+        "OffsetY": 0,
+        "OffsetZ": 0
+    },
+    "Holograms": {
+        "Enabled": true,
+        "HeightOffset": 2.0,
+        "TitleColor": "#55ff55"
+    },
+    "Spawn": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Pitch": 0,
+        "Yaw": 0,
+        "CustomSpawn": false
+    },
+    "Database": {
+        "Enabled": false,
+        "JdbcUrl": "jdbc:sqlite:plots.db",
+        "Username": "",
+        "Password": "",
+        "MaxPoolSize": 10
+    },
+    "Economy": {
+        "Enabled": false,
+        "Provider": "auto",
+        "Costs": {
+            "Claim": 0.0,
+            "AutoClaim": 0.0,
+            "Merge": 0.0,
+            "Unmerge": 0.0
+        }
     }
 }

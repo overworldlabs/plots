@@ -1,12 +1,14 @@
 package com.overworldlabs.plots.util;
 
 import javax.annotation.Nonnull;
+import java.util.logging.Logger;
 
 /**
  * Utility class for colorized console output using ANSI escape codes.
  * Provides methods for printing colored messages to the terminal/console.
  */
 public final class ConsoleColors {
+    private static final Logger LOGGER = Logger.getLogger("Plots");
 
     // Reset
     public static final String RESET = "\u001B[0m";
@@ -53,7 +55,6 @@ public final class ConsoleColors {
     public static final String WHITE_BG = "\u001B[47m";
 
     // Plugin specific colors
-    public static final String PLUGIN_PREFIX = CYAN_BOLD + "[Plots] " + RESET;
     public static final String SUCCESS = GREEN_BRIGHT;
     public static final String ERROR = RED_BRIGHT;
     public static final String WARNING = YELLOW_BRIGHT;
@@ -72,7 +73,7 @@ public final class ConsoleColors {
      * @param message The success message to display
      */
     public static void success(@Nonnull String message) {
-        System.out.println(PLUGIN_PREFIX + SUCCESS + "✓ " + message + RESET);
+        LOGGER.info(SUCCESS + message + RESET);
     }
 
     /**
@@ -84,7 +85,7 @@ public final class ConsoleColors {
      * @param message The error message to display
      */
     public static void error(@Nonnull String message) {
-        System.err.println(PLUGIN_PREFIX + ERROR + "✗ " + message + RESET);
+        LOGGER.severe(ERROR + message + RESET);
     }
 
     /**
@@ -96,7 +97,7 @@ public final class ConsoleColors {
      * @param message The warning message to display
      */
     public static void warning(@Nonnull String message) {
-        System.out.println(PLUGIN_PREFIX + WARNING + "⚠ " + message + RESET);
+        LOGGER.warning(WARNING + message + RESET);
     }
 
     /**
@@ -108,7 +109,7 @@ public final class ConsoleColors {
      * @param message The informational message to display
      */
     public static void info(@Nonnull String message) {
-        System.out.println(PLUGIN_PREFIX + INFO + "ℹ " + message + RESET);
+        LOGGER.info(INFO + message + RESET);
     }
 
     /**
@@ -120,7 +121,7 @@ public final class ConsoleColors {
      * @param message The debug message to display
      */
     public static void debug(@Nonnull String message) {
-        System.out.println(PLUGIN_PREFIX + BLACK_BRIGHT + "⚙ " + message + RESET);
+        LOGGER.fine(BLACK_BRIGHT + message + RESET);
     }
 
     /**
@@ -133,7 +134,7 @@ public final class ConsoleColors {
      * @param message The message to display
      */
     public static void print(@Nonnull String color, @Nonnull String message) {
-        System.out.println(PLUGIN_PREFIX + color + message + RESET);
+        LOGGER.info(color + message + RESET);
     }
 
     /**

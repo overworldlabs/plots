@@ -1,32 +1,129 @@
 {
     "general": {
-        "prefix": "{#3498db}[Terrenos] {#95a5a6}» ",
+        "prefix": "{#f5c542}[Plots] {#95a5a6}",
         "no_permission": "Você não tem permissão para fazer isso!",
         "only_players": "Este comando só pode ser usado por jogadores.",
         "not_owner": "Você deve ser o dono do terreno para fazer isso.",
-        "error_generic": "An unexpected error occurred. Please try again."
+        "error_generic": "Ocorreu um erro inesperado. Tente novamente.",
+        "world_not_found": "Mundo não encontrado."
+    },
+    "commandsystem": {
+        "command_not_recognized": "Comando não reconhecido: %command%",
+        "usage_header": "--- Uso do Comando ---",
+        "arguments_header": "--- Argumentos ---",
+        "root_usage": "Uso: %root% <subcomando>",
+        "subcommands_hint": "Use um dos subcomandos abaixo.",
+        "subcommands_header": "--- Subcomandos ---",
+        "subcommand_item": "- %command%",
+        "help_title": "Plots",
+        "help_section_basic": "Básico",
+        "help_section_management": "Gerenciamento",
+        "help_section_trust_flags": "Confiança e Flags",
+        "help_section_confirmation": "Confirmação",
+        "help_sub_usage_title": "Sintaxe correta",
+        "help_tip_root": "Dica: use /plot para ver todos os subcomandos."
     },
     "claim": {
         "standing_on_road": "Você está na estrada! Vá para um terreno para reivindicá-lo.",
-        "plot_claimed": "Terreno reivindicado com sucesso em %location%!",
-        "plot_auto_claimed": "Terreno reivindicado automaticamente em %x%, %z%!",
+        "plot_claimed": "Terreno reivindicado com sucesso em x=%x%, y=%y%.",
+        "plot_auto_claimed": "Terreno reivindicado automaticamente em x=%x%, y=%y%.",
         "plot_already_claimed": "Este terreno já foi reivindicado por outra pessoa.",
         "max_plots_reached": "Você atingiu o limite máximo de terrenos!"
     },
     "delete": {
+        "usage": "Uso: /plot delete [gridX] [gridZ]",
         "success": "Terreno foi excluído com sucesso.",
         "need_permission": "Você precisa da permissão plots.delete.* para excluir terrenos por coordenadas."
     },
     "management": {
         "not_found": "Terreno não encontrado nesta localização.",
-        "renamed": "Terreno renomeado para %name%!",
-        "rename_provide_name": "Por favor, forneça um nome para o terreno."
+        "renamed": "Terreno renomeado para %plot_name%!",
+        "rename_provide_name": "Por favor, forneça um nome para o terreno.",
+        "no_permission": "Você não tem permissão para gerenciar este terreno."
+    },
+    "rename": {
+        "usage": "/plot rename <name>"
+    },
+    "refresh": {
+        "usage": "Uso: /plot refresh",
+        "success": "Configurações e cache de plots recarregados com sucesso.",
+        "failed": "Falha ao recarregar: %error%"
+    },
+    "transfer": {
+        "usage": "Uso: /plot transfer <jogador>",
+        "already_owner": "Esse jogador já é o dono deste terreno.",
+        "success": "Transferido(s) %count% terreno(s) para %player%."
+    },
+    "confirm": {
+        "usage_confirm": "Uso: /plot confirm",
+        "usage_cancel": "Uso: /plot cancel",
+        "request": "Ação pendente: %action%. Digite %confirm_cmd% para continuar ou %cancel_cmd% para cancelar. Expira em %seconds%s.",
+        "command_confirm": "{#55ffff}/plot confirm{#3498db}",
+        "command_cancel": "{#55ffff}/plot cancel{#3498db}",
+        "command_deny": "{#55ffff}/plot deny{#3498db}",
+        "none": "Você não tem nenhuma ação pendente para confirmar.",
+        "expired": "Sua ação pendente expirou. Execute o comando novamente.",
+        "confirmed": "Confirmado: %action%.",
+        "cancelled": "Cancelado: %action%.",
+        "action_rename": "renomear o terreno para %plot_name%",
+        "action_delete": "deletar o terreno em x=%x%, y=%y%",
+        "action_transfer": "transferir %count% terreno(s) para %player%",
+        "action_flag_apply_merged": "aplicar a flag %flag%=%value% em %count% plots mesclados (isso sobrescreve diferenças entre eles)",
+        "action_flag_remove_merged": "remover a flag %flag% em %count% plots mesclados (isso sobrescreve diferenças entre eles)"
+    },
+    "merge": {
+        "usage": "Uso: /plot merge <north|south|east|west|all> [true|false]",
+        "none": "Nenhum terreno adjacente foi mesclado.",
+        "merged_count": "Mesclado(s) %count% terreno(s) adjacente(s).",
+        "no_adjacent_claimed": "Nenhum terreno adjacente reivindicado nessa direção.",
+        "owner_mismatch": "O terreno adjacente deve ter o mesmo dono.",
+        "already_merged": "Esses terrenos já estão mesclados.",
+        "failed": "Falha ao mesclar terrenos.",
+        "success": "Terrenos mesclados com sucesso."
+    },
+    "unmerge": {
+        "usage": "Uso: /plot unmerge <north|south|east|west|all> [true|false]",
+        "none": "Nenhum terreno adjacente foi desmesclado.",
+        "unmerged_count": "Desmesclado(s) %count% terreno(s) adjacente(s).",
+        "no_adjacent_claimed": "Nenhum terreno adjacente reivindicado nessa direção.",
+        "owner_mismatch": "O terreno adjacente deve ter o mesmo dono.",
+        "not_merged": "Esses terrenos não estão mesclados.",
+        "failed": "Falha ao desmesclar terrenos.",
+        "success": "Terrenos desmesclados com sucesso."
+    },
+    "flag": {
+        "usage": "Uso: /plot flag <set|remove|list>",
+        "usage_set": "Uso: /plot flag set <flag> <value>",
+        "usage_remove": "Uso: /plot flag remove <flag>",
+        "usage_list": "Uso: /plot flag list",
+        "unknown": "Flag desconhecida: %flag%",
+        "requires_mixin_bridge": "A flag %flag% requer os mixins do Plots carregados (bridge early + runtime de mixin).",
+        "set": "Flag %flag% definida para %value%",
+        "invalid_value": "Valor inválido para a flag %flag%: %value%",
+        "invalid_value_with_hint": "Valor inválido para a flag %flag%: %value% (esperado: %expected%)",
+        "value_hint": {
+            "generic": "valor válido",
+            "boolean": "true/false",
+            "integer": "número inteiro",
+            "string": "texto",
+            "weather": "id do weather asset (use /weather list)",
+            "greet_message": "texto",
+            "allowed_cmds": "CSV de comandos, ex: spawn,home,msg",
+            "blocked_cmds": "CSV de comandos, ex: kill,tp,plot"
+        },
+        "removed": "Flag %flag% removida (voltou ao padrão)",
+        "list_header": "--- Flags Disponíveis ---",
+        "list_item": "- %flag%: %value% %status%",
+        "list_footer": "----------------------"
     },
     "teleport": {
         "usage": "Uso: /plot tp <nome>",
         "teleporting": "Teleportando para o terreno...",
         "world_not_loaded": "O mundo de terrenos não está carregado!",
-        "failed": "O teleporte falhou: %error%"
+        "failed": "O teleporte falhou: %error%",
+        "set_spawn": "O ponto de spawn para o mundo %world% foi definido!",
+        "set_spawn_error": "Falha ao definir o ponto de spawn: %error%",
+        "position_unavailable": "Não foi possível obter sua posição!"
     },
     "info": {
         "no_permission": "Você não tem permissão para ver informações do terreno!",
@@ -43,7 +140,7 @@
     },
     "list": {
         "header": "{#55ffff}--- Seus Terrenos (%count%) ---",
-        "item": "{#ffffff}- {#55ff55}%name% {#95a5a6}(%x%, %z%)",
+        "item": "{#ffffff}- {#55ff55}%plot_name% {#95a5a6}(%x%, %z%)",
         "empty": "Você não possui terrenos!"
     },
     "trust": {
@@ -58,21 +155,42 @@
         "not_trusted": "%player% não é um ajudante neste terreno."
     },
     "notification": {
+        "hud_name_line": "{#55ffff}%plot_name%",
+        "hud_owner_line": "{#ffffff}Plot de %owner_name%",
         "world_enter": {
             "title": "Mundo de Plots",
             "subtitle": "Construa seus sonhos aqui!"
         },
         "plot_enter": {
-            "title": "%name%",
-            "subtitle": "Plot de %owner%"
+            "title": "%plot_name%",
+            "subtitle": "Plot de %owner_name%"
         }
     },
     "hologram": {
-        "title": "%name%",
-        "subtitle": "Dono: %owner%"
+        "title": "%plot_name%",
+        "subtitle": "Dono: %owner_name%"
+    },
+    "economy": {
+        "not_available": "Nenhum provedor de economia compatível está disponível no momento.",
+        "insufficient_funds": "Você precisa de %amount% para realizar esta ação.",
+        "withdraw_failed": "Falha ao processar o pagamento. Tente novamente.",
+        "charged": "Cobrado %amount%.",
+        "reason": {
+            "claim": "Reivindicação de terreno",
+            "auto_claim": "Reivindicação automática de terreno",
+            "merge": "Mesclagem de terreno",
+            "unmerge": "Desmesclagem de terreno"
+        }
     },
     "protection": {
         "no_permission_break": "Você não tem permissão para quebrar blocos aqui!",
-        "no_permission_place": "Você não tem permissão para colocar blocos aqui!"
+        "no_permission_interact": "Você não tem permissão para interagir aqui!",
+        "no_permission_place": "Você não tem permissão para colocar blocos aqui!",
+        "no_permission_place_liquid": "Você não pode colocar líquidos nas bordas do terreno que fluiriam para fora do seu terreno!",
+        "no_permission_buildertools": "Você não tem permissão para usar BuilderTools aqui!",
+        "no_permission_pvp": "PvP está desativado neste terreno!",
+        "item_drop_disabled": "Dropar itens está desativado neste terreno!",
+        "item_pickup_disabled": "Pegar itens está desativado neste terreno!",
+        "chat_disabled": "O chat está desativado neste terreno!"
     }
 }

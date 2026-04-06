@@ -5,7 +5,8 @@ import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.WorldConfig;
 import com.hypixel.hytale.server.core.universe.world.spawn.GlobalSpawnProvider;
-import com.overworldlabs.plots.model.PlotConfig;
+import com.overworldlabs.plots.api.IWorldManager;
+import com.overworldlabs.plots.config.PlotConfig;
 import com.overworldlabs.plots.util.ConsoleColors;
 import com.overworldlabs.plots.worldgen.PlotWorldGenProvider;
 
@@ -18,7 +19,7 @@ import java.time.temporal.ChronoUnit;
 /**
  * Manages the plot world creation and access
  */
-public class WorldManager {
+public class WorldManager implements IWorldManager {
     private final PlotConfig plotConfig;
     private final String worldName;
     private final String defaultTime;
@@ -29,32 +30,28 @@ public class WorldManager {
         this.defaultTime = config.getDefaultWorldTime();
     }
 
-    /**
-     * Get the plot world name
-     */
+    @Override
     @Nonnull
     public String getWorldName() {
         return worldName;
     }
 
-    /**
-     * Get the plot world if it exists
-     */
+    @Override
+    public boolean isPlotWorld(@Nonnull String worldName) {
+        return this.worldName.equals(worldName);
+    }
+
+    @Override
     @Nullable
     public World getPlotWorld() {
         return Universe.get().getWorld(worldName);
     }
 
-    /**
-     * Check if the plot world exists
-     */
     public boolean worldExists() {
         return getPlotWorld() != null;
     }
 
-    /**
-     * Create the plot world if it doesn't exist
-     */
+    @Override
     public void createWorldIfNeeded() {
         if (worldExists()) {
             ConsoleColors.info("Plot world '" + worldName + "' already exists");
@@ -82,18 +79,9 @@ public class WorldManager {
             config.setBlockTicking(true);
             config.setPvpEnabled(false);
             config.setSpawningNPC(false);
-
-            // Keep time permanent
             config.setGameTimePaused(true);
-
-            // Set the world time
             config.setGameTime(parseTime(defaultTime));
 
-            // Default spawn: at the center of the road intersection at origin
-            // Roads are between plots, so the intersection at (0,0) is actually at negative
-            // coordinates
-            // The road before plot (0,0) starts at -(roadSize) and goes to 0
-            // So the center of the intersection is at -(roadSize/2)
             double intersectionCoordX = -(roadSizeX / 2.0);
             double intersectionCoordZ = -(roadSizeZ / 2.0);
 
@@ -120,16 +108,11 @@ public class WorldManager {
         }
     }
 
-    /**
-     * Parse time string to Hytale game instant
-     */
     private Instant parseTime(String timeStr) {
         if (timeStr == null)
             return getMidday();
 
         String normalized = timeStr.toLowerCase().trim();
-
-        // Zero point for Hytale time seems to be Year 1
         Instant base = Instant.parse("0001-01-01T00:00:00.00Z");
 
         switch (normalized) {
@@ -138,7 +121,6 @@ public class WorldManager {
             case "morning":
                 return base.plus(6, ChronoUnit.HOURS);
             case "midday":
-                return base.plus(12, ChronoUnit.HOURS);
             case "noon":
                 return base.plus(12, ChronoUnit.HOURS);
             case "afternoon":
@@ -151,16 +133,14 @@ public class WorldManager {
                 return base.plus(19, ChronoUnit.HOURS);
             default:
                 try {
-                    // Try to parse as double (0.5 = midday)
                     double factor = Double.parseDouble(normalized);
                     return base.plus((long) (factor * 86400 * 1_000_000_000L), ChronoUnit.NANOS);
                 } catch (NumberFormatException e) {
-                    // Try to parse as integer hour
                     try {
                         int hour = Integer.parseInt(normalized);
                         return base.plus(hour % 24, ChronoUnit.HOURS);
                     } catch (NumberFormatException e2) {
-                        return getMidday(); // Fallback
+                        return getMidday();
                     }
                 }
         }

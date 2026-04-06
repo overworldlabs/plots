@@ -3,11 +3,12 @@ package com.overworldlabs.plots.integration.buildertools;
 import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.server.core.prefab.selection.mask.BlockFilter;
 import com.hypixel.hytale.server.core.prefab.selection.mask.BlockMask;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.accessor.ChunkAccessor;
 import com.overworldlabs.plots.Plots;
-import com.overworldlabs.plots.manager.PlotManager;
-import com.overworldlabs.plots.model.Plot;
-import com.overworldlabs.plots.util.ConsoleColors;
+import com.overworldlabs.plots.api.IPlotManager;
+import com.overworldlabs.plots.util.PermissionUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @SuppressWarnings({ "rawtypes", "deprecation" })
 public class PlotProtectionMask extends BlockMask {
     private final UUID playerUuid;
-    private final PlotManager plotManager;
+    private final IPlotManager plotManager;
     private final BlockMask originalMask;
 
     public PlotProtectionMask(@Nonnull UUID playerUuid, @Nullable BlockMask originalMask) {
@@ -28,8 +29,6 @@ public class PlotProtectionMask extends BlockMask {
         this.playerUuid = playerUuid;
         this.plotManager = Plots.getInstance().getPlotManager();
         this.originalMask = originalMask;
-        ConsoleColors.success("[PlotProtectionMask] ✓ Created for player: " + playerUuid + " (wrapping: "
-                + (originalMask != null ? originalMask.getClass().getSimpleName() : "none") + ")");
     }
 
     public UUID getPlayerUuid() {
@@ -43,65 +42,81 @@ public class PlotProtectionMask extends BlockMask {
     @Override
     public boolean isExcluded(@Nonnull ChunkAccessor chunks, int x, int y, int z, Vector3i min, Vector3i max,
             int worldY) {
-        ConsoleColors.warning("[PlotProtectionMask] ⚡ isExcluded() called at [" + x + "," + y + "," + z
-                + "] for player " + playerUuid);
         // Check original mask first
         if (originalMask != null && originalMask.isExcluded(chunks, x, y, z, min, max, worldY)) {
-            ConsoleColors.info("[PlotProtectionMask]   → Original mask excluded");
             return true;
         }
-        boolean result = isExcludedByPlot(x, y, z);
-        ConsoleColors.info("[PlotProtectionMask]   → Result: " + (result ? "BLOCKED" : "ALLOWED"));
-        return result;
+        return isExcludedByPlot(chunks, x, y, z);
     }
 
     @Override
     public boolean isExcluded(@Nonnull ChunkAccessor chunks, int x, int y, int z, Vector3i min, Vector3i max,
             int worldY, int layer) {
-        ConsoleColors.warning("[PlotProtectionMask] ⚡ isExcluded(layer) called at [" + x + "," + y + "," + z
-                + "] layer=" + layer + " for player " + playerUuid);
         // Check original mask first
         if (originalMask != null && originalMask.isExcluded(chunks, x, y, z, min, max, worldY, layer)) {
-            ConsoleColors.info("[PlotProtectionMask]   → Original mask excluded");
             return true;
         }
-        boolean result = isExcludedByPlot(x, y, z);
-        ConsoleColors.info("[PlotProtectionMask]   → Result: " + (result ? "BLOCKED" : "ALLOWED"));
-        return result;
+        return isExcludedByPlot(chunks, x, y, z);
     }
 
-    private boolean isExcludedByPlot(int x, int y, int z) {
+    private boolean isExcludedByPlot(@Nullable ChunkAccessor chunks, int x, int y, int z) {
         // Bypass for admin
-        if (com.hypixel.hytale.server.core.permissions.PermissionsModule.get().hasPermission(playerUuid,
-                PlotManager.PERM_ADMIN)) {
-            ConsoleColors.info("[PlotProtectionMask] ALLOWING - Admin bypass for " + playerUuid);
+        if (PermissionUtil.hasAdminPermission(playerUuid)) {
             return false;
         }
 
-        String configWorld = plotManager.getConfig().getPlotWorldName();
-        Plot plot = plotManager.getPlotAt(configWorld, x, z);
+        int[] worldCoords = resolveWorldCoordinates(chunks, x, z);
+        int worldX = worldCoords[0];
+        int worldZ = worldCoords[1];
 
-        boolean isExcluded;
-        if (plot == null) {
-            // Check if we are in the plot world
-            String currentWorld = Plots.getInstance().getWorldManager().getWorldName();
-            if (configWorld.equalsIgnoreCase(currentWorld)) {
-                isExcluded = true; // Road or empty space in plot world
-                ConsoleColors.warning("[PlotProtectionMask] BLOCKING - Road/empty at " + x + "," + z);
-            } else {
-                isExcluded = false; // Other world
-            }
-        } else {
-            isExcluded = !plot.hasPermission(playerUuid);
-            if (isExcluded) {
-                ConsoleColors.warning("[PlotProtectionMask] BLOCKING - No permission for plot at " + x + "," + z +
-                        " (owner: " + plot.getOwner() + ")");
-            } else {
-                ConsoleColors.info("[PlotProtectionMask] ALLOWING - Has permission for plot at " + x + "," + z);
-            }
+        String worldName = resolveWorldName();
+        if (worldName == null || !plotManager.isInPlot(worldName, worldX, worldZ)) {
+            return true;
         }
 
-        return isExcluded;
+        return !plotManager.canUseBuilderTools(playerUuid, worldName, worldX, worldZ);
+    }
+
+    @Nullable
+    private String resolveWorldName() {
+        PlayerRef ref = Universe.get().getPlayer(playerUuid);
+        if (ref == null || ref.getWorldUuid() == null) {
+            return null;
+        }
+        var world = Universe.get().getWorld(ref.getWorldUuid());
+        return world != null ? world.getName() : null;
+    }
+
+    private int[] resolveWorldCoordinates(@Nullable ChunkAccessor chunks, int x, int z) {
+        if (chunks == null) {
+            return new int[] { x, z };
+        }
+
+        Integer baseX = readChunkInt(chunks, "getX");
+        Integer baseZ = readChunkInt(chunks, "getZ");
+        if (baseX == null || baseZ == null) {
+            return new int[] { x, z };
+        }
+
+        // Local chunk coordinates are 0..31 in this accessor family.
+        if (x >= 0 && z >= 0 && x <= 31 && z <= 31) {
+            return new int[] { baseX + x, baseZ + z };
+        }
+
+        return new int[] { x, z };
+    }
+
+    @Nullable
+    private Integer readChunkInt(@Nonnull ChunkAccessor chunks, @Nonnull String methodName) {
+        try {
+            var method = chunks.getClass().getMethod(methodName);
+            Object value = method.invoke(chunks);
+            if (value instanceof Integer) {
+                return (Integer) value;
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 
     @Override

@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class TranslationManager {
     private final Map<String, String> translations = new HashMap<>();
-    private final String language;
+    private String language;
     private final Gson gson = new Gson();
     private final File langDir;
 
@@ -31,6 +31,15 @@ public class TranslationManager {
             langDir.mkdirs();
         }
 
+        exportDefaultLanguages();
+        load();
+    }
+
+    public synchronized void reload(@Nonnull String language) {
+        if (language != null && !language.isBlank()) {
+            this.language = language.toLowerCase();
+        }
+        translations.clear();
         exportDefaultLanguages();
         load();
     }
@@ -48,6 +57,8 @@ public class TranslationManager {
     private void exportDefaultLanguages() {
         exportResource("en_us.json");
         exportResource("pt_br.json");
+        exportResource("es_es.json");
+        exportResource("ru_ru.json");
     }
 
     private void exportResource(String name) {
@@ -69,37 +80,34 @@ public class TranslationManager {
         String fileName = lang + ".json";
         File file = new File(langDir, fileName);
 
-        InputStream is = null;
-        try {
-            if (file.exists()) {
-                is = new FileInputStream(file);
-            } else {
-                is = getClass().getResourceAsStream("/lang/" + fileName);
-            }
-
-            if (is == null) {
-                ConsoleColors.error("Could not find language file: " + fileName);
-                return;
-            }
-
-            Type type = new TypeToken<Map<String, Object>>() {
-            }.getType();
-
-            Map<String, Object> loaded = gson.fromJson(new InputStreamReader(is), type);
-
-            if (loaded != null) {
-                flattenAndPut("", loaded);
-            }
+        // 1) Load bundled language first so missing keys always have fallback.
+        try (InputStream bundled = getClass().getResourceAsStream("/lang/" + fileName)) {
+            loadFromStream(bundled);
         } catch (Exception e) {
-            ConsoleColors.error("Failed to load language " + lang + ": " + e.getMessage());
+            ConsoleColors.error("Failed to load bundled language " + lang + ": " + e.getMessage());
             e.printStackTrace();
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (Exception ignored) {
-                }
+        }
+
+        // 2) Overlay custom file (if present) so user edits still win.
+        if (file.exists()) {
+            try (InputStream custom = new FileInputStream(file)) {
+                loadFromStream(custom);
+            } catch (Exception e) {
+                ConsoleColors.error("Failed to load custom language " + lang + ": " + e.getMessage());
+                e.printStackTrace();
             }
+        }
+    }
+
+    private void loadFromStream(InputStream is) {
+        if (is == null) {
+            return;
+        }
+        Type type = new TypeToken<Map<String, Object>>() {
+        }.getType();
+        Map<String, Object> loaded = gson.fromJson(new InputStreamReader(is), type);
+        if (loaded != null) {
+            flattenAndPut("", loaded);
         }
     }
 

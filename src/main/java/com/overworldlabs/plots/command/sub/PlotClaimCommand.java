@@ -1,5 +1,10 @@
 package com.overworldlabs.plots.command.sub;
 
+import com.overworldlabs.plots.util.CommandSenderIdentity;
+
+import com.overworldlabs.plots.util.PlayerIdentity;
+import com.hypixel.hytale.server.core.universe.Universe;
+
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Vector3d;
@@ -10,12 +15,13 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.overworldlabs.plots.Plots;
-import com.overworldlabs.plots.manager.PlotManager;
+import com.overworldlabs.plots.api.IPlotManager;
+import com.overworldlabs.plots.integration.economy.PlotEconomyService;
 import com.overworldlabs.plots.manager.TranslationManager;
 import com.overworldlabs.plots.model.Plot;
-import com.overworldlabs.plots.model.PlotConfig;
+import com.overworldlabs.plots.config.PlotConfig;
 import com.overworldlabs.plots.util.ChatUtil;
-import com.overworldlabs.plots.util.PlotUtil;
+import com.overworldlabs.plots.util.PermissionUtil;
 
 import javax.annotation.Nonnull;
 
@@ -24,20 +30,21 @@ import javax.annotation.Nonnull;
  * Claims the plot at the player's current location
  */
 public class PlotClaimCommand extends CommandBase {
-    private final PlotManager plotManager;
+    private final IPlotManager plotManager;
 
-    public PlotClaimCommand(@Nonnull PlotManager plotManager) {
+    public PlotClaimCommand(@Nonnull IPlotManager plotManager) {
         super("claim", "Claim the current plot");
         this.plotManager = plotManager;
-        requirePermission(PlotManager.PERM_PLOT);
+        requirePermission(IPlotManager.PERM_PLOT);
     }
 
     @Override
     protected void executeSync(@Nonnull CommandContext context) {
         TranslationManager tm = Plots.getInstance().getTranslationManager();
 
-        if (!context.sender().hasPermission(PlotManager.PERM_ADMIN)) {
-            CommandUtil.requirePermission(context.sender(), PlotManager.PERM_CLAIM);
+        if (!PermissionUtil.hasAdminPermission(context.sender())) {
+            CommandUtil.requirePermission(context.sender(),
+                    IPlotManager.PERM_CLAIM);
         }
 
         if (!context.isPlayer()) {
@@ -50,11 +57,11 @@ public class PlotClaimCommand extends CommandBase {
             return;
 
         // Get the player object from Universe (thread-safe) to find their world
-        java.util.UUID senderUuid = context.sender().getUuid();
+        java.util.UUID senderUuid = CommandSenderIdentity.uuid(context.sender());
         if (senderUuid == null)
             return;
 
-        PlayerRef playerObj = com.hypixel.hytale.server.core.universe.Universe.get().getPlayer(senderUuid);
+        PlayerRef playerObj = Universe.get().getPlayer(senderUuid);
         if (playerObj == null)
             return;
 
@@ -62,7 +69,7 @@ public class PlotClaimCommand extends CommandBase {
         if (worldUuid == null)
             return;
 
-        World currentWorld = com.hypixel.hytale.server.core.universe.Universe.get().getWorld(worldUuid);
+        World currentWorld = Universe.get().getWorld(worldUuid);
         if (currentWorld == null)
             return;
 
@@ -85,16 +92,27 @@ public class PlotClaimCommand extends CommandBase {
             int gridX = grid[0];
             int gridZ = grid[1];
 
+            double claimCost = config.getEconomyCostClaim();
+            boolean economyBypass = PermissionUtil.hasEconomyBypass(context.sender());
+            if (!economyBypass && !chargeIfNeeded(playerRef, claimCost, tm.get("economy.reason.claim"), tm)) {
+                return;
+            }
+
             if (this.plotManager.claimPlot(context.sender(), playerRef, gridX, gridZ)) {
+                Plot claimedPlot = this.plotManager.getPlot(gridX, gridZ);
+                String plotName = claimedPlot != null ? claimedPlot.getName() : "Plot";
                 playerRef.sendMessage(
-                        ChatUtil.success(
-                                tm.get("claim.plot_claimed", "location", PlotUtil.formatPlotLocation(gridX, gridZ))));
+                        ChatUtil.success(tm.get("claim.plot_claimed",
+                                "name", plotName,
+                                "plot_name", plotName,
+                                "x", String.valueOf(gridX),
+                                "y", String.valueOf((int) pos.y),
+                                "z", String.valueOf(gridZ))));
 
                 // Update radar marker
-                Plot plot = this.plotManager.getPlot(gridX, gridZ);
-                if (plot != null) {
-                    Plots.getInstance().getRadarManager().updatePlotMarker(plot);
-                    Plots.getInstance().getHologramManager().updateHologram(plot, store);
+                if (claimedPlot != null) {
+                    Plots.getInstance().getRadarManager().updatePlotMarker(claimedPlot);
+                    Plots.getInstance().getHologramManager().updateHologram(claimedPlot, store);
                 }
             } else {
                 Plot existingPlot = this.plotManager.getPlot(gridX, gridZ);
@@ -105,5 +123,30 @@ public class PlotClaimCommand extends CommandBase {
                 }
             }
         });
+    }
+
+    private boolean chargeIfNeeded(PlayerRef playerRef, double amount, String reason, TranslationManager tm) {
+        if (amount <= 0.0) {
+            return true;
+        }
+
+        PlotEconomyService economy = Plots.getInstance().getEconomyService();
+        if (economy == null || !economy.isEnabled()) {
+            playerRef.sendMessage(ChatUtil.error(tm.get("economy.not_available")));
+            return false;
+        }
+
+        if (!economy.has(PlayerIdentity.uuid(playerRef), amount)) {
+            playerRef.sendMessage(ChatUtil.error(tm.get("economy.insufficient_funds", "amount", economy.format(amount))));
+            return false;
+        }
+
+        if (!economy.tryWithdraw(PlayerIdentity.uuid(playerRef), amount, reason)) {
+            playerRef.sendMessage(ChatUtil.error(tm.get("economy.withdraw_failed")));
+            return false;
+        }
+
+        playerRef.sendMessage(ChatUtil.info(tm.get("economy.charged", "amount", economy.format(amount))));
+        return true;
     }
 }

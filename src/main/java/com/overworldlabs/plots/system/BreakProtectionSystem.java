@@ -12,9 +12,11 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.overworldlabs.plots.Plots;
-import com.overworldlabs.plots.manager.PlotManager;
+import com.overworldlabs.plots.api.IPlotManager;
+import com.overworldlabs.plots.api.IWorldManager;
+import com.overworldlabs.plots.flag.FlagRegistry;
 import com.overworldlabs.plots.manager.TranslationManager;
-import com.overworldlabs.plots.manager.WorldManager;
+import com.overworldlabs.plots.model.Plot;
 import com.overworldlabs.plots.util.ChatUtil;
 
 import javax.annotation.Nonnull;
@@ -23,13 +25,11 @@ import javax.annotation.Nonnull;
  * System to protect blocks from being broken.
  */
 public class BreakProtectionSystem extends EntityEventSystem<EntityStore, BreakBlockEvent> {
-    private final PlotManager plotManager;
-    private final WorldManager worldManager;
+    private final IPlotManager plotManager;
 
-    public BreakProtectionSystem(PlotManager plotManager, WorldManager worldManager) {
+    public BreakProtectionSystem(@Nonnull IPlotManager plotManager, @Nonnull IWorldManager worldManager) {
         super(BreakBlockEvent.class);
         this.plotManager = plotManager;
-        this.worldManager = worldManager;
     }
 
     @Override
@@ -37,21 +37,23 @@ public class BreakProtectionSystem extends EntityEventSystem<EntityStore, BreakB
             @Nonnull CommandBuffer<EntityStore> buffer, @Nonnull BreakBlockEvent event) {
 
         World world = ((EntityStore) store.getExternalData()).getWorld();
-        if (!world.getName().equals(worldManager.getWorldName())) {
+        if (!plotManager.getConfig().isManagedWorld(world.getName())) {
             return;
         }
 
-        // Fix deprecation: use store.getComponent instead of playerRef.getComponent
         PlayerRef playerRef = chunk.getComponent(index, PlayerRef.getComponentType());
         if (playerRef == null)
             return;
 
         Vector3i pos = event.getTargetBlock();
 
-        if (!plotManager.canModify(playerRef, world, pos.x, pos.y, pos.z)) {
+        if (!plotManager.canModify(playerRef, world, pos.x, pos.y, pos.z, IPlotManager.ActionType.BREAK)) {
             event.setCancelled(true);
             TranslationManager tm = Plots.getInstance().getTranslationManager();
-            playerRef.sendMessage(ChatUtil.error(tm.get("protection.no_permission_break")));
+            Plot plot = plotManager.getPlotAt(world.getName(), pos.x, pos.z);
+            String custom = plot != null ? plot.getFlagValue(FlagRegistry.DENY_MESSAGE) : "";
+            playerRef.sendMessage(ChatUtil.error(
+                    custom != null && !custom.trim().isEmpty() ? custom : tm.get("protection.no_permission_break")));
         }
     }
 

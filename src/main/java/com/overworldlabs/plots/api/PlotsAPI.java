@@ -11,7 +11,7 @@ import java.util.UUID;
  * Main API interface for the Plots plugin.
  * Other plugins can use this to interact with the plot system.
  */
-public interface PlotsAPI {
+public interface PlotsAPI extends PlotAPI, PlotEventAPI {
 
     /**
      * Get a plot at specific coordinates in the plot world
@@ -114,4 +114,21 @@ public interface PlotsAPI {
      * @return Width of roads in blocks
      */
     int getRoadWidth();
+
+    /**
+     * Register a world generator override. External plugins can replace Plots'
+     * default generator with a custom implementation.
+     */
+    void setWorldGenOverride(@Nullable PlotWorldGenOverride worldGenOverride);
+
+    /**
+     * Get the currently registered world generator override.
+     */
+    @Nullable
+    PlotWorldGenOverride getWorldGenOverride();
+
+    /**
+     * Clear the current world generator override and restore default behavior.
+     */
+    void clearWorldGenOverride();
 }

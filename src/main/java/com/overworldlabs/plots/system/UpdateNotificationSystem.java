@@ -1,5 +1,8 @@
 package com.overworldlabs.plots.system;
 
+import com.overworldlabs.plots.util.PlayerIdentity;
+import com.hypixel.hytale.server.core.command.system.CommandSender;
+
 import com.hypixel.hytale.component.Archetype;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -8,8 +11,9 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.overworldlabs.plots.manager.PlotManager;
+import com.overworldlabs.plots.integration.mixin.MixinBridgeStatus;
 import com.overworldlabs.plots.util.ChatUtil;
+import com.overworldlabs.plots.util.PermissionUtil;
 import com.overworldlabs.plots.util.UpdateChecker;
 
 import javax.annotation.Nonnull;
@@ -22,6 +26,8 @@ import java.util.UUID;
  */
 public class UpdateNotificationSystem extends EntityTickingSystem<EntityStore> {
     private final Map<UUID, Float> playerJoinTime = new HashMap<>();
+    private final Map<UUID, Boolean> missingMixinBridgeNotified = new HashMap<>();
+    private final Map<UUID, Boolean> mixinsNotAppliedNotified = new HashMap<>();
     private String latestVersion = null;
     private boolean updateCheckInProgress = false;
     private final String currentVersion;
@@ -39,16 +45,16 @@ public class UpdateNotificationSystem extends EntityTickingSystem<EntityStore> {
         if (playerRef == null)
             return;
 
-        UUID uuid = playerRef.getUuid();
+        UUID uuid = PlayerIdentity.uuid(playerRef);
 
         // Track when player joins
         if (!playerJoinTime.containsKey(uuid)) {
             // Check if player has permission before tracking (PlayerRef extends
             // CommandSender)
-            if (playerRef instanceof com.hypixel.hytale.server.core.command.system.CommandSender) {
-                com.hypixel.hytale.server.core.command.system.CommandSender sender = (com.hypixel.hytale.server.core.command.system.CommandSender) playerRef;
+            if (playerRef instanceof CommandSender) {
+                CommandSender sender = (CommandSender) playerRef;
 
-                if (sender.hasPermission(PlotManager.PERM_ADMIN)) {
+                if (PermissionUtil.hasAdminPermission(sender)) {
                     playerJoinTime.put(uuid, 0.0f);
 
                     // Start update check if not already in progress
@@ -73,6 +79,24 @@ public class UpdateNotificationSystem extends EntityTickingSystem<EntityStore> {
 
         // Notify if update is available (only once)
         if (timeSinceJoin >= NOTIFICATION_DELAY && timeSinceJoin < NOTIFICATION_DELAY + 1.0f) {
+            if (!MixinBridgeStatus.isReadyForMixinFlags() && !missingMixinBridgeNotified.getOrDefault(uuid, false)) {
+                playerRef.sendMessage(ChatUtil.colorize(
+                        "{#ffaa00}[Plots] {#ffffff}Plots-MixinBridge is not loaded."));
+                playerRef.sendMessage(ChatUtil.colorize(
+                        "{#ffaa00}[Plots] {#ffffff}Some protections need it for full coverage (pickup/F-key, hammer, fluid, command filtering, seats, keep-inventory, invincible-items)."));
+                playerRef.sendMessage(ChatUtil.colorize(
+                        "{#ffaa00}[Plots] {#ffffff}Install: {#55ffff}https://github.com/overworldlabs/plots-mixin-bridge/releases"));
+                missingMixinBridgeNotified.put(uuid, true);
+            }
+            if (MixinBridgeStatus.isReadyForMixinFlags()
+                    && !MixinBridgeStatus.isMixinsLoaded()
+                    && !mixinsNotAppliedNotified.getOrDefault(uuid, false)) {
+                playerRef.sendMessage(ChatUtil.colorize(
+                        "{#ffaa00}[Plots] {#ffffff}Plots-MixinBridge is active, but no mixins were applied."));
+                playerRef.sendMessage(ChatUtil.colorize(
+                        "{#ffaa00}[Plots] {#ffffff}Verify bridge version compatibility with this Hytale server build."));
+                mixinsNotAppliedNotified.put(uuid, true);
+            }
             if (latestVersion != null && UpdateChecker.isNewerVersion(currentVersion, latestVersion)) {
                 playerRef.sendMessage(ChatUtil
                         .colorize("{#ffaa00}[Plots] {#ffffff}A new version is available: {#55ff55}" + latestVersion));

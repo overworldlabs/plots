@@ -16,9 +16,14 @@
   "Website": "https://github.com/overworldlabs/plots",
   "Main": "com.overworldlabs.plots.Plots",
   "ServerVersion": "*",
-  "Description": "A plot world plugin for Hytale servers - claim plots, build, and protect your creations",
+  "Description": "Grid-based plot management: claim/auto-claim, trust, flags, merge/unmerge, BuilderTools protection (including extrude/scripted brushes), economy hooks, translations, and API support.",
   "IncludesAssetPack": true,
   "OptionalDependencies": {
-    "ehko:Hylograms": "*"
+    "Hytale:plots.mixin.bridge": "*",
+    "ehko:Hylograms": "*",
+    "com.eliteessentials:EliteEssentials": "*",
+    "Economy:EconomySystem": "*",
+    "Ecotale:Ecotale": "*",
+    "fof1092:EssentialsPlus": "*"
   }
 }

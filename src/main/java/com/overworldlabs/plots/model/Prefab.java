@@ -14,13 +14,10 @@ public class Prefab {
     private int anchorY;
     private int anchorZ;
     private List<PrefabBlock> blocks;
+    private List<PrefabFluid> fluids; // Water, lava, etc.
 
     public int getVersion() {
         return version;
-    }
-
-    public int getBlockIdVersion() {
-        return blockIdVersion;
     }
 
     public int getAnchorX() {
@@ -33,6 +30,10 @@ public class Prefab {
 
     public int getAnchorZ() {
         return anchorZ;
+    }
+
+    public int getBlockIdVersion() {
+        return blockIdVersion;
     }
 
     public List<PrefabBlock> getBlocks() {
@@ -138,6 +139,10 @@ public class Prefab {
         return (maxZ < minZ) ? 0 : maxZ - minZ + 1;
     }
 
+    public List<PrefabFluid> getFluids() {
+        return fluids;
+    }
+
     public static class PrefabBlock {
         private int x;
         private int y;
@@ -169,6 +174,45 @@ public class Prefab {
 
         public void setBlockId(int blockId) {
             this.blockId = blockId;
+        }
+    }
+
+    public static class PrefabFluid {
+        private int x;
+        private int y;
+        private int z;
+        private String name; // "Water_Source", "Lava_Source", "Empty"
+        private int level; // Fluid level (1 = full source)
+
+        // Cached fluid ID
+        private int fluidId = -1;
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public int getZ() {
+            return z;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getLevel() {
+            return level;
+        }
+
+        public int getFluidId() {
+            return fluidId;
+        }
+
+        public void setFluidId(int fluidId) {
+            this.fluidId = fluidId;
         }
     }
 }

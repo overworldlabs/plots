@@ -1,0 +1,31 @@
+Group #PlotInfoRoot {
+  LayoutMode: Top;
+  Anchor: (Top: 36 + 74 + 24 + 6, Width: 520, Height: 44);
+  Visible: false;
+
+  Group {
+    Anchor: (Width: 520, Height: 44);
+    Background: (Color: #101820);
+
+    Label #PlotName {
+      Anchor: (Width: 520, Height: 22, Top: 0);
+      Style: (
+        FontSize: 14,
+        TextColor: #ffffff,
+        RenderBold: true,
+        Alignment: Center
+      );
+      Text: "";
+    }
+
+    Label #PlotOwner {
+      Anchor: (Width: 520, Height: 22, Top: 22);
+      Style: (
+        FontSize: 12,
+        TextColor: #c7d2da,
+        Alignment: Center
+      );
+      Text: "";
+    }
+  }
+}

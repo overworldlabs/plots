@@ -1,0 +1,16 @@
+{
+  "Name": "Plots-MixinBridge",
+  "ID": "plots.mixin.bridge",
+  "Group": "Hytale",
+  "Version": "${version}",
+  "Authors": [
+    {
+      "Name": "Overworld Labs",
+      "Url": "https://github.com/overworldlabs"
+    }
+  ],
+  "Website": "https://github.com/overworldlabs/plots",
+  "Main": "com.overworldlabs.plots.bridge.PlotsMixinBridgePlugin",
+  "ServerVersion": "*",
+  "Description": "Early bridge for Plots mixin/transformer bootstrap."
+}

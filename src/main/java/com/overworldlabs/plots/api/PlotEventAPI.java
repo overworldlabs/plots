@@ -1,6 +1,9 @@
 package com.overworldlabs.plots.api;
 
-import com.overworldlabs.plots.api.events.*;
+import com.overworldlabs.plots.api.events.ClaimEvent;
+import com.overworldlabs.plots.api.events.RenameEvent;
+import com.overworldlabs.plots.api.events.TrustEvent;
+import com.overworldlabs.plots.api.events.UnclaimEvent;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;

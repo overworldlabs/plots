@@ -1,5 +1,11 @@
 package com.overworldlabs.plots.command.sub;
 
+import com.overworldlabs.plots.util.CommandSenderIdentity;
+
+import com.overworldlabs.plots.util.PlayerIdentity;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.command.system.CommandUtil;
+
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Vector3d;
@@ -7,17 +13,19 @@ import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
-import com.hypixel.hytale.server.core.command.system.CommandUtil;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.overworldlabs.plots.Plots;
-import com.overworldlabs.plots.manager.PlotManager;
+import com.overworldlabs.plots.api.IPlotManager;
+import com.overworldlabs.plots.command.CommandArgs;
+import com.overworldlabs.plots.command.feedback.CommandFeedbackService;
 import com.overworldlabs.plots.manager.TranslationManager;
 import com.overworldlabs.plots.model.Plot;
 import com.overworldlabs.plots.util.ChatUtil;
+import com.overworldlabs.plots.util.PermissionUtil;
 
 import javax.annotation.Nonnull;
 
@@ -26,22 +34,24 @@ import javax.annotation.Nonnull;
  * Grants building permission to a player on your plot
  */
 public class PlotTrustCommand extends CommandBase {
-    private final PlotManager plotManager;
+    private final IPlotManager plotManager;
     private final RequiredArg<String> playerArg;
 
-    public PlotTrustCommand(@Nonnull PlotManager plotManager) {
+    public PlotTrustCommand(@Nonnull IPlotManager plotManager) {
         super("trust", "Grant build permissions to a player");
+        setAllowsExtraArguments(true);
         this.plotManager = plotManager;
-        this.playerArg = (RequiredArg<String>) withRequiredArg("player", "Player name", ArgTypes.STRING);
-        requirePermission(PlotManager.PERM_PLOT);
+        this.playerArg = CommandArgs.required(this, "player", "Player name", ArgTypes.STRING);
+        requirePermission(IPlotManager.PERM_PLOT);
     }
 
     @Override
     protected void executeSync(@Nonnull CommandContext context) {
         TranslationManager tm = Plots.getInstance().getTranslationManager();
 
-        if (!context.sender().hasPermission(PlotManager.PERM_ADMIN)) {
-            CommandUtil.requirePermission(context.sender(), PlotManager.PERM_TRUST);
+        if (!PermissionUtil.hasAdminPermission(context.sender())) {
+            CommandUtil.requirePermission(context.sender(),
+                    IPlotManager.PERM_TRUST);
         }
 
         if (!context.isPlayer()) {
@@ -54,11 +64,11 @@ public class PlotTrustCommand extends CommandBase {
             return;
 
         // Get the player object from Universe (thread-safe) to find their world
-        java.util.UUID senderUuid = context.sender().getUuid();
+        java.util.UUID senderUuid = CommandSenderIdentity.uuid(context.sender());
         if (senderUuid == null)
             return;
 
-        PlayerRef playerObj = com.hypixel.hytale.server.core.universe.Universe.get().getPlayer(senderUuid);
+        PlayerRef playerObj = Universe.get().getPlayer(senderUuid);
         if (playerObj == null)
             return;
 
@@ -66,7 +76,7 @@ public class PlotTrustCommand extends CommandBase {
         if (worldUuid == null)
             return;
 
-        World currentWorld = com.hypixel.hytale.server.core.universe.Universe.get().getWorld(worldUuid);
+        World currentWorld = Universe.get().getWorld(worldUuid);
         if (currentWorld == null)
             return;
 
@@ -87,16 +97,17 @@ public class PlotTrustCommand extends CommandBase {
             }
 
             // Ownership check
-            if (!plot.getOwner().equals(playerRef.getUuid())) {
-                if (!context.sender().hasPermission(PlotManager.PERM_ADMIN)) {
-                    CommandUtil.requirePermission(context.sender(), PlotManager.PERM_ADMIN);
+            if (!plot.getOwner().equals(PlayerIdentity.uuid(playerRef))) {
+                if (!PermissionUtil.hasAdminPermission(context.sender())) {
+                    CommandUtil.requirePermission(context.sender(),
+                            IPlotManager.PERM_ADMIN);
                 }
             }
 
             String targetPlayerName = playerArg.get(context);
 
             if (targetPlayerName == null) {
-                playerRef.sendMessage(ChatUtil.error(tm.get("trust.usage")));
+                CommandFeedbackService.sendUsage(playerRef, tm, "trust.usage");
                 return;
             }
 
@@ -106,9 +117,13 @@ public class PlotTrustCommand extends CommandBase {
             java.util.UUID targetUuid = null;
 
             if (targetRef != null) {
-                targetUuid = targetRef.getUuid();
+                targetUuid = PlayerIdentity.uuid(targetRef);
             } else {
                 // Player is offline - we need their UUID from somewhere
+                playerRef.sendMessage(ChatUtil.error(tm.get("trust.player_offline")));
+                return;
+            }
+            if (targetUuid == null) {
                 playerRef.sendMessage(ChatUtil.error(tm.get("trust.player_offline")));
                 return;
             }
