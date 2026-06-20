@@ -70,8 +70,8 @@ public class HologramManager {
                 devExists = apiClass.getMethod("exists", String.class);
                 devDelete = apiClass.getMethod("delete", String.class);
 
-                Class<?> vector3dClass = Class.forName("com.hypixel.hytale.math.vector.Vector3d");
-                Class<?> vector3fClass = Class.forName("com.hypixel.hytale.math.vector.Vector3f");
+                Class<?> vector3dClass = Class.forName("org.joml.Vector3d");
+                Class<?> vector3fClass = Class.forName("com.hypixel.hytale.math.vector.Rotation3f");
 
                 devCreate = apiClass.getMethod(
                         "create",
@@ -318,14 +318,14 @@ public class HologramManager {
 
     @Nonnull
     private Object newVector3d(double x, double y, double z) throws ReflectiveOperationException {
-        Class<?> vector3dClass = Class.forName("com.hypixel.hytale.math.vector.Vector3d");
+        Class<?> vector3dClass = Class.forName("org.joml.Vector3d");
         Constructor<?> ctor = vector3dClass.getConstructor(double.class, double.class, double.class);
         return ctor.newInstance(x, y, z);
     }
 
     @Nonnull
     private Object newVector3f(float x, float y, float z) throws ReflectiveOperationException {
-        Class<?> vector3fClass = Class.forName("com.hypixel.hytale.math.vector.Vector3f");
+        Class<?> vector3fClass = Class.forName("com.hypixel.hytale.math.vector.Rotation3f");
         Constructor<?> ctor = vector3fClass.getConstructor(float.class, float.class, float.class);
         return ctor.newInstance(x, y, z);
     }

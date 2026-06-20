@@ -5,8 +5,8 @@ import com.hypixel.hytale.server.core.command.system.CommandSender;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
+import org.joml.Vector3d;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
@@ -495,11 +495,11 @@ public class PlotManager implements IPlotManager {
         }
 
         Vector3d pos;
-        Vector3f rot;
+        Rotation3f rot;
         if (plot.hasSpawn()) {
             Plot.PlotSpawn s = plot.getSpawn();
             pos = new Vector3d(s.x, s.y, s.z);
-            rot = new Vector3f(0, s.yaw, 0);
+            rot = new Rotation3f(0, s.yaw, 0);
         } else {
             int gridX = plot.getGridX();
             int gridZ = plot.getGridZ();
@@ -507,7 +507,7 @@ public class PlotManager implements IPlotManager {
             int worldZ = plotConfig.gridToWorldZ(gridZ) - 2;
             double spawnY = 66.5;
             pos = new Vector3d(worldX + 0.5, spawnY, worldZ + 0.5);
-            rot = new Vector3f(0, 180, 0);
+            rot = new Rotation3f(0, 180, 0);
         }
 
         try {
@@ -529,7 +529,7 @@ public class PlotManager implements IPlotManager {
             return;
         }
         Vector3d pos = new Vector3d(warp.x, warp.y, warp.z);
-        Vector3f rot = new Vector3f(0, warp.yaw, 0);
+        Rotation3f rot = new Rotation3f(0, warp.yaw, 0);
         try {
             Teleport teleport = new Teleport(plotWorld, pos, rot);
             store.addComponent(ref, Teleport.getComponentType(), teleport);

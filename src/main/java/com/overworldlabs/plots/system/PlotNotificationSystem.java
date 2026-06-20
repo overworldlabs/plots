@@ -1,7 +1,7 @@
 package com.overworldlabs.plots.system;
 
 import com.overworldlabs.plots.util.PlayerIdentity;
-import com.hypixel.hytale.math.vector.Vector3d;
+import org.joml.Vector3d;
 
 import com.hypixel.hytale.component.Archetype;
 import com.hypixel.hytale.component.ArchetypeChunk;
@@ -9,7 +9,7 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
-import com.hypixel.hytale.math.vector.Vector3f;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -269,7 +269,7 @@ public class PlotNotificationSystem extends EntityTickingSystem<EntityStore> {
             return;
         }
         buffer.addComponent(ref, Teleport.getComponentType(),
-                new Teleport(world, new Vector3d(safePos.x, safePos.y, safePos.z), new Vector3f(0, 0, 0)));
+                new Teleport(world, new Vector3d(safePos.x, safePos.y, safePos.z), new Rotation3f(0, 0, 0)));
     }
 
     private void removeHud(@Nonnull Player player, @Nonnull PlayerRef playerRef, @Nonnull UUID uuid) {

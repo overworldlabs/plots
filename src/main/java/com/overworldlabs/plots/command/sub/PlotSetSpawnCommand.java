@@ -4,8 +4,8 @@ import com.overworldlabs.plots.util.CommandSenderIdentity;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
+import org.joml.Vector3d;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
@@ -75,7 +75,7 @@ public class PlotSetSpawnCommand extends CommandBase {
             }
 
             Vector3d pos = transformComp.getPosition();
-            Vector3f rot = transformComp.getRotation();
+            Rotation3f rot = transformComp.getRotation();
 
             PlotConfig config = Plots.getInstance().getConfig();
             PlotConfig.SpawnSettings spawn = config.getSpawn();
@@ -83,8 +83,8 @@ public class PlotSetSpawnCommand extends CommandBase {
             spawn.X = pos.x;
             spawn.Y = pos.y;
             spawn.Z = pos.z;
-            spawn.Pitch = rot.getPitch();
-            spawn.Yaw = rot.getYaw();
+            spawn.Pitch = rot.pitch();
+            spawn.Yaw = rot.yaw();
             spawn.CustomSpawn = true;
 
             Plots.getInstance().saveConfig(config);

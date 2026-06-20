@@ -596,16 +596,16 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
             player.sendMessage(ChatUtil.error("Your position is unavailable."));
             return;
         }
-        com.hypixel.hytale.math.vector.Vector3d pos = transform.getPosition();
-        com.hypixel.hytale.math.vector.Vector3f rot = transform.getRotation();
+        org.joml.Vector3d pos = transform.getPosition();
+        com.hypixel.hytale.math.vector.Rotation3f rot = transform.getRotation();
         // Keep the spawn inside this plot's bounds so it can't be set elsewhere.
         if (!plot.equals(this.plugin.getPlotManager().getPlotAt(this.sourceWorld.getName(),
                 (int) Math.floor(pos.x), (int) Math.floor(pos.z)))) {
             player.sendMessage(ChatUtil.error("Stand inside this plot to set its spawn."));
             return;
         }
-        float yaw = rot != null ? rot.getYaw() : 0f;
-        float pitch = rot != null ? rot.getPitch() : 0f;
+        float yaw = rot != null ? rot.yaw() : 0f;
+        float pitch = rot != null ? rot.pitch() : 0f;
         plot.setSpawn(pos.x, pos.y, pos.z, yaw, pitch);
         this.plugin.getPlotManager().savePlots();
         player.sendMessage(ChatUtil.success("Plot spawn set to your current position."));

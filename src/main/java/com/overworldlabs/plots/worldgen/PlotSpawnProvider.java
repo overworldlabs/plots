@@ -1,8 +1,8 @@
 package com.overworldlabs.plots.worldgen;
 
 import com.hypixel.hytale.math.vector.Transform;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
+import org.joml.Vector3d;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.overworldlabs.plots.config.PlotConfig;
 import com.overworldlabs.plots.model.Prefab;
 
@@ -23,7 +23,7 @@ public class PlotSpawnProvider {
         if (customSpawn != null && customSpawn.CustomSpawn) {
             return new Transform[] { new Transform(
                     new Vector3d(customSpawn.X, customSpawn.Y, customSpawn.Z),
-                    new Vector3f(customSpawn.Pitch, customSpawn.Yaw, 0)) };
+                    new Rotation3f(customSpawn.Pitch, customSpawn.Yaw, 0)) };
         }
 
         // Priority 2: Try to find a safe floor in the plot prefab
@@ -48,7 +48,7 @@ public class PlotSpawnProvider {
                 int baseHeight = ctx.getConfig().isPrefabAutoHeight() ? ctx.getGroundHeight() : 1;
                 return new Transform[] { new Transform(
                         new Vector3d(centerX + 0.5, baseHeight + highestSolidY + 1.5, centerZ + 0.5),
-                        new Vector3f(0f, 0f, 0f)) };
+                        new Rotation3f(0f, 0f, 0f)) };
             }
         }
 
@@ -58,7 +58,7 @@ public class PlotSpawnProvider {
         double spawnY = ctx.getGroundHeight() + 1.5;
 
         return new Transform[] {
-                new Transform(new Vector3d(spawnX + 0.5, spawnY, spawnZ + 0.5), new Vector3f(0f, 0f, 0f)) };
+                new Transform(new Vector3d(spawnX + 0.5, spawnY, spawnZ + 0.5), new Rotation3f(0f, 0f, 0f)) };
     }
 
     private boolean isSafeFloor(String name) {

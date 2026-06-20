@@ -4,8 +4,8 @@ import com.overworldlabs.plots.util.CommandSenderIdentity;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
+import org.joml.Vector3d;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.command.system.CommandUtil;
@@ -93,11 +93,11 @@ public class PlotSpawnCommand extends CommandBase {
                 PlotConfig.SpawnSettings customSpawn = config.getSpawn();
 
                 Vector3d spawnPos;
-                Vector3f spawnRot;
+                Rotation3f spawnRot;
 
                 if (customSpawn.CustomSpawn) {
                     spawnPos = new Vector3d(customSpawn.X, customSpawn.Y, customSpawn.Z);
-                    spawnRot = new Vector3f(customSpawn.Pitch, customSpawn.Yaw, 0);
+                    spawnRot = new Rotation3f(customSpawn.Pitch, customSpawn.Yaw, 0);
                 } else {
                     // Get default spawn point (intersection between plot 0,0 and 1,1)
                     int plotX = config.getPlotSizeX();
@@ -106,7 +106,7 @@ public class PlotSpawnCommand extends CommandBase {
                     int roadZ = config.getRoadSizeZ();
 
                     spawnPos = new Vector3d(plotX + roadX / 2.0, 65, plotZ + roadZ / 2.0);
-                    spawnRot = new Vector3f(0, 0, 0);
+                    spawnRot = new Rotation3f(0, 0, 0);
                 }
 
                 // Create teleport to plot world

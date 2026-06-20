@@ -1,6 +1,6 @@
 package com.overworldlabs.plots.integration.buildertools;
 
-import com.hypixel.hytale.math.vector.Vector3i;
+import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.prefab.selection.mask.BlockFilter;
 import com.hypixel.hytale.server.core.prefab.selection.mask.BlockMask;
 import com.hypixel.hytale.server.core.universe.PlayerRef;

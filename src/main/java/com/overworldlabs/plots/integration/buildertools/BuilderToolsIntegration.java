@@ -9,7 +9,7 @@ import com.hypixel.hytale.builtin.buildertools.tooloperations.OperationFactory;
 import com.hypixel.hytale.builtin.buildertools.tooloperations.ToolOperation;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.math.vector.Vector3i;
+import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;

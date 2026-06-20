@@ -2,7 +2,7 @@ package com.overworldlabs.plots.integration.buildertools;
 
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
-import com.hypixel.hytale.math.vector.Vector3i;
+import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.universe.world.accessor.BlockAccessor;
 import com.overworldlabs.plots.Plots;
 import com.overworldlabs.plots.api.IPlotManager;

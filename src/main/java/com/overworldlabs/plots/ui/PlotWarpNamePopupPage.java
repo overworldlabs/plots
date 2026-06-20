@@ -107,8 +107,8 @@ public class PlotWarpNamePopupPage extends InteractiveCustomUIPage<PlotWarpNameP
             reopenWithError(player, ref, store, "Your position is unavailable.");
             return;
         }
-        com.hypixel.hytale.math.vector.Vector3d pos = transform.getPosition();
-        com.hypixel.hytale.math.vector.Vector3f rot = transform.getRotation();
+        org.joml.Vector3d pos = transform.getPosition();
+        com.hypixel.hytale.math.vector.Rotation3f rot = transform.getRotation();
         if (!plot.equals(this.plugin.getPlotManager().getPlotAt(this.sourceWorld.getName(),
                 (int) Math.floor(pos.x), (int) Math.floor(pos.z)))) {
             reopenWithError(player, ref, store, "Stand inside this plot to add a warp.");
@@ -122,8 +122,8 @@ public class PlotWarpNamePopupPage extends InteractiveCustomUIPage<PlotWarpNameP
             return;
         }
 
-        float yaw = rot != null ? rot.getYaw() : 0f;
-        float pitch = rot != null ? rot.getPitch() : 0f;
+        float yaw = rot != null ? rot.yaw() : 0f;
+        float pitch = rot != null ? rot.pitch() : 0f;
         try {
             plot.setWarp(name, pos.x, pos.y, pos.z, yaw, pitch);
             this.plugin.getPlotManager().savePlots();
