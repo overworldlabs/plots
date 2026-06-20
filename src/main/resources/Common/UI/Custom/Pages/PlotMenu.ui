@@ -135,6 +135,12 @@ Group #Root {
         Id: "Flags";
       }
 
+      TabButton #TabWarps {
+        Icon: "../icons/arrow-right.png";
+        TooltipText: "Warps";
+        Id: "Warps";
+      }
+
       TabButton #TabMerge {
         Icon: "../icons/arrow-right.png";
         TooltipText: "Merge";
@@ -279,6 +285,7 @@ Group #Root {
           }
           @PlotToggleRow { @Label = "Crafting";          @ToggleId = "FlagCrafting"; }
           @PlotToggleRow { @Label = "Player Chat";       @ToggleId = "FlagPlayerChat"; }
+          @PlotToggleRow { @Label = "Public Visit";      @ToggleId = "FlagVisit"; }
 
           @PlotStringRow { @Label = "Greet Message";    @FieldId = "FlagGreetMessage"; }
           @PlotStringRow { @Label = "Farewell Message"; @FieldId = "FlagFarewellMessage"; }
@@ -288,6 +295,62 @@ Group #Root {
         $C.@TextButton #BtnSaveFlags {
           @Anchor = (Horizontal: 0, Height: 40, Bottom: 2);
           Text: "Save Flags";
+        }
+      }
+
+      // ===== WARPS PANEL =====
+      Group #PanelWarps {
+        Visible: false;
+        Anchor: (Horizontal: 0, Vertical: 0);
+        LayoutMode: Top;
+
+        Group {
+          Anchor: (Horizontal: 0, Height: 36, Bottom: 6);
+          LayoutMode: Left;
+
+          Label #WarpCount {
+            Anchor: (Height: 20, Vertical: 0);
+            FlexWeight: 1;
+            Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #cbd9e8, VerticalAlignment: Center);
+            Text: "";
+          }
+
+          $C.@SmallSecondaryTextButton #WarpAdd {
+            @Anchor = (Width: 110, Vertical: 0);
+            Text: "Add Warp";
+          }
+
+          Group { Anchor: (Width: 6); }
+
+          $C.@SmallSecondaryTextButton #WarpBrowse {
+            @Anchor = (Width: 140, Vertical: 0);
+            Text: "Public Warps";
+          }
+        }
+
+        Label #WarpEmpty {
+          Anchor: (Horizontal: 0, Height: 18, Bottom: 8);
+          Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #d6a6a6);
+          Text: "No warps set.";
+          Visible: false;
+        }
+
+        Group {
+          Anchor: (Horizontal: 0, Bottom: 4);
+          FlexWeight: 1;
+          LayoutMode: TopScrolling;
+          ScrollbarStyle: $C.@DefaultScrollbarStyle;
+
+          Group #WarpRow0 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName0 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp0 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel0 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
+          Group #WarpRow1 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName1 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp1 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel1 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
+          Group #WarpRow2 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName2 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp2 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel2 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
+          Group #WarpRow3 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName3 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp3 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel3 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
+          Group #WarpRow4 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName4 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp4 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel4 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
+          Group #WarpRow5 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName5 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp5 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel5 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
+          Group #WarpRow6 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName6 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp6 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel6 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
+          Group #WarpRow7 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName7 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp7 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel7 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
+          Group #WarpRow8 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName8 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp8 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel8 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
+          Group #WarpRow9 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName9 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp9 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel9 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
         }
       }
 

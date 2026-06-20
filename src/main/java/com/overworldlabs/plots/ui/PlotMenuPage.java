@@ -43,9 +43,10 @@ import java.util.UUID;
 public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData> {
 
     private static final int MAX_TRUST_ROWS = 12;
+    private static final int MAX_WARP_ROWS = 10;
 
     private enum Tab {
-        INFO, TRUST, FLAGS, MERGE, DANGER
+        INFO, TRUST, FLAGS, WARPS, MERGE, DANGER
     }
 
     private final PlayerRef playerRef;
@@ -55,6 +56,8 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
 
     /** Cached trusted UUIDs for the rendered TRUST tab (parallel to row indices). */
     private List<UUID> trustedView = new ArrayList<>();
+    /** Cached warps for the rendered WARPS tab (parallel to row indices). */
+    private List<Plot.PlotWarp> warpView = new ArrayList<>();
 
     private PlotMenuPage(@Nonnull PlayerRef playerRef, @Nonnull World sourceWorld, @Nonnull Plots plugin,
             @Nonnull Tab tab) {
@@ -95,6 +98,8 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
                 EventData.of("Action", "TabMerge"), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabDanger",
                 EventData.of("Action", "TabDanger"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabWarps",
+                EventData.of("Action", "TabWarps"), false);
 
         Plot plot = resolvePlot(ref, store);
         boolean canManage = plot != null && canManage(plot);
@@ -103,6 +108,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
             case INFO -> "Info";
             case TRUST -> "Trust";
             case FLAGS -> "Flags";
+            case WARPS -> "Warps";
             case MERGE -> "Merge";
             case DANGER -> "Danger";
         };
@@ -111,6 +117,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
             case INFO -> "PLOT INFO";
             case TRUST -> "TRUSTED PLAYERS";
             case FLAGS -> "PLOT FLAGS";
+            case WARPS -> "PLOT WARPS";
             case MERGE -> "MERGE PLOTS";
             case DANGER -> "DANGER ZONE";
         });
@@ -118,6 +125,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         commandBuilder.set("#PanelInfo.Visible", this.currentTab == Tab.INFO);
         commandBuilder.set("#PanelTrust.Visible", this.currentTab == Tab.TRUST);
         commandBuilder.set("#PanelFlags.Visible", this.currentTab == Tab.FLAGS);
+        commandBuilder.set("#PanelWarps.Visible", this.currentTab == Tab.WARPS);
         commandBuilder.set("#PanelMerge.Visible", this.currentTab == Tab.MERGE);
         commandBuilder.set("#PanelDanger.Visible", this.currentTab == Tab.DANGER);
 
@@ -134,8 +142,35 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         buildInfo(commandBuilder, eventBuilder, plot, canManage);
         buildTrust(commandBuilder, eventBuilder, plot, canManage);
         buildFlags(commandBuilder, eventBuilder, plot, canManage);
+        buildWarps(commandBuilder, eventBuilder, plot, canManage);
         buildMerge(commandBuilder, eventBuilder, plot, canManage);
         buildDanger(commandBuilder, eventBuilder, plot, canManage);
+    }
+
+    private void buildWarps(UICommandBuilder cb, UIEventBuilder eb, Plot plot, boolean canManage) {
+        eb.addEventBinding(CustomUIEventBindingType.Activating, "#WarpBrowse",
+                EventData.of("Action", "OpenWarpsBrowser"), false);
+        eb.addEventBinding(CustomUIEventBindingType.Activating, "#WarpAdd",
+                EventData.of("Action", "OpenAddWarp"), false);
+
+        int max = this.plugin.getPlotManager().getMaxWarpsPerPlot();
+        java.util.List<Plot.PlotWarp> warps = plot != null ? plot.getWarps() : new ArrayList<>();
+        this.warpView = warps;
+        cb.set("#WarpCount.Text", "Warps: " + warps.size() + " / " + max);
+
+        for (int i = 0; i < MAX_WARP_ROWS; i++) {
+            if (i < warps.size()) {
+                Plot.PlotWarp w = warps.get(i);
+                cb.set("#WarpRow" + i + ".Visible", true);
+                cb.set("#WarpName" + i + ".Text", safe(w.name));
+                eb.addEventBinding(CustomUIEventBindingType.Activating, "#WarpTp" + i,
+                        EventData.of("Action", "WarpTp").append("Param", String.valueOf(i)), false);
+                eb.addEventBinding(CustomUIEventBindingType.Activating, "#WarpDel" + i,
+                        EventData.of("Action", "WarpDel").append("Param", String.valueOf(i)), false);
+            } else {
+                cb.set("#WarpRow" + i + ".Visible", false);
+            }
+        }
     }
 
     private void buildInfo(UICommandBuilder cb, UIEventBuilder eb, Plot plot, boolean canManage) {
@@ -202,6 +237,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         setBool(cb, "#FlagKeepInventory.Value", plot, FlagRegistry.KEEP_INVENTORY);
         setBool(cb, "#FlagCrafting.Value", plot, FlagRegistry.CRAFTING);
         setBool(cb, "#FlagPlayerChat.Value", plot, FlagRegistry.PLAYER_CHAT);
+        setBool(cb, "#FlagVisit.Value", plot, FlagRegistry.VISIT);
 
         // Bridge-only flags are hidden entirely when TaleGuard is not available,
         // so the menu never shows a toggle the server can't actually enforce.
@@ -232,6 +268,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
                 .append("@KeepInventory", "#FlagKeepInventory.Value")
                 .append("@Crafting", "#FlagCrafting.Value")
                 .append("@PlayerChat", "#FlagPlayerChat.Value")
+                .append("@Visit", "#FlagVisit.Value")
                 .append("@GreetMessage", "#FlagGreetMessage.Value")
                 .append("@FarewellMessage", "#FlagFarewellMessage.Value")
                 .append("@DenyMessage", "#FlagDenyMessage.Value");
@@ -297,6 +334,14 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
                 reopen(player, ref, store, Tab.DANGER);
                 return;
             }
+            case "TabWarps" -> {
+                reopen(player, ref, store, Tab.WARPS);
+                return;
+            }
+            case "OpenWarpsBrowser" -> {
+                PlotWarpsBrowserPage.open(player, ref, store, this.playerRef, resolveWorld(player), this.plugin);
+                return;
+            }
         }
 
         Plot plot = resolvePlot(ref, store);
@@ -349,6 +394,21 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
                 handleUnmerge(player, ref, store, plot);
                 reopen(player, ref, store, Tab.MERGE);
             }
+            case "OpenAddWarp" -> {
+                int max = this.plugin.getPlotManager().getMaxWarpsPerPlot();
+                if (plot.getWarpCount() >= max) {
+                    player.sendMessage(ChatUtil.error("Warp limit reached (max " + max + ")."));
+                    reopen(player, ref, store, Tab.WARPS);
+                } else {
+                    player.getPageManager().openCustomPage(ref, store,
+                            (CustomUIPage) PlotWarpNamePopupPage.create(this.playerRef, resolveWorld(player), this.plugin));
+                }
+            }
+            case "WarpTp" -> handleWarpTp(player, ref, store, data.param);
+            case "WarpDel" -> {
+                handleWarpDel(player, ref, store, plot, data.param);
+                reopen(player, ref, store, Tab.WARPS);
+            }
             case "OpenTransfer" -> player.getPageManager().openCustomPage(ref, store,
                     (CustomUIPage) PlotPlayerPickerPage.create(this.playerRef, resolveWorld(player), this.plugin,
                             PlotPlayerPickerPage.Mode.TRANSFER));
@@ -376,6 +436,37 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         player.sendMessage(ChatUtil.success("Removed " + resolveName(target) + " from trusted players."));
     }
 
+    private void handleWarpTp(Player player, Ref<EntityStore> ref, Store<EntityStore> store, String param) {
+        int index;
+        try {
+            index = Integer.parseInt(safe(param).trim());
+        } catch (NumberFormatException ex) {
+            return;
+        }
+        if (index < 0 || index >= this.warpView.size()) {
+            return;
+        }
+        this.plugin.getPlotManager().teleportPlayerToWarp(store, ref, this.warpView.get(index));
+        player.getPageManager().setPage(ref, store, Page.None);
+    }
+
+    private void handleWarpDel(Player player, Ref<EntityStore> ref, Store<EntityStore> store, Plot plot, String param) {
+        int index;
+        try {
+            index = Integer.parseInt(safe(param).trim());
+        } catch (NumberFormatException ex) {
+            return;
+        }
+        if (index < 0 || index >= this.warpView.size()) {
+            return;
+        }
+        Plot.PlotWarp w = this.warpView.get(index);
+        if (plot.removeWarp(w.name)) {
+            this.plugin.getPlotManager().savePlots();
+            player.sendMessage(ChatUtil.success("Warp '" + safe(w.name) + "' removed."));
+        }
+    }
+
     /**
      * Persists flag toggles. Flags that can only be enforced through the mixin
      * bridge ({@link MixinRequiredFlags}) are forced off when no bridge is
@@ -399,6 +490,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         skipped += applyGuarded(plot, FlagRegistry.KEEP_INVENTORY, data.keepInventory);
         skipped += applyGuarded(plot, FlagRegistry.CRAFTING, data.crafting);
         skipped += applyGuarded(plot, FlagRegistry.PLAYER_CHAT, data.playerChat);
+        skipped += applyGuarded(plot, FlagRegistry.VISIT, data.visit);
 
         plot.setFlagValue(FlagRegistry.GREET_MESSAGE, safe(data.greetMessage));
         plot.setFlagValue(FlagRegistry.FAREWELL_MESSAGE, safe(data.farewellMessage));
@@ -631,6 +723,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
                 .add()
                 .append(new KeyedCodec<>("@Crafting", Codec.BOOLEAN), (o, v) -> o.crafting = v, o -> o.crafting).add()
                 .append(new KeyedCodec<>("@PlayerChat", Codec.BOOLEAN), (o, v) -> o.playerChat = v, o -> o.playerChat).add()
+                .append(new KeyedCodec<>("@Visit", Codec.BOOLEAN), (o, v) -> o.visit = v, o -> o.visit).add()
                 .append(new KeyedCodec<>("@GreetMessage", Codec.STRING), (o, v) -> o.greetMessage = v,
                         o -> o.greetMessage)
                 .add()
@@ -657,6 +750,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         public Boolean keepInventory;
         public Boolean crafting;
         public Boolean playerChat;
+        public Boolean visit;
         public String greetMessage;
         public String farewellMessage;
         public String denyMessage;
