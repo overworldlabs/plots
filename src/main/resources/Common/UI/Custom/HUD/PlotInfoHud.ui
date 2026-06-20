@@ -1,6 +1,6 @@
 Group #PlotInfoRoot {
   LayoutMode: Top;
-  Anchor: (Top: 36 + 74 + 24 + 6, Width: 520, Height: 70);
+  Anchor: (Top: 140, Width: 520, Height: 70);
   Visible: false;
 
   Group #PlotInfoBody {

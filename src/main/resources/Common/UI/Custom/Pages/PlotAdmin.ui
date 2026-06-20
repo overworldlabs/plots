@@ -24,50 +24,6 @@ $Sounds = "../PlotsSounds.ui";
   )
 );
 
-@AdmInfoRow = Group {
-  @Label = "";
-  @ValueId = "";
-  @Value = "";
-
-  Anchor: (Horizontal: 0, Height: 26, Bottom: 4);
-  LayoutMode: Left;
-  Padding: (Horizontal: 6);
-
-  Label {
-    Text: @Label;
-    Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center);
-    Anchor: (Height: 20, Vertical: 0);
-    FlexWeight: 1;
-  }
-
-  Label #@ValueId {
-    Text: @Value;
-    Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End);
-    Anchor: (Height: 20, Vertical: 0);
-    FlexWeight: 1;
-  }
-};
-
-@AdmFieldRow = Group {
-  @Label = "";
-  @FieldId = "";
-
-  Anchor: (Horizontal: 0, Height: 34, Bottom: 6);
-  LayoutMode: Left;
-  Padding: (Horizontal: 6);
-
-  Label {
-    Text: @Label;
-    Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center);
-    Anchor: (Height: 20, Vertical: 0);
-    FlexWeight: 1;
-  }
-
-  $C.@TextField #@FieldId {
-    @Anchor = (Width: 120, Vertical: 0);
-  }
-};
-
 $C.@PageOverlay {}
 
 Group #Root {
@@ -146,10 +102,26 @@ Group #Root {
             Text: "EDITABLE";
           }
 
-          @AdmFieldRow { @Label = "Plot Size X"; @FieldId = "SetPlotSizeX"; }
-          @AdmFieldRow { @Label = "Plot Size Z"; @FieldId = "SetPlotSizeZ"; }
-          @AdmFieldRow { @Label = "Road Size X"; @FieldId = "SetRoadSizeX"; }
-          @AdmFieldRow { @Label = "Road Size Z"; @FieldId = "SetRoadSizeZ"; }
+          Group {
+            Anchor: (Horizontal: 0, Height: 34, Bottom: 6); LayoutMode: Left; Padding: (Horizontal: 6);
+            Label { Text: "Plot Size X"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@TextField #SetPlotSizeX { @Anchor = (Width: 120, Vertical: 0); }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 34, Bottom: 6); LayoutMode: Left; Padding: (Horizontal: 6);
+            Label { Text: "Plot Size Z"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@TextField #SetPlotSizeZ { @Anchor = (Width: 120, Vertical: 0); }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 34, Bottom: 6); LayoutMode: Left; Padding: (Horizontal: 6);
+            Label { Text: "Road Size X"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@TextField #SetRoadSizeX { @Anchor = (Width: 120, Vertical: 0); }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 34, Bottom: 6); LayoutMode: Left; Padding: (Horizontal: 6);
+            Label { Text: "Road Size Z"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@TextField #SetRoadSizeZ { @Anchor = (Width: 120, Vertical: 0); }
+          }
 
           Label #SettingsNote {
             Anchor: (Horizontal: 0, Height: 30, Bottom: 8);
@@ -169,13 +141,41 @@ Group #Root {
             Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4, Color: #0f1822);
             Padding: (Full: 10);
 
-            @AdmInfoRow { @Label = "World Name:";    @ValueId = "SetWorldName";    @Value = ""; }
-            @AdmInfoRow { @Label = "Managed World:"; @ValueId = "SetManagedWorld"; @Value = ""; }
-            @AdmInfoRow { @Label = "Default Name:";  @ValueId = "SetDefaultName";  @Value = ""; }
-            @AdmInfoRow { @Label = "Max Plots:";     @ValueId = "SetMaxPlots";     @Value = ""; }
-            @AdmInfoRow { @Label = "Max Limit:";     @ValueId = "SetMaxLimit";     @Value = ""; }
-            @AdmInfoRow { @Label = "Holograms:";     @ValueId = "SetHologram";     @Value = ""; }
-            @AdmInfoRow { @Label = "Economy:";       @ValueId = "SetEconomy";      @Value = ""; }
+            Group {
+              Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+              Label { Text: "World Name:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+              Label #SetWorldName { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            }
+            Group {
+              Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+              Label { Text: "Managed World:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+              Label #SetManagedWorld { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            }
+            Group {
+              Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+              Label { Text: "Default Name:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+              Label #SetDefaultName { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            }
+            Group {
+              Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+              Label { Text: "Max Plots:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+              Label #SetMaxPlots { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            }
+            Group {
+              Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+              Label { Text: "Max Limit:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+              Label #SetMaxLimit { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            }
+            Group {
+              Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+              Label { Text: "Holograms:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+              Label #SetHologram { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            }
+            Group {
+              Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+              Label { Text: "Economy:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+              Label #SetEconomy { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            }
           }
         }
 
@@ -290,10 +290,26 @@ Group #Root {
           Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4, Color: #0f1822);
           Padding: (Full: 10);
 
-          @AdmInfoRow { @Label = "Total Plots:";     @ValueId = "StatTotal";     @Value = ""; }
-          @AdmInfoRow { @Label = "Claimed:";         @ValueId = "StatClaimed";   @Value = ""; }
-          @AdmInfoRow { @Label = "Unclaimed:";       @ValueId = "StatUnclaimed"; @Value = ""; }
-          @AdmInfoRow { @Label = "Distinct Owners:"; @ValueId = "StatOwners";    @Value = ""; }
+          Group {
+            Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+            Label { Text: "Total Plots:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            Label #StatTotal { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+            Label { Text: "Claimed:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            Label #StatClaimed { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+            Label { Text: "Unclaimed:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            Label #StatUnclaimed { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+            Label { Text: "Distinct Owners:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            Label #StatOwners { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+          }
         }
 
         Label {

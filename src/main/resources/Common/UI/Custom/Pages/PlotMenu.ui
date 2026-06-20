@@ -24,84 +24,6 @@ $Sounds = "../PlotsSounds.ui";
   )
 );
 
-@PlotInfoRow = Group {
-  @Label = "";
-  @ValueId = "";
-  @Value = "";
-
-  Anchor: (Horizontal: 0, Height: 26, Bottom: 4);
-  LayoutMode: Left;
-  Padding: (Horizontal: 6);
-
-  Label {
-    Text: @Label;
-    Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center);
-    Anchor: (Height: 20, Vertical: 0);
-    FlexWeight: 1;
-  }
-
-  Label #@ValueId {
-    Text: @Value;
-    Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End);
-    Anchor: (Height: 20, Vertical: 0);
-    FlexWeight: 1;
-  }
-};
-
-@PlotToggleRow = Group {
-  @Label = "";
-  @ToggleId = "";
-  @Checked = false;
-
-  Anchor: (Horizontal: 0, Height: 32, Bottom: 4);
-  LayoutMode: Left;
-  Background: (Color: #16202d);
-  Padding: (Horizontal: 10);
-
-  Label {
-    Text: @Label;
-    Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center);
-    Anchor: (Height: 20, Vertical: 0);
-    FlexWeight: 1;
-  }
-
-  $C.@CheckBox #@ToggleId {
-    Value: @Checked;
-  }
-};
-
-@PlotStringRow = Group {
-  @Label = "";
-  @FieldId = "";
-
-  Anchor: (Horizontal: 0, Height: 58, Bottom: 4);
-  LayoutMode: Top;
-  Padding: (Horizontal: 4);
-
-  Label {
-    Text: @Label;
-    Style: (FontSize: 12, TextColor: #7a8d9f, RenderBold: true);
-    Anchor: (Height: 16, Horizontal: 0, Bottom: 4);
-  }
-
-  $C.@TextField #@FieldId {
-    @Anchor = (Horizontal: 0);
-  }
-};
-
-@PlotActionButton = Group {
-  @BtnId = "";
-  @Text = "";
-
-  Anchor: (Horizontal: 0, Height: 40, Bottom: 6);
-  LayoutMode: Top;
-
-  $C.@SecondaryTextButton #@BtnId {
-    @Anchor = (Horizontal: 0, Height: 38);
-    Text: @Text;
-  }
-};
-
 $C.@PageOverlay {}
 
 Group #Root {
@@ -192,19 +114,52 @@ Group #Root {
           Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4, Color: #0f1822);
           Padding: (Full: 10);
 
-          @PlotInfoRow { @Label = "Name:";    @ValueId = "InfoName";    @Value = ""; }
-          @PlotInfoRow { @Label = "Owner:";   @ValueId = "InfoOwner";   @Value = ""; }
-          @PlotInfoRow { @Label = "Grid:";    @ValueId = "InfoGrid";    @Value = ""; }
-          @PlotInfoRow { @Label = "Created:"; @ValueId = "InfoCreated"; @Value = ""; }
-          @PlotInfoRow { @Label = "Trusted:"; @ValueId = "InfoTrusted"; @Value = ""; }
-          @PlotInfoRow { @Label = "Merged:";  @ValueId = "InfoMerged";  @Value = ""; }
+          Group {
+            Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+            Label { Text: "Name:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            Label #InfoName { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+            Label { Text: "Owner:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            Label #InfoOwner { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+            Label { Text: "Grid:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            Label #InfoGrid { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+            Label { Text: "Created:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            Label #InfoCreated { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+            Label { Text: "Trusted:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            Label #InfoTrusted { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 26, Bottom: 4); LayoutMode: Left; Padding: (Horizontal: 6);
+            Label { Text: "Merged:"; Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            Label #InfoMerged { Text: ""; Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+          }
         }
 
         Group { Anchor: (Height: 12); }
 
-        @PlotActionButton { @BtnId = "BtnRename";   @Text = "Rename Plot"; }
-        @PlotActionButton { @BtnId = "BtnSetSpawn"; @Text = "Set Spawn Here"; }
-        @PlotActionButton { @BtnId = "BtnTeleport"; @Text = "Teleport To Plot"; }
+        Group {
+          Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
+          $C.@SecondaryTextButton #BtnRename { @Anchor = (Horizontal: 0, Height: 38); Text: "Rename Plot"; }
+        }
+        Group {
+          Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
+          $C.@SecondaryTextButton #BtnSetSpawn { @Anchor = (Horizontal: 0, Height: 38); Text: "Set Spawn Here"; }
+        }
+        Group {
+          Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
+          $C.@SecondaryTextButton #BtnTeleport { @Anchor = (Horizontal: 0, Height: 38); Text: "Teleport To Plot"; }
+        }
       }
 
       // ===== TRUST PANEL =====
@@ -213,7 +168,10 @@ Group #Root {
         Anchor: (Horizontal: 0, Vertical: 0);
         LayoutMode: Top;
 
-        @PlotActionButton { @BtnId = "BtnAddTrust"; @Text = "Add Trusted Player"; }
+        Group {
+          Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
+          $C.@SecondaryTextButton #BtnAddTrust { @Anchor = (Horizontal: 0, Height: 38); Text: "Add Trusted Player"; }
+        }
 
         Label #TrustEmpty {
           Anchor: (Horizontal: 0, Height: 18, Bottom: 8);
@@ -255,12 +213,36 @@ Group #Root {
           LayoutMode: TopScrolling;
           ScrollbarStyle: $C.@DefaultScrollbarStyle;
 
-          @PlotToggleRow { @Label = "Block Break";       @ToggleId = "FlagBlockBreak"; }
-          @PlotToggleRow { @Label = "Block Place";       @ToggleId = "FlagBlockPlace"; }
-          @PlotToggleRow { @Label = "Interact";          @ToggleId = "FlagInteract"; }
-          @PlotToggleRow { @Label = "Allow Entry";       @ToggleId = "FlagEntry"; }
-          @PlotToggleRow { @Label = "Allow Exit";        @ToggleId = "FlagExit"; }
-          @PlotToggleRow { @Label = "PvP";               @ToggleId = "FlagPvp"; }
+          Group {
+            Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
+            Label { Text: "Block Break"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@CheckBox #FlagBlockBreak { Value: false; }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
+            Label { Text: "Block Place"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@CheckBox #FlagBlockPlace { Value: false; }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
+            Label { Text: "Interact"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@CheckBox #FlagInteract { Value: false; }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
+            Label { Text: "Allow Entry"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@CheckBox #FlagEntry { Value: false; }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
+            Label { Text: "Allow Exit"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@CheckBox #FlagExit { Value: false; }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
+            Label { Text: "PvP"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@CheckBox #FlagPvp { Value: false; }
+          }
           Group #FlagExplosionsRow {
             Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
             Label { Text: "Explosions"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
@@ -271,25 +253,57 @@ Group #Root {
             Label { Text: "Mob Spawning"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
             $C.@CheckBox #FlagMobSpawning { Value: false; }
           }
-          @PlotToggleRow { @Label = "Mob Damage";        @ToggleId = "FlagMobDamage"; }
+          Group {
+            Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
+            Label { Text: "Mob Damage"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@CheckBox #FlagMobDamage { Value: false; }
+          }
           Group #FlagItemPickupRow {
             Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
             Label { Text: "Item Pickup"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
             $C.@CheckBox #FlagItemPickup { Value: false; }
           }
-          @PlotToggleRow { @Label = "Item Drop";         @ToggleId = "FlagItemDrop"; }
+          Group {
+            Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
+            Label { Text: "Item Drop"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@CheckBox #FlagItemDrop { Value: false; }
+          }
           Group #FlagKeepInventoryRow {
             Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
             Label { Text: "Keep Inventory"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
             $C.@CheckBox #FlagKeepInventory { Value: false; }
           }
-          @PlotToggleRow { @Label = "Crafting";          @ToggleId = "FlagCrafting"; }
-          @PlotToggleRow { @Label = "Player Chat";       @ToggleId = "FlagPlayerChat"; }
-          @PlotToggleRow { @Label = "Public Visit";      @ToggleId = "FlagVisit"; }
+          Group {
+            Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
+            Label { Text: "Crafting"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@CheckBox #FlagCrafting { Value: false; }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
+            Label { Text: "Player Chat"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@CheckBox #FlagPlayerChat { Value: false; }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
+            Label { Text: "Public Visit"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@CheckBox #FlagVisit { Value: false; }
+          }
 
-          @PlotStringRow { @Label = "Greet Message";    @FieldId = "FlagGreetMessage"; }
-          @PlotStringRow { @Label = "Farewell Message"; @FieldId = "FlagFarewellMessage"; }
-          @PlotStringRow { @Label = "Deny Message";     @FieldId = "FlagDenyMessage"; }
+          Group {
+            Anchor: (Horizontal: 0, Height: 58, Bottom: 4); LayoutMode: Top; Padding: (Horizontal: 4);
+            Label { Text: "Greet Message"; Style: (FontSize: 12, TextColor: #7a8d9f, RenderBold: true); Anchor: (Height: 16, Horizontal: 0, Bottom: 4); }
+            $C.@TextField #FlagGreetMessage { @Anchor = (Horizontal: 0); }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 58, Bottom: 4); LayoutMode: Top; Padding: (Horizontal: 4);
+            Label { Text: "Farewell Message"; Style: (FontSize: 12, TextColor: #7a8d9f, RenderBold: true); Anchor: (Height: 16, Horizontal: 0, Bottom: 4); }
+            $C.@TextField #FlagFarewellMessage { @Anchor = (Horizontal: 0); }
+          }
+          Group {
+            Anchor: (Horizontal: 0, Height: 58, Bottom: 4); LayoutMode: Top; Padding: (Horizontal: 4);
+            Label { Text: "Deny Message"; Style: (FontSize: 12, TextColor: #7a8d9f, RenderBold: true); Anchor: (Height: 16, Horizontal: 0, Bottom: 4); }
+            $C.@TextField #FlagDenyMessage { @Anchor = (Horizontal: 0); }
+          }
         }
 
         $C.@TextButton #BtnSaveFlags {
@@ -366,14 +380,29 @@ Group #Root {
           Text: "Merge this plot with an adjacent plot you own.";
         }
 
-        @PlotActionButton { @BtnId = "BtnMergeNorth"; @Text = "Merge North"; }
-        @PlotActionButton { @BtnId = "BtnMergeSouth"; @Text = "Merge South"; }
-        @PlotActionButton { @BtnId = "BtnMergeEast";  @Text = "Merge East"; }
-        @PlotActionButton { @BtnId = "BtnMergeWest";  @Text = "Merge West"; }
+        Group {
+          Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
+          $C.@SecondaryTextButton #BtnMergeNorth { @Anchor = (Horizontal: 0, Height: 38); Text: "Merge North"; }
+        }
+        Group {
+          Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
+          $C.@SecondaryTextButton #BtnMergeSouth { @Anchor = (Horizontal: 0, Height: 38); Text: "Merge South"; }
+        }
+        Group {
+          Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
+          $C.@SecondaryTextButton #BtnMergeEast { @Anchor = (Horizontal: 0, Height: 38); Text: "Merge East"; }
+        }
+        Group {
+          Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
+          $C.@SecondaryTextButton #BtnMergeWest { @Anchor = (Horizontal: 0, Height: 38); Text: "Merge West"; }
+        }
 
         Group { Anchor: (Height: 8); }
 
-        @PlotActionButton { @BtnId = "BtnUnmerge"; @Text = "Unmerge All"; }
+        Group {
+          Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
+          $C.@SecondaryTextButton #BtnUnmerge { @Anchor = (Horizontal: 0, Height: 38); Text: "Unmerge All"; }
+        }
       }
 
       // ===== DANGER PANEL =====
@@ -388,7 +417,10 @@ Group #Root {
           Text: "These actions cannot be undone.";
         }
 
-        @PlotActionButton { @BtnId = "BtnTransfer"; @Text = "Transfer Ownership"; }
+        Group {
+          Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
+          $C.@SecondaryTextButton #BtnTransfer { @Anchor = (Horizontal: 0, Height: 38); Text: "Transfer Ownership"; }
+        }
 
         Group { Anchor: (Height: 8); }
 
