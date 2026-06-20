@@ -149,7 +149,8 @@ public class PlotAdminPage extends InteractiveCustomUIPage<PlotAdminPage.PageDat
         cb.set("#SetEconomy.Text", config != null && config.isEconomyEnabled() ? "Enabled" : "Disabled");
 
         cb.set("#SettingsNote.Text",
-                "Size changes apply in-memory for this session (no config-write API exposed).");
+                "Size changes are saved to config.json and persist across restarts. "
+                        + "They affect newly generated plots; existing plots keep their layout.");
 
         EventData save = EventData.of("Action", "SaveSettings")
                 .append("@PlotSizeX", "#SetPlotSizeX.Value")
@@ -351,7 +352,8 @@ public class PlotAdminPage extends InteractiveCustomUIPage<PlotAdminPage.PageDat
             changed = true;
         }
         if (changed) {
-            player.sendMessage(ChatUtil.success("Settings updated (in-memory for this session)."));
+            this.plugin.saveConfig(config);
+            player.sendMessage(ChatUtil.success("Settings saved to config.json — persists across restarts."));
         } else {
             player.sendMessage(ChatUtil.info("No valid changes to apply."));
         }

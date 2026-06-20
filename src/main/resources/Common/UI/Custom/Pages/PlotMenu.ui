@@ -255,12 +255,28 @@ Group #Root {
           @PlotToggleRow { @Label = "Allow Entry";       @ToggleId = "FlagEntry"; }
           @PlotToggleRow { @Label = "Allow Exit";        @ToggleId = "FlagExit"; }
           @PlotToggleRow { @Label = "PvP";               @ToggleId = "FlagPvp"; }
-          @PlotToggleRow { @Label = "Explosions";        @ToggleId = "FlagExplosions"; }
-          @PlotToggleRow { @Label = "Mob Spawning";      @ToggleId = "FlagMobSpawning"; }
+          Group #FlagExplosionsRow {
+            Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
+            Label { Text: "Explosions"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@CheckBox #FlagExplosions { Value: false; }
+          }
+          Group #FlagMobSpawningRow {
+            Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
+            Label { Text: "Mob Spawning"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@CheckBox #FlagMobSpawning { Value: false; }
+          }
           @PlotToggleRow { @Label = "Mob Damage";        @ToggleId = "FlagMobDamage"; }
-          @PlotToggleRow { @Label = "Item Pickup";       @ToggleId = "FlagItemPickup"; }
+          Group #FlagItemPickupRow {
+            Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
+            Label { Text: "Item Pickup"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@CheckBox #FlagItemPickup { Value: false; }
+          }
           @PlotToggleRow { @Label = "Item Drop";         @ToggleId = "FlagItemDrop"; }
-          @PlotToggleRow { @Label = "Keep Inventory";    @ToggleId = "FlagKeepInventory"; }
+          Group #FlagKeepInventoryRow {
+            Anchor: (Horizontal: 0, Height: 32, Bottom: 4); LayoutMode: Left; Background: (Color: #16202d); Padding: (Horizontal: 10);
+            Label { Text: "Keep Inventory"; Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
+            $C.@CheckBox #FlagKeepInventory { Value: false; }
+          }
           @PlotToggleRow { @Label = "Crafting";          @ToggleId = "FlagCrafting"; }
           @PlotToggleRow { @Label = "Player Chat";       @ToggleId = "FlagPlayerChat"; }
 

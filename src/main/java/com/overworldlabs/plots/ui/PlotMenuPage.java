@@ -203,6 +203,14 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         setBool(cb, "#FlagCrafting.Value", plot, FlagRegistry.CRAFTING);
         setBool(cb, "#FlagPlayerChat.Value", plot, FlagRegistry.PLAYER_CHAT);
 
+        // Bridge-only flags are hidden entirely when TaleGuard is not available,
+        // so the menu never shows a toggle the server can't actually enforce.
+        boolean bridge = MixinBridgeStatus.isReadyForMixinFlags();
+        cb.set("#FlagExplosionsRow.Visible", bridge);
+        cb.set("#FlagMobSpawningRow.Visible", bridge);
+        cb.set("#FlagItemPickupRow.Visible", bridge);
+        cb.set("#FlagKeepInventoryRow.Visible", bridge);
+
         // String inputs.
         cb.set("#FlagGreetMessage.Value", safe(plot.getFlagValue(FlagRegistry.GREET_MESSAGE)));
         cb.set("#FlagFarewellMessage.Value", safe(plot.getFlagValue(FlagRegistry.FAREWELL_MESSAGE)));
