@@ -14,7 +14,7 @@ Group #PlotInfoRoot {
         FontSize: 15,
         TextColor: #ffffff,
         RenderBold: true,
-        Alignment: Center
+        HorizontalAlignment: Center
       );
       Text: "";
     }
@@ -24,7 +24,7 @@ Group #PlotInfoRoot {
       Style: (
         FontSize: 12,
         TextColor: #c7d2da,
-        Alignment: Center
+        HorizontalAlignment: Center
       );
       Text: "";
     }
@@ -34,7 +34,7 @@ Group #PlotInfoRoot {
       Style: (
         FontSize: 11,
         TextColor: #8fa3b3,
-        Alignment: Center
+        HorizontalAlignment: Center
       );
       Text: "";
     }
@@ -50,7 +50,7 @@ Group #PlotInfoRoot {
       Style: (
         FontSize: 13,
         TextColor: #c7d2da,
-        Alignment: Center
+        HorizontalAlignment: Center
       );
       Text: "";
     }
