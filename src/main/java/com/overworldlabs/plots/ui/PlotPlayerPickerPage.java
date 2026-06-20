@@ -129,11 +129,20 @@ public class PlotPlayerPickerPage extends InteractiveCustomUIPage<PlotPlayerPick
                     return;
                 }
                 PlayerRef target = Universe.get().getPlayerByUsername(typed, NameMatching.EXACT);
-                if (target == null) {
-                    reopenWithError(player, ref, store, "Player '" + typed + "' is not online.");
+                if (target != null) {
+                    perform(player, ref, store, world, target.getUuid(), target.getUsername());
                     return;
                 }
-                perform(player, ref, store, world, target.getUuid(), target.getUsername());
+                // Fall back to the known-players directory for offline players.
+                UUID offlineUuid = this.plugin.getKnownPlayers() != null
+                        ? this.plugin.getKnownPlayers().resolveUuid(typed)
+                        : null;
+                if (offlineUuid != null) {
+                    String offlineName = this.plugin.getKnownPlayers().getName(offlineUuid);
+                    perform(player, ref, store, world, offlineUuid, offlineName != null ? offlineName : typed);
+                    return;
+                }
+                reopenWithError(player, ref, store, "Player '" + typed + "' not found.");
             }
             case "Select" -> {
                 int index;

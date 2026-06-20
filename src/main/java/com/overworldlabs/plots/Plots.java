@@ -61,6 +61,7 @@ public class Plots extends JavaPlugin {
     private IServiceRegistry serviceRegistry;
     private PlotEconomyService economyService;
     private com.overworldlabs.plots.menu.PlotMenuKeybindManager menuKeybindManager;
+    private com.overworldlabs.plots.manager.KnownPlayersService knownPlayers;
 
     public Plots(@Nonnull JavaPluginInit init) {
         super(init);
@@ -160,6 +161,8 @@ public class Plots extends JavaPlugin {
      * Initialize all plugin managers
      */
     private void initializeManagers(@Nonnull File dataDir, @Nonnull PlotConfig config) {
+        knownPlayers = new com.overworldlabs.plots.manager.KnownPlayersService(dataDir);
+
         PrefabManager prefabManager = new PrefabManager(dataDir);
         serviceRegistry.register(PrefabManager.class, prefabManager);
 
@@ -302,6 +305,10 @@ public class Plots extends JavaPlugin {
             menuKeybindManager = null;
         }
 
+        if (knownPlayers != null) {
+            knownPlayers.save();
+        }
+
         IPlotManager plotManager = getPlotManager();
         if (plotManager != null) {
             plotManager.savePlots();
@@ -379,6 +386,10 @@ public class Plots extends JavaPlugin {
     }
 
     @Nonnull
+    public com.overworldlabs.plots.manager.KnownPlayersService getKnownPlayers() {
+        return knownPlayers;
+    }
+
     public IWorldManager getWorldManager() {
         return serviceRegistry.getServiceOrThrow(IWorldManager.class);
     }

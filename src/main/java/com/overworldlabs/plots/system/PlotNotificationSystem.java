@@ -71,6 +71,13 @@ public class PlotNotificationSystem extends EntityTickingSystem<EntityStore> {
             return;
 
         UUID uuid = PlayerIdentity.uuid(playerRef);
+        try {
+            var known = Plots.getInstance().getKnownPlayers();
+            if (known != null) {
+                known.record(uuid, playerRef.getUsername());
+            }
+        } catch (Exception ignored) {
+        }
         boolean isAdminBypass = PermissionUtil.hasAdminPermission(uuid);
         UUID worldUuid = playerRef.getWorldUuid();
         if (worldUuid == null)

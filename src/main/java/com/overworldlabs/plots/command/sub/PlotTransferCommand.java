@@ -102,16 +102,23 @@ public class PlotTransferCommand extends CommandBase {
             }
 
             PlayerRef targetRef = Universe.get().getPlayerByUsername(targetPlayerName, NameMatching.EXACT);
-            if (targetRef == null) {
-                senderRef.sendMessage(ChatUtil.error(tm.get("trust.player_offline")));
-                return;
+            UUID targetUuid;
+            String targetName;
+            if (targetRef != null) {
+                targetUuid = PlayerIdentity.uuid(targetRef);
+                targetName = targetRef.getUsername();
+            } else {
+                // Offline target: resolve via the known-players directory.
+                var known = Plots.getInstance().getKnownPlayers();
+                targetUuid = known != null ? known.resolveUuid(targetPlayerName) : null;
+                String resolved = (targetUuid != null && known != null) ? known.getName(targetUuid) : null;
+                targetName = resolved != null ? resolved : targetPlayerName;
             }
-
-            UUID targetUuid = PlayerIdentity.uuid(targetRef);
             if (targetUuid == null) {
                 senderRef.sendMessage(ChatUtil.error(tm.get("trust.player_offline")));
                 return;
             }
+            final String targetDisplayName = targetName;
 
             if (targetUuid.equals(current.getOwner())) {
                 senderRef.sendMessage(ChatUtil.error(tm.get("transfer.already_owner")));
@@ -125,7 +132,7 @@ public class PlotTransferCommand extends CommandBase {
 
             PlotConfirmationService.getInstance().request(context.sender(), tm,
                     tm.get("confirm.action_transfer",
-                            "player", targetRef.getUsername(),
+                            "player", targetDisplayName,
                             "count", String.valueOf(transferCount),
                             "plot_name", canonical.getName()),
                     () -> currentWorld.execute(() -> {
@@ -147,14 +154,14 @@ public class PlotTransferCommand extends CommandBase {
 
                         for (Plot plot : latestGroup) {
                             plot.setOwner(targetUuid);
-                            plot.setOwnerName(targetRef.getUsername());
+                            plot.setOwnerName(targetDisplayName);
                             Plots.getInstance().getRadarManager().updatePlotMarker(plot);
                             Plots.getInstance().getHologramManager().updateHologram(plot, store);
                         }
                         this.plotManager.savePlots();
 
                         senderRef.sendMessage(ChatUtil.success(tm.get("transfer.success",
-                                "player", targetRef.getUsername(),
+                                "player", targetDisplayName,
                                 "count", String.valueOf(latestGroup.size()))));
                     }));
         });
