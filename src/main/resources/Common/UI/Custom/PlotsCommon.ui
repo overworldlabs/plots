@@ -1,4 +1,4 @@
-$Sounds = "Sounds.ui";
+$Sounds = "PlotsSounds.ui";
 
 // Colors
 @ColorDefault = #ffffff;

@@ -1,5 +1,5 @@
-$C = "../Common.ui";
-$Sounds = "../Sounds.ui";
+$C = "../PlotsCommon.ui";
+$Sounds = "../PlotsSounds.ui";
 
 $C.@PageOverlay {}
 
