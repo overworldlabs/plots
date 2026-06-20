@@ -23,6 +23,14 @@ Flags are managed using the `/plot flag` command.
 
 ## Available Flags
 
+> **Bridge-required flags** — the following can only be enabled when the
+> [TaleGuard](./protection#protection-coverage-native-vs-taleguard) bridge is installed,
+> because they are enforced by bytecode mixins with no native (ECS) fallback:
+> `item-pickup`, `item-pickup-manual`, `build`, `hammer`, `allowed-cmds`, `blocked-cmds`,
+> `seat`, `mob-spawning`, `keep-inventory`, `invincible-items`, `explosions`.
+> Without TaleGuard the plugin refuses to enable them and warns the player; all other
+> flags are enforced natively. See [Protection Coverage](./protection#protection-coverage-native-vs-taleguard).
+
 | Flag | Type | Default | Description |
 |------|------|---------|-------------|
 | `interact` | Boolean | `true` | Allow block interaction (doors, chests, etc.). |

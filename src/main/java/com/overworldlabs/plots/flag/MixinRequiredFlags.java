@@ -14,7 +14,10 @@ public final class MixinRequiredFlags {
             "seat",
             "mob-spawning",
             "keep-inventory",
-            "invincible-items");
+            "invincible-items",
+            // Enforced only by the ExplosionBlockDamage mixin — no ECS fallback,
+            // so it must not be settable without the TaleGuard bridge.
+            "explosions");
 
     private MixinRequiredFlags() {
     }
