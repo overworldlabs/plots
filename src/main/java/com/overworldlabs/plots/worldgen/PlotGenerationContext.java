@@ -6,6 +6,7 @@ import com.hypixel.hytale.server.core.asset.type.fluid.Fluid;
 import com.overworldlabs.plots.Plots;
 import com.overworldlabs.plots.config.PlotConfig;
 import com.overworldlabs.plots.model.Prefab;
+import com.overworldlabs.plots.util.ConsoleColors;
 
 /**
  * Data Transfer Object containing a snapshot of the generation requirements.
@@ -22,6 +23,8 @@ public class PlotGenerationContext {
     private final int borderBlockId;
     private final int environmentId;
     private final int groundHeight = 64;
+    /** Guaranteed-valid (non-zero) block id used when a configured name can't be resolved. */
+    private final int safeDefaultBlockId;
 
     private final Prefab roadPrefab;
     private final Prefab plotPrefab;
@@ -36,13 +39,17 @@ public class PlotGenerationContext {
         this.plotPrefab = pm.getOrLoadPrefab(this.config.getPlotPrefab());
         this.intersectionPrefab = pm.getOrLoadPrefab(this.config.getIntersectionPrefab());
 
-        // Cache Block IDs
-        this.bedrockBlockId = getBlockIdFromAsset(this.config.getBedrockBlock(), 0);
-        this.grassBlockId = getBlockIdFromAsset(this.config.getPlotSurfaceBlock(), 0);
-        this.dirtBlockId = getBlockIdFromAsset(this.config.getPlotSubSurfaceBlock(), 0);
-        this.stoneBlockId = getBlockIdFromAsset(this.config.getFillingBlock(), 0);
-        this.roadBlockId = getBlockIdFromAsset(this.config.getRoadSurfaceBlock(), stoneBlockId);
-        this.borderBlockId = getBlockIdFromAsset(this.config.getBorderBlock(), roadBlockId);
+        // Cache Block IDs. Block id 0 is invalid ("air") and, if written into a
+        // generated chunk, corrupts the global item asset registry (an item ends
+        // up referencing block 0, which crashes asset sending on player join).
+        // So every terrain block resolves to a guaranteed non-zero block id.
+        this.safeDefaultBlockId = computeSafeDefaultBlockId();
+        this.bedrockBlockId = resolveBlock(this.config.getBedrockBlock());
+        this.grassBlockId = resolveBlock(this.config.getPlotSurfaceBlock());
+        this.dirtBlockId = resolveBlock(this.config.getPlotSubSurfaceBlock());
+        this.stoneBlockId = resolveBlock(this.config.getFillingBlock());
+        this.roadBlockId = resolveBlock(this.config.getRoadSurfaceBlock());
+        this.borderBlockId = resolveBlock(this.config.getBorderBlock());
 
         // Safe environment lookup
         int envId = 0;
@@ -66,6 +73,36 @@ public class PlotGenerationContext {
         } catch (Exception e) {
             return fallback;
         }
+    }
+
+    /** Resolves a configured block name to a valid id, never returning 0/invalid. */
+    private int resolveBlock(String name) {
+        int id = getBlockIdFromAsset(name, -1);
+        if (id > 0) {
+            return id;
+        }
+        ConsoleColors.warning("Plot world block '" + name + "' not found on this server build; "
+                + "using a safe default block instead. Update the Blocks section of config.json.");
+        return safeDefaultBlockId;
+    }
+
+    /** Finds a guaranteed-valid (non-zero) block id to use as a last-resort terrain block. */
+    private int computeSafeDefaultBlockId() {
+        try {
+            var assetMap = BlockType.getAssetMap();
+            if (assetMap != null) {
+                for (String candidate : new String[] { "Rock_Stone", "Stone", "Soil_Dirt", "Dirt", "Rock_Bedrock",
+                        "Soil_Grass" }) {
+                    int id = assetMap.getIndex(candidate);
+                    if (id != Integer.MIN_VALUE && id > 0) {
+                        return id;
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        // Absolute last resort: id 1 is a real block (0 is air/invalid).
+        return 1;
     }
 
     public int getFluidIdByName(String name) {
