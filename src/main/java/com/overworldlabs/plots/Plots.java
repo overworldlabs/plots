@@ -60,6 +60,7 @@ public class Plots extends JavaPlugin {
 
     private IServiceRegistry serviceRegistry;
     private PlotEconomyService economyService;
+    private com.overworldlabs.plots.menu.PlotMenuKeybindManager menuKeybindManager;
 
     public Plots(@Nonnull JavaPluginInit init) {
         super(init);
@@ -114,20 +115,28 @@ public class Plots extends JavaPlugin {
         registerWorldGenerator();
         registerSystems();
 
+        // Basic protection (block break/place/interact, containers, mobs, item
+        // drop/pickup, etc.) is always enforced by the ECS protection systems
+        // registered above — it does not require any bridge. The TaleGuard bridge
+        // adds the mixin-only flags (item-pickup, builder tools, mob-spawning,
+        // keep-inventory, commands, ...). Plots prefers TaleGuard when present and
+        // gracefully falls back to basic protection when it is absent.
         if (MixinBridgeStatus.isReadyForMixinFlags()) {
             if (MixinBridgeStatus.isMixinsLoaded()) {
-                ConsoleColors.info("Plots mixins loaded.");
+                ConsoleColors.success("TaleGuard bridge active — full protection coverage enabled.");
             } else {
-                ConsoleColors.info("Plots Mixin bridge bootstrap is ready. Mixins will be applied as target classes load.");
+                ConsoleColors.info("TaleGuard bridge bootstrap is ready. Mixins will be applied as target classes load.");
             }
         } else if (MixinBridgeStatus.isActive()) {
-            ConsoleColors.warning("Plots Mixin bridge detected, but bootstrap is not ready.");
+            ConsoleColors.warning("Protection bridge detected, but bootstrap is not ready — running with basic protection only.");
         } else {
-            ConsoleColors.warning("No Plots Mixin bridge detected. Mixin-required flags will be blocked.");
-            ConsoleColors.warning(
-                    "Install Plots-MixinBridge for full protection coverage: https://github.com/overworldlabs/plots-mixin-bridge/releases");
+            ConsoleColors.warning("No protection bridge detected — running with BASIC protection (ECS) only.");
+            ConsoleColors.warning("Mixin-required flags are disabled. Install TaleGuard for full protection coverage.");
         }
+        // Keep the legacy plots-native registry populated (harmless if unused) and
+        // register the adapter hook with the shared TaleGuard bridge registry.
         PlotsMixinsCompatibility.register(getPlotManager());
+        PlotsMixinsCompatibility.registerTaleGuard(getPlotManager());
 
         ConsoleColors.success("Setup complete! Plugin is ready.");
 
@@ -279,12 +288,19 @@ public class Plots extends JavaPlugin {
         ConsoleColors.info("Starting Plots...");
         getWorldManager().createWorldIfNeeded();
         getRadarManager().refreshAllPlotMarkers();
+        menuKeybindManager = new com.overworldlabs.plots.menu.PlotMenuKeybindManager(this);
+        menuKeybindManager.start();
         started = true;
     }
 
     @Override
     protected void shutdown() {
         ConsoleColors.info("Shutting down...");
+
+        if (menuKeybindManager != null) {
+            menuKeybindManager.shutdown();
+            menuKeybindManager = null;
+        }
 
         IPlotManager plotManager = getPlotManager();
         if (plotManager != null) {

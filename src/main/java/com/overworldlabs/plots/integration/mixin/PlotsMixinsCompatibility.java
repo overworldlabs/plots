@@ -23,6 +23,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class PlotsMixinsCompatibility {
     public static final String REGISTRY_KEY = "plots.hook.registry";
+    /** Shared TaleGuard bridge registry key (cross-classloader, via System properties). */
+    public static final String TALEGUARD_REGISTRY_KEY = "taleguard.hook.registry";
+    /** Identifier for the Plots adapter hook within the TaleGuard registry. */
+    public static final String TALEGUARD_HOOK_KEY = "plots";
     public static final String PICKUP_HOOK = "plots.pickup.hook";
     public static final String HAMMER_HOOK = "plots.hammer.hook";
     public static final String HARVEST_HOOK = "plots.harvest.hook";
@@ -69,6 +73,151 @@ public final class PlotsMixinsCompatibility {
             ConsoleColors.info("Plots mixin hooks registered.");
         } catch (Exception e) {
             ConsoleColors.warning("Failed to register plots mixin hooks: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Registers a single adapter hook into the shared TaleGuard bridge registry
+     * ({@value #TALEGUARD_REGISTRY_KEY}). TaleGuard's mixins discover hooks by
+     * reflection over the method names exposed by {@link PlotsProtectionHook},
+     * so no compile-time dependency on TaleGuard is required.
+     */
+    @SuppressWarnings("unchecked")
+    public static void registerTaleGuard(@Nonnull IPlotManager plotManager) {
+        try {
+            Map<String, Object> registry = (Map<String, Object>) System.getProperties().get(TALEGUARD_REGISTRY_KEY);
+            if (registry == null) {
+                registry = new ConcurrentHashMap<>();
+                System.getProperties().put(TALEGUARD_REGISTRY_KEY, registry);
+            }
+            registry.put(TALEGUARD_HOOK_KEY, new PlotsProtectionHook(plotManager));
+            ConsoleColors.info("Plots protection hook registered with TaleGuard bridge.");
+        } catch (Exception e) {
+            ConsoleColors.warning("Failed to register Plots hook with TaleGuard: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Adapter exposing the method surface expected by TaleGuard's reflective
+     * {@code HookRegistry}. Delegates to the existing, battle-tested per-action
+     * hooks. Enforcement is scoped to plot worlds so the hook stays inert when
+     * other TaleGuard consumers (e.g. skyblock) own the world.
+     */
+    public static final class PlotsProtectionHook {
+        private final IPlotManager plotManager;
+        private final GenericCheckHook generic;
+        private final FluidFlowHook fluid;
+        private final ExplosionHook explosion;
+        private final CommandHook command;
+        private final SpawnHook spawn;
+        private final DeathHook death;
+        private final DurabilityHook durability;
+
+        PlotsProtectionHook(@Nonnull IPlotManager plotManager) {
+            this.plotManager = plotManager;
+            this.generic = new GenericCheckHook(plotManager);
+            this.fluid = new FluidFlowHook(plotManager);
+            this.explosion = new ExplosionHook(plotManager);
+            this.command = new CommandHook(plotManager);
+            this.spawn = new SpawnHook(plotManager);
+            this.death = new DeathHook(plotManager);
+            this.durability = new DurabilityHook(plotManager);
+        }
+
+        public int getPriority() {
+            return 2;
+        }
+
+        private boolean isPlotWorld(String worldName) {
+            if (worldName == null || worldName.isBlank()) {
+                return true;
+            }
+            try {
+                Plots plugin = Plots.getInstance();
+                if (plugin != null && plugin.getWorldManager() != null) {
+                    return plugin.getWorldManager().isPlotWorld(worldName);
+                }
+            } catch (Exception ignored) {
+            }
+            return true;
+        }
+
+        public boolean isAllowed(UUID playerUuid, String worldName, double x, double y, double z, String type) {
+            if (type == null) {
+                return true;
+            }
+            if (!isPlotWorld(worldName)) {
+                return true;
+            }
+            int ix = (int) Math.floor(x);
+            int iy = (int) Math.floor(y);
+            int iz = (int) Math.floor(z);
+            switch (type) {
+                case "EXPLOSION":
+                    return !explosion.shouldBlockExplosion(worldName, ix, iy, iz);
+                case "MOB_SPAWN":
+                    return !spawn.shouldBlockSpawn(worldName, ix, iy, iz);
+                case "DEATH_DROP":
+                    // allowed == false => keep inventory / block the drop
+                    return !death.shouldKeepInventory(playerUuid, worldName, ix, iy, iz);
+                case "DURABILITY":
+                    // allowed == false => prevent durability loss
+                    return !durability.shouldPreventDurabilityLoss(playerUuid, worldName, ix, iy, iz);
+                default:
+                    return generic.check(playerUuid, worldName, x, y, z, translateMode(type));
+            }
+        }
+
+        public void notifyDenied(UUID playerUuid, String worldName, double x, double y, double z, String type) {
+            if (type == null) {
+                return;
+            }
+            switch (type) {
+                case "EXPLOSION":
+                case "MOB_SPAWN":
+                case "DEATH_DROP":
+                case "DURABILITY":
+                    // Non player-facing world rules: no chat feedback.
+                    return;
+                default:
+                    generic.notifyDenied(playerUuid, worldName, x, y, z, translateMode(type));
+            }
+        }
+
+        /**
+         * Bridges TaleGuard's interaction-type vocabulary to the action modes the
+         * plot protection logic understands ({@link GenericCheckHook}).
+         */
+        private static String translateMode(String type) {
+            if (type == null) {
+                return "INTERACT";
+            }
+            switch (type) {
+                case "CROP_HARVEST":
+                    return "HARVEST";
+                case "ITEM_PICKUP":
+                    return "AUTO";
+                case "ENTITY_INTERACT":
+                    return "INTERACT";
+                default:
+                    return type; // HARVEST, BUILDER, HAMMER, FLUID, INTERACT, PLACE, FIRE, DROP, AUTO, MANUAL...
+            }
+        }
+
+        public boolean isFluidFlowAllowed(String worldName, int fromX, int fromY, int fromZ, int toX, int toY,
+                int toZ) {
+            if (!isPlotWorld(worldName)) {
+                return true;
+            }
+            return !fluid.shouldBlockFluidSpread(worldName, fromX, fromY, fromZ, toX, toY, toZ);
+        }
+
+        public boolean isCommandAllowed(UUID senderUuid, String rawCommand) {
+            return !command.shouldBlockCommand(senderUuid, rawCommand);
+        }
+
+        public String getCommandDenialMessage() {
+            return command.getDenialMessage();
         }
     }
 
@@ -221,6 +370,14 @@ public final class PlotsMixinsCompatibility {
             Plot plot = plotManager.getPlotAt(world.getName(), x, z);
             return plot != null && !plot.getFlagValue(FlagRegistry.EXPLOSIONS);
         }
+
+        public boolean shouldBlockExplosion(String worldName, int x, int y, int z) {
+            if (worldName == null || worldName.isBlank()) {
+                return false;
+            }
+            Plot plot = plotManager.getPlotAt(worldName, x, z);
+            return plot != null && !plot.getFlagValue(FlagRegistry.EXPLOSIONS);
+        }
     }
 
     public static final class FluidFlowHook {
@@ -341,7 +498,35 @@ public final class PlotsMixinsCompatibility {
             if (plot == null || plot.isOwnerOrMember(playerRef.getUuid())) {
                 return false;
             }
+            return matchesBlock(plot, rawCommand);
+        }
 
+        public boolean shouldBlockCommand(UUID senderUuid, String rawCommand) {
+            if (senderUuid == null || PermissionUtil.hasAdminPermission(senderUuid)) {
+                return false;
+            }
+            PlayerRef playerRef = Universe.get().getPlayer(senderUuid);
+            if (playerRef == null || playerRef.getWorldUuid() == null) {
+                return false;
+            }
+            World world = Universe.get().getWorld(playerRef.getWorldUuid());
+            if (world == null) {
+                return false;
+            }
+            var transform = playerRef.getTransform();
+            if (transform == null) {
+                return false;
+            }
+            int x = (int) transform.getPosition().x;
+            int z = (int) transform.getPosition().z;
+            Plot plot = plotManager.getPlotAt(world.getName(), x, z);
+            if (plot == null || plot.isOwnerOrMember(senderUuid)) {
+                return false;
+            }
+            return matchesBlock(plot, rawCommand);
+        }
+
+        private boolean matchesBlock(Plot plot, String rawCommand) {
             String cmd = normalizeCommand(rawCommand);
             String allowedRaw = plot.getFlagValue(FlagRegistry.ALLOWED_COMMANDS);
             if (allowedRaw != null && !allowedRaw.trim().isEmpty()) {

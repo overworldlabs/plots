@@ -73,21 +73,12 @@ java {
     }
 }
 
-val earlyBridge by sourceSets.creating {
-    java.srcDir("src/earlybridge/java")
-    resources.srcDir("src/earlybridge/resources")
-}
-
-// Mixin 0.8.x + ASM can silently no-op with very new classfile versions.
-// Keep early bridge bytecode conservative for runtime compatibility.
-val earlyBridgeBytecodeVersion = 21
+// Protection mixins are now provided by the shared TaleGuard bridge
+// (consumed at runtime via the reflective hook registry). Plots no longer
+// ships its own early-bridge source set.
 
 tasks.withType<JavaCompile> {
     options.release.set(javaLanguageVersion)
-}
-
-tasks.named<JavaCompile>(earlyBridge.compileJavaTaskName) {
-    options.release.set(earlyBridgeBytecodeVersion)
 }
 
 repositories {
@@ -99,18 +90,8 @@ repositories {
 
 dependencies {
     compileOnly(files(hytaleServerJar))
-    add("${earlyBridge.name}CompileOnly", files(hytaleServerJar))
-    add("${earlyBridge.name}Implementation", "org.ow2.asm:asm:9.7")
-    add("${earlyBridge.name}Implementation", "org.ow2.asm:asm-analysis:9.7")
-    add("${earlyBridge.name}Implementation", "org.ow2.asm:asm-commons:9.7")
-    add("${earlyBridge.name}Implementation", "org.ow2.asm:asm-tree:9.7")
-    add("${earlyBridge.name}Implementation", "org.ow2.asm:asm-util:9.7")
-    add("${earlyBridge.name}Implementation", "net.fabricmc:sponge-mixin:0.16.5+mixin.0.8.7")
-    add("${earlyBridge.name}Implementation", "org.ow2.sat4j:org.ow2.sat4j.core:2.3.6")
-    add("${earlyBridge.name}Implementation", "org.ow2.sat4j:org.ow2.sat4j.pb:2.3.6")
-    add("${earlyBridge.name}Implementation", "com.google.guava:guava:33.2.1-jre")
-    add("${earlyBridge.name}Implementation", "com.google.code.gson:gson:2.10.1")
     compileOnly(files("libs/hylograms-1.1.1.jar"))
+    compileOnly(files("libs/TaleGuard-1.0.0.jar"))
     compileOnly(fileTree("libs/economy") { include("*.jar") })
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.zaxxer:HikariCP:5.1.0")
@@ -158,13 +139,6 @@ tasks.processResources {
     }
 }
 
-tasks.named<ProcessResources>(earlyBridge.processResourcesTaskName) {
-    inputs.property("version", project.version)
-    filesMatching("manifest.json") {
-        expand("version" to project.version)
-    }
-}
-
 tasks.withType<JavaCompile> {
     options.compilerArgs.add("-Xlint:deprecation")
 }
@@ -182,28 +156,6 @@ tasks.jar {
     }
 
     from("src/main/resources")
-}
-
-tasks.register<Jar>("earlyBridgeJar") {
-    group = "build"
-    description = "Builds the Plots earlyplugin mixin bridge jar."
-    dependsOn(earlyBridge.classesTaskName)
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    archiveBaseName.set("Plots-MixinBridge")
-    archiveVersion.set(project.version.toString())
-    from(earlyBridge.output)
-    from({
-        configurations[earlyBridge.runtimeClasspathConfigurationName]
-            .filter { it.name.endsWith(".jar") }
-            .map { zipTree(it) }
-    })
-    exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
-    manifest {
-        attributes(
-            "Implementation-Title" to "Plots-MixinBridge",
-            "Implementation-Version" to project.version
-        )
-    }
 }
 
 val syncAssets = tasks.register<Copy>("syncAssets") {

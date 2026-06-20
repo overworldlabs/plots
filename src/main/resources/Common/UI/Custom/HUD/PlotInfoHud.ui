@@ -1,16 +1,17 @@
 Group #PlotInfoRoot {
   LayoutMode: Top;
-  Anchor: (Top: 36 + 74 + 24 + 6, Width: 520, Height: 44);
+  Anchor: (Top: 36 + 74 + 24 + 6, Width: 520, Height: 70);
   Visible: false;
 
-  Group {
-    Anchor: (Width: 520, Height: 44);
+  Group #PlotInfoBody {
+    Anchor: (Width: 520, Height: 70);
     Background: (Color: #101820);
+    Visible: false;
 
     Label #PlotName {
-      Anchor: (Width: 520, Height: 22, Top: 0);
+      Anchor: (Width: 520, Height: 24, Top: 4);
       Style: (
-        FontSize: 14,
+        FontSize: 15,
         TextColor: #ffffff,
         RenderBold: true,
         Alignment: Center
@@ -19,9 +20,35 @@ Group #PlotInfoRoot {
     }
 
     Label #PlotOwner {
-      Anchor: (Width: 520, Height: 22, Top: 22);
+      Anchor: (Width: 520, Height: 20, Top: 28);
       Style: (
         FontSize: 12,
+        TextColor: #c7d2da,
+        Alignment: Center
+      );
+      Text: "";
+    }
+
+    Label #PlotInfoLine {
+      Anchor: (Width: 520, Height: 18, Top: 48);
+      Style: (
+        FontSize: 11,
+        TextColor: #8fa3b3,
+        Alignment: Center
+      );
+      Text: "";
+    }
+  }
+
+  Group #PlotFallback {
+    Anchor: (Width: 520, Height: 44);
+    Background: (Color: #101820);
+    Visible: false;
+
+    Label #PlotFallbackText {
+      Anchor: (Width: 520, Height: 44, Top: 0);
+      Style: (
+        FontSize: 13,
         TextColor: #c7d2da,
         Alignment: Center
       );

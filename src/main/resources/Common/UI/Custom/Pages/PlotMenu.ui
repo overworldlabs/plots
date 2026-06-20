@@ -1,0 +1,323 @@
+$C = "../Common.ui";
+$Sounds = "../Sounds.ui";
+
+@PlotTabBase = TabStyleState(
+  Background: "../Common/Tab.png",
+  Overlay: "../Common/TabOverlay.png",
+  IconAnchor: (Width: 40, Height: 40),
+  Anchor: (Width: 82, Height: 62, Right: 5, Bottom: -10)
+);
+@PlotTopTabAnchor = Anchor(Width: 82, Height: 62, Right: 5, Bottom: -10);
+@PlotTopTabsStyle = TabNavigationStyle(
+  TabStyle: (
+    Default: @PlotTabBase,
+    Hovered: (...@PlotTabBase, Anchor: (...@PlotTopTabAnchor, Bottom: -4)),
+    Pressed: (...@PlotTabBase, Anchor: (...@PlotTopTabAnchor, Bottom: -6))
+  ),
+  SelectedTabStyle: (
+    Default: (
+      ...@PlotTabBase,
+      Anchor: (...@PlotTopTabAnchor, Bottom: -1),
+      IconAnchor: (Width: 40, Height: 40),
+      Overlay: "../Common/TabSelectedOverlay.png"
+    )
+  )
+);
+
+@PlotInfoRow = Group {
+  @Label = "";
+  @ValueId = "";
+  @Value = "";
+
+  Anchor: (Horizontal: 0, Height: 26, Bottom: 4);
+  LayoutMode: Left;
+  Padding: (Horizontal: 6);
+
+  Label {
+    Text: @Label;
+    Style: (FontSize: 13, TextColor: #7a8d9f, RenderBold: true, VerticalAlignment: Center);
+    Anchor: (Height: 20, Vertical: 0);
+    FlexWeight: 1;
+  }
+
+  Label #@ValueId {
+    Text: @Value;
+    Style: (FontSize: 13, TextColor: #d0dce6, RenderBold: true, VerticalAlignment: Center, HorizontalAlignment: End);
+    Anchor: (Height: 20, Vertical: 0);
+    FlexWeight: 1;
+  }
+};
+
+@PlotToggleRow = Group {
+  @Label = "";
+  @ToggleId = "";
+  @Checked = false;
+
+  Anchor: (Horizontal: 0, Height: 32, Bottom: 4);
+  LayoutMode: Left;
+  Background: (Color: #16202d);
+  Padding: (Horizontal: 10);
+
+  Label {
+    Text: @Label;
+    Style: (FontSize: 13, TextColor: #b2c1d0, VerticalAlignment: Center);
+    Anchor: (Height: 20, Vertical: 0);
+    FlexWeight: 1;
+  }
+
+  $C.@CheckBox #@ToggleId {
+    Value: @Checked;
+  }
+};
+
+@PlotStringRow = Group {
+  @Label = "";
+  @FieldId = "";
+
+  Anchor: (Horizontal: 0, Height: 58, Bottom: 4);
+  LayoutMode: Top;
+  Padding: (Horizontal: 4);
+
+  Label {
+    Text: @Label;
+    Style: (FontSize: 12, TextColor: #7a8d9f, RenderBold: true);
+    Anchor: (Height: 16, Horizontal: 0, Bottom: 4);
+  }
+
+  $C.@TextField #@FieldId {
+    @Anchor = (Horizontal: 0);
+  }
+};
+
+@PlotActionButton = Group {
+  @BtnId = "";
+  @Text = "";
+
+  Anchor: (Horizontal: 0, Height: 40, Bottom: 6);
+  LayoutMode: Top;
+
+  $C.@SecondaryTextButton #@BtnId {
+    @Anchor = (Horizontal: 0, Height: 38);
+    Text: @Text;
+  }
+};
+
+$C.@PageOverlay {}
+
+Group #Root {
+  LayoutMode: Left;
+  Anchor: (Width: 760, Height: 560);
+
+  Group #LeftSide {
+    LayoutMode: Top;
+    Anchor: (Width: 78);
+
+    TabNavigation #TabNav {
+      Anchor: (Width: 78, Top: 0, Bottom: 0);
+      Style: @PlotTopTabsStyle;
+      SelectedTab: "Info";
+
+      TabButton #TabInfo {
+        Icon: "../icons/eye.png";
+        TooltipText: "Info";
+        Id: "Info";
+      }
+
+      TabButton #TabTrust {
+        Icon: "../icons/check.png";
+        TooltipText: "Trusted";
+        Id: "Trust";
+      }
+
+      TabButton #TabFlags {
+        Icon: "../icons/pen.png";
+        TooltipText: "Flags";
+        Id: "Flags";
+      }
+
+      TabButton #TabMerge {
+        Icon: "../icons/arrow-right.png";
+        TooltipText: "Merge";
+        Id: "Merge";
+      }
+
+      TabButton #TabDanger {
+        Icon: "../icons/trash.png";
+        TooltipText: "Danger";
+        Id: "Danger";
+      }
+    }
+  }
+
+  Group { Anchor: (Width: 8); }
+
+  $C.@DecoratedContainer #RightContainer {
+    @CloseButton = true;
+    Anchor: (Width: 674, Height: 554);
+
+    #Title {
+      Group #ContainerDecorationTop {
+        Visible: false;
+      }
+
+      $C.@Title #RightTitle { @Text = "PLOT MENU"; }
+    }
+
+    #Content {
+      LayoutMode: Top;
+      Padding: (Full: 16);
+
+      Label #PermNotice {
+        Anchor: (Horizontal: 0, Height: 18, Bottom: 8);
+        Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffd6c8, HorizontalAlignment: Center);
+        Text: "";
+        Visible: false;
+      }
+
+      // ===== INFO PANEL =====
+      Group #PanelInfo {
+        Visible: true;
+        Anchor: (Horizontal: 0);
+        LayoutMode: Top;
+
+        Group {
+          Anchor: (Horizontal: 0);
+          LayoutMode: Top;
+          Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4, Color: #0f1822);
+          Padding: (Full: 10);
+
+          @PlotInfoRow { @Label = "Name:";    @ValueId = "InfoName";    @Value = ""; }
+          @PlotInfoRow { @Label = "Owner:";   @ValueId = "InfoOwner";   @Value = ""; }
+          @PlotInfoRow { @Label = "Grid:";    @ValueId = "InfoGrid";    @Value = ""; }
+          @PlotInfoRow { @Label = "Created:"; @ValueId = "InfoCreated"; @Value = ""; }
+          @PlotInfoRow { @Label = "Trusted:"; @ValueId = "InfoTrusted"; @Value = ""; }
+          @PlotInfoRow { @Label = "Merged:";  @ValueId = "InfoMerged";  @Value = ""; }
+        }
+
+        Group { Anchor: (Height: 12); }
+
+        @PlotActionButton { @BtnId = "BtnRename";   @Text = "Rename Plot"; }
+        @PlotActionButton { @BtnId = "BtnSetSpawn"; @Text = "Set Spawn Here"; }
+        @PlotActionButton { @BtnId = "BtnTeleport"; @Text = "Teleport To Plot"; }
+      }
+
+      // ===== TRUST PANEL =====
+      Group #PanelTrust {
+        Visible: false;
+        Anchor: (Horizontal: 0, Vertical: 0);
+        LayoutMode: Top;
+
+        @PlotActionButton { @BtnId = "BtnAddTrust"; @Text = "Add Trusted Player"; }
+
+        Label #TrustEmpty {
+          Anchor: (Horizontal: 0, Height: 18, Bottom: 8);
+          Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #d6a6a6);
+          Text: "No trusted players.";
+          Visible: false;
+        }
+
+        Group {
+          Anchor: (Horizontal: 0, Bottom: 4);
+          FlexWeight: 1;
+          LayoutMode: TopScrolling;
+          ScrollbarStyle: $C.@DefaultScrollbarStyle;
+
+          Group #TrustRow0 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName0 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove0 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
+          Group #TrustRow1 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName1 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove1 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
+          Group #TrustRow2 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName2 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove2 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
+          Group #TrustRow3 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName3 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove3 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
+          Group #TrustRow4 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName4 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove4 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
+          Group #TrustRow5 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName5 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove5 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
+          Group #TrustRow6 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName6 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove6 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
+          Group #TrustRow7 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName7 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove7 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
+          Group #TrustRow8 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName8 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove8 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
+          Group #TrustRow9 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName9 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove9 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
+          Group #TrustRow10 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName10 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove10 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
+          Group #TrustRow11 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName11 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove11 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
+        }
+      }
+
+      // ===== FLAGS PANEL =====
+      Group #PanelFlags {
+        Visible: false;
+        Anchor: (Horizontal: 0, Vertical: 0);
+        LayoutMode: Top;
+
+        Group {
+          Anchor: (Horizontal: 0, Bottom: 8);
+          FlexWeight: 1;
+          LayoutMode: TopScrolling;
+          ScrollbarStyle: $C.@DefaultScrollbarStyle;
+
+          @PlotToggleRow { @Label = "Block Break";       @ToggleId = "FlagBlockBreak"; }
+          @PlotToggleRow { @Label = "Block Place";       @ToggleId = "FlagBlockPlace"; }
+          @PlotToggleRow { @Label = "Interact";          @ToggleId = "FlagInteract"; }
+          @PlotToggleRow { @Label = "Allow Entry";       @ToggleId = "FlagEntry"; }
+          @PlotToggleRow { @Label = "Allow Exit";        @ToggleId = "FlagExit"; }
+          @PlotToggleRow { @Label = "PvP";               @ToggleId = "FlagPvp"; }
+          @PlotToggleRow { @Label = "Explosions";        @ToggleId = "FlagExplosions"; }
+          @PlotToggleRow { @Label = "Mob Spawning";      @ToggleId = "FlagMobSpawning"; }
+          @PlotToggleRow { @Label = "Mob Damage";        @ToggleId = "FlagMobDamage"; }
+          @PlotToggleRow { @Label = "Item Pickup";       @ToggleId = "FlagItemPickup"; }
+          @PlotToggleRow { @Label = "Item Drop";         @ToggleId = "FlagItemDrop"; }
+          @PlotToggleRow { @Label = "Keep Inventory";    @ToggleId = "FlagKeepInventory"; }
+          @PlotToggleRow { @Label = "Crafting";          @ToggleId = "FlagCrafting"; }
+          @PlotToggleRow { @Label = "Player Chat";       @ToggleId = "FlagPlayerChat"; }
+
+          @PlotStringRow { @Label = "Greet Message";    @FieldId = "FlagGreetMessage"; }
+          @PlotStringRow { @Label = "Farewell Message"; @FieldId = "FlagFarewellMessage"; }
+          @PlotStringRow { @Label = "Deny Message";     @FieldId = "FlagDenyMessage"; }
+        }
+
+        $C.@TextButton #BtnSaveFlags {
+          @Anchor = (Horizontal: 0, Height: 40, Bottom: 2);
+          Text: "Save Flags";
+        }
+      }
+
+      // ===== MERGE PANEL =====
+      Group #PanelMerge {
+        Visible: false;
+        Anchor: (Horizontal: 0);
+        LayoutMode: Top;
+
+        Label #MergeHint {
+          Anchor: (Horizontal: 0, Height: 36, Bottom: 8);
+          Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #b2c1d0, HorizontalAlignment: Center, Wrap: true);
+          Text: "Merge this plot with an adjacent plot you own.";
+        }
+
+        @PlotActionButton { @BtnId = "BtnMergeNorth"; @Text = "Merge North"; }
+        @PlotActionButton { @BtnId = "BtnMergeSouth"; @Text = "Merge South"; }
+        @PlotActionButton { @BtnId = "BtnMergeEast";  @Text = "Merge East"; }
+        @PlotActionButton { @BtnId = "BtnMergeWest";  @Text = "Merge West"; }
+
+        Group { Anchor: (Height: 8); }
+
+        @PlotActionButton { @BtnId = "BtnUnmerge"; @Text = "Unmerge All"; }
+      }
+
+      // ===== DANGER PANEL =====
+      Group #PanelDanger {
+        Visible: false;
+        Anchor: (Horizontal: 0);
+        LayoutMode: Top;
+
+        Label #DangerHint {
+          Anchor: (Horizontal: 0, Height: 36, Bottom: 10);
+          Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffd6c8, HorizontalAlignment: Center, Wrap: true);
+          Text: "These actions cannot be undone.";
+        }
+
+        @PlotActionButton { @BtnId = "BtnTransfer"; @Text = "Transfer Ownership"; }
+
+        Group { Anchor: (Height: 8); }
+
+        $C.@CancelTextButton #BtnDelete {
+          @Anchor = (Horizontal: 0, Height: 40);
+          Text: "Delete Plot";
+        }
+      }
+    }
+  }
+}

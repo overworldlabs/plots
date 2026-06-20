@@ -1,0 +1,57 @@
+$C = "../Common.ui";
+$Sounds = "../Sounds.ui";
+
+$C.@PageOverlay {}
+
+$C.@Container {
+  Anchor: (Width: 420, Height: 250);
+
+  #Title {
+    $C.@Title #RenamePopupTitle { @Text = "RENAME PLOT"; }
+  }
+
+  #Content {
+    LayoutMode: Top;
+    Padding: (Top: 18, Bottom: 20, Left: 24, Right: 24);
+
+    Label #RenamePlotHint {
+      Anchor: (Horizontal: 0, Height: 16, Bottom: 8);
+      Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #b8c7d8);
+      Text: "Plot name (max 32 characters):";
+    }
+
+    $C.@TextField #RenamePlotInput {
+      @Anchor = (Horizontal: 0, Bottom: 10);
+    }
+
+    Label #RenamePlotError {
+      Anchor: (Horizontal: 0, Height: 18, Bottom: 10);
+      Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ff7a7a, HorizontalAlignment: Center);
+      Text: "";
+      Visible: false;
+    }
+
+    Group { FlexWeight: 1; }
+
+    Group {
+      Anchor: (Horizontal: 0, Height: 40);
+      LayoutMode: Left;
+
+      $C.@SecondaryTextButton #BtnRenameCancel {
+        @Sounds = $Sounds.@ButtonsLight;
+        @Anchor = (Height: 36);
+        FlexWeight: 1;
+        Text: "Cancel";
+      }
+
+      Group { Anchor: (Width: 8); }
+
+      $C.@TextButton #BtnRenameSave {
+        @Sounds = $Sounds.@ButtonsLight;
+        @Anchor = (Height: 36);
+        FlexWeight: 1;
+        Text: "Save";
+      }
+    }
+  }
+}

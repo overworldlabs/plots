@@ -157,6 +157,11 @@
     "notification": {
         "hud_name_line": "{#55ffff}%plot_name%",
         "hud_owner_line": "{#ffffff}%owner_name%'s Plot",
+        "hud_info_line": "%status% • Trusted: %trusted% • Merged: %merged%",
+        "hud_status_owner": "Owner",
+        "hud_status_trusted": "Trusted",
+        "hud_status_visitor": "Visitor",
+        "hud_fallback": "Press Alt to open the plot menu",
         "world_enter": {
             "title": "Plot World",
             "subtitle": "Build your dreams here!"

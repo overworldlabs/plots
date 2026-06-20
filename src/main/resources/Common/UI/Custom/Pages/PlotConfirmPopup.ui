@@ -1,0 +1,53 @@
+$C = "../Common.ui";
+$Sounds = "../Sounds.ui";
+
+$C.@PageOverlay {}
+
+$C.@Container {
+  Anchor: (Width: 460, Height: 250);
+
+  #Title {
+    $C.@Title #ConfirmPopupTitle { @Text = "CONFIRM ACTION"; }
+  }
+
+  #Content {
+    LayoutMode: Top;
+    Padding: (Top: 18, Bottom: 20, Left: 24, Right: 24);
+
+    Label #ConfirmPopupMessage {
+      Anchor: (Horizontal: 0, Height: 44, Bottom: 10);
+      Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #d0dce6, HorizontalAlignment: Center, VerticalAlignment: Center, Wrap: true);
+      Text: "";
+    }
+
+    Label #ConfirmPopupError {
+      Anchor: (Horizontal: 0, Height: 18, Bottom: 10);
+      Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ff7a7a, HorizontalAlignment: Center);
+      Text: "";
+      Visible: false;
+    }
+
+    Group { FlexWeight: 1; }
+
+    Group {
+      Anchor: (Horizontal: 0, Height: 40);
+      LayoutMode: Left;
+
+      $C.@SecondaryTextButton #BtnConfirmCancel {
+        @Sounds = $Sounds.@ButtonsLight;
+        @Anchor = (Height: 36);
+        FlexWeight: 1;
+        Text: "Cancel";
+      }
+
+      Group { Anchor: (Width: 8); }
+
+      $C.@CancelTextButton #BtnConfirmConfirm {
+        @Sounds = $Sounds.@ButtonsCancel;
+        @Anchor = (Height: 36);
+        FlexWeight: 1;
+        Text: "Confirm";
+      }
+    }
+  }
+}

@@ -19,7 +19,7 @@
   "Description": "Grid-based plot management: claim/auto-claim, trust, flags, merge/unmerge, BuilderTools protection (including extrude/scripted brushes), economy hooks, translations, and API support.",
   "IncludesAssetPack": true,
   "OptionalDependencies": {
-    "Hytale:plots.mixin.bridge": "*",
+    "Stoshe:stoshe.taleguard": "*",
     "ehko:Hylograms": "*",
     "com.eliteessentials:EliteEssentials": "*",
     "Economy:EconomySystem": "*",

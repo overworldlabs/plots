@@ -157,6 +157,11 @@
     "notification": {
         "hud_name_line": "{#55ffff}%plot_name%",
         "hud_owner_line": "{#ffffff}Plot de %owner_name%",
+        "hud_info_line": "%status% • Confiáveis: %trusted% • Mesclados: %merged%",
+        "hud_status_owner": "Dono",
+        "hud_status_trusted": "Confiável",
+        "hud_status_visitor": "Visitante",
+        "hud_fallback": "Aperte Alt para abrir o menu do plot",
         "world_enter": {
             "title": "Mundo de Plots",
             "subtitle": "Construa seus sonhos aqui!"

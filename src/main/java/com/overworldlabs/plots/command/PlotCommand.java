@@ -18,6 +18,8 @@ import com.overworldlabs.plots.command.sub.PlotDebugCommand;
 import com.overworldlabs.plots.command.sub.PlotFlagCommand;
 import com.overworldlabs.plots.command.sub.PlotInfoCommand;
 import com.overworldlabs.plots.command.sub.PlotListCommand;
+import com.overworldlabs.plots.command.sub.PlotMenuCommand;
+import com.overworldlabs.plots.command.sub.PlotAdminCommand;
 import com.overworldlabs.plots.command.sub.PlotMergeCommand;
 import com.overworldlabs.plots.command.sub.PlotRenameCommand;
 import com.overworldlabs.plots.command.sub.PlotRefreshCommand;
@@ -82,6 +84,8 @@ public class PlotCommand extends AbstractCommandCollection {
         addSubCommand(new PlotUnmergeCommand(plotManager));
         addSubCommand(new PlotSetSpawnCommand(plotManager));
         addSubCommand(new PlotRefreshCommand(plotManager));
+        addSubCommand(new PlotMenuCommand(plotManager));
+        addSubCommand(new PlotAdminCommand(plotManager));
     }
 
     @Override

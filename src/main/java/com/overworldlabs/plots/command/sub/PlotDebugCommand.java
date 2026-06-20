@@ -61,7 +61,7 @@ public class PlotDebugCommand extends CommandBase {
             context.sender().sendMessage(ChatUtil.colorize(
                     "{#ffaa00}[Plots] {#ffffff}Bridge is ready, but no mixins were applied."));
             context.sender().sendMessage(ChatUtil.colorize(
-                    "{#ffaa00}[Plots] {#ffffff}Check plots-mixin-bridge version compatibility with this server build."));
+                    "{#ffaa00}[Plots] {#ffffff}Check TaleGuard version compatibility with this server build."));
         }
     }
 

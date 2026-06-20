@@ -81,20 +81,20 @@ public class UpdateNotificationSystem extends EntityTickingSystem<EntityStore> {
         if (timeSinceJoin >= NOTIFICATION_DELAY && timeSinceJoin < NOTIFICATION_DELAY + 1.0f) {
             if (!MixinBridgeStatus.isReadyForMixinFlags() && !missingMixinBridgeNotified.getOrDefault(uuid, false)) {
                 playerRef.sendMessage(ChatUtil.colorize(
-                        "{#ffaa00}[Plots] {#ffffff}Plots-MixinBridge is not loaded."));
+                        "{#ffaa00}[Plots] {#ffffff}TaleGuard bridge is not loaded — running with basic protection only."));
                 playerRef.sendMessage(ChatUtil.colorize(
-                        "{#ffaa00}[Plots] {#ffffff}Some protections need it for full coverage (pickup/F-key, hammer, fluid, command filtering, seats, keep-inventory, invincible-items)."));
+                        "{#ffaa00}[Plots] {#ffffff}Some flags need it for full coverage (pickup/F-key, hammer, fluid, command filtering, seats, keep-inventory, invincible-items)."));
                 playerRef.sendMessage(ChatUtil.colorize(
-                        "{#ffaa00}[Plots] {#ffffff}Install: {#55ffff}https://github.com/overworldlabs/plots-mixin-bridge/releases"));
+                        "{#ffaa00}[Plots] {#ffffff}Install the {#55ffff}TaleGuard{#ffffff} bridge plugin for full protection coverage."));
                 missingMixinBridgeNotified.put(uuid, true);
             }
             if (MixinBridgeStatus.isReadyForMixinFlags()
                     && !MixinBridgeStatus.isMixinsLoaded()
                     && !mixinsNotAppliedNotified.getOrDefault(uuid, false)) {
                 playerRef.sendMessage(ChatUtil.colorize(
-                        "{#ffaa00}[Plots] {#ffffff}Plots-MixinBridge is active, but no mixins were applied."));
+                        "{#ffaa00}[Plots] {#ffffff}TaleGuard bridge is active, but no mixins were applied."));
                 playerRef.sendMessage(ChatUtil.colorize(
-                        "{#ffaa00}[Plots] {#ffffff}Verify bridge version compatibility with this Hytale server build."));
+                        "{#ffaa00}[Plots] {#ffffff}Verify TaleGuard version compatibility with this Hytale server build."));
                 mixinsNotAppliedNotified.put(uuid, true);
             }
             if (latestVersion != null && UpdateChecker.isNewerVersion(currentVersion, latestVersion)) {

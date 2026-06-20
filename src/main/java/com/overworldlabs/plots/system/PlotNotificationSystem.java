@@ -163,7 +163,17 @@ public class PlotNotificationSystem extends EntityTickingSystem<EntityStore> {
                         "x", String.valueOf(plot.getGridX()),
                         "z", String.valueOf(plot.getGridZ()));
 
-                hud.setPlotInfo(hudNameLine, hudOwnerLine);
+                String status = plot.getOwner() != null && plot.getOwner().equals(uuid)
+                        ? tm().get("notification.hud_status_owner")
+                        : (plot.isTrusted(uuid)
+                                ? tm().get("notification.hud_status_trusted")
+                                : tm().get("notification.hud_status_visitor"));
+                String hudInfoLine = translationManager.get("notification.hud_info_line",
+                        "status", status,
+                        "trusted", String.valueOf(plot.getTrustedPlayers().size()),
+                        "merged", String.valueOf(plot.getMergedPlots().size()));
+
+                hud.setPlotInfo(hudNameLine, hudOwnerLine, hudInfoLine);
                 safeRequestHudUpdate(hud);
 
                 if (!greeting.isEmpty()) {
@@ -176,7 +186,7 @@ public class PlotNotificationSystem extends EntityTickingSystem<EntityStore> {
                 }
                 lastHudState.put(uuid, newHudState);
             } else if (lastId != null && !lastId.equals("road")) {
-                hud.clearPlotInfo();
+                hud.setFallback(tm().get("notification.hud_fallback"));
                 safeRequestHudUpdate(hud);
                 lastHudState.remove(uuid);
                 restoreWorldWeather(playerRef, currentWorld);
@@ -196,6 +206,12 @@ public class PlotNotificationSystem extends EntityTickingSystem<EntityStore> {
                     } catch (NumberFormatException ignored) {
                     }
                 }
+            } else {
+                // On a road (no plot) inside a managed world: show the menu hint.
+                hud.setFallback(tm().get("notification.hud_fallback"));
+                safeRequestHudUpdate(hud);
+                lastHudState.remove(uuid);
+                restoreWorldWeather(playerRef, currentWorld);
             }
 
             lastPlotId.put(uuid, currentId);
