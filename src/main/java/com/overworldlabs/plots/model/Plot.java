@@ -31,6 +31,28 @@ public class Plot {
     private final Map<String, Object> flags;
     private final Set<String> mergedPlots;
     private final long createdAt;
+    /** Optional per-plot spawn point; null means use the computed plot center. */
+    private PlotSpawn spawn;
+
+    /** Per-plot spawn location (world coordinates + rotation). */
+    public static final class PlotSpawn {
+        public double x;
+        public double y;
+        public double z;
+        public float yaw;
+        public float pitch;
+
+        public PlotSpawn() {
+        }
+
+        public PlotSpawn(double x, double y, double z, float yaw, float pitch) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.yaw = yaw;
+            this.pitch = pitch;
+        }
+    }
 
     /**
      * Constructs a new Plot with the specified grid coordinates and owner.
@@ -172,6 +194,29 @@ public class Plot {
      */
     public void setName(@Nonnull String name) {
         this.name = name;
+    }
+
+    /** Returns the per-plot spawn, or null when none is set. */
+    public PlotSpawn getSpawn() {
+        return spawn;
+    }
+
+    public boolean hasSpawn() {
+        return spawn != null;
+    }
+
+    /** Sets a custom per-plot spawn point. */
+    public void setSpawn(double x, double y, double z, float yaw, float pitch) {
+        this.spawn = new PlotSpawn(x, y, z, yaw, pitch);
+    }
+
+    public void setSpawn(PlotSpawn spawn) {
+        this.spawn = spawn;
+    }
+
+    /** Clears the custom spawn so the plot falls back to its computed center. */
+    public void clearSpawn() {
+        this.spawn = null;
     }
 
     /**

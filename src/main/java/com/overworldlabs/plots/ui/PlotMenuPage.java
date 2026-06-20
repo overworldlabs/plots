@@ -317,7 +317,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
             case "OpenRename" -> player.getPageManager().openCustomPage(ref, store,
                     (CustomUIPage) PlotRenamePopupPage.create(this.playerRef, resolveWorld(player), this.plugin));
             case "SetSpawn" -> {
-                handleSetSpawn(player, ref, store);
+                handleSetSpawn(player, ref, store, plot);
                 reopen(player, ref, store, this.currentTab);
             }
             case "Teleport" -> {
@@ -498,11 +498,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         player.sendMessage(ChatUtil.success("Unmerged " + count + " link(s)."));
     }
 
-    private void handleSetSpawn(Player player, Ref<EntityStore> ref, Store<EntityStore> store) {
-        if (!PermissionUtil.hasAdminPermission(this.playerRef.getUuid())) {
-            player.sendMessage(ChatUtil.error("Only admins can set the plot world spawn."));
-            return;
-        }
+    private void handleSetSpawn(Player player, Ref<EntityStore> ref, Store<EntityStore> store, Plot plot) {
         TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
         if (transform == null || transform.getPosition() == null) {
             player.sendMessage(ChatUtil.error("Your position is unavailable."));
@@ -510,18 +506,17 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         }
         com.hypixel.hytale.math.vector.Vector3d pos = transform.getPosition();
         com.hypixel.hytale.math.vector.Vector3f rot = transform.getRotation();
-        com.overworldlabs.plots.config.PlotConfig config = this.plugin.getConfig();
-        com.overworldlabs.plots.config.PlotConfig.SpawnSettings spawn = config.getSpawn();
-        spawn.X = pos.x;
-        spawn.Y = pos.y;
-        spawn.Z = pos.z;
-        if (rot != null) {
-            spawn.Pitch = rot.getPitch();
-            spawn.Yaw = rot.getYaw();
+        // Keep the spawn inside this plot's bounds so it can't be set elsewhere.
+        if (!plot.equals(this.plugin.getPlotManager().getPlotAt(this.sourceWorld.getName(),
+                (int) Math.floor(pos.x), (int) Math.floor(pos.z)))) {
+            player.sendMessage(ChatUtil.error("Stand inside this plot to set its spawn."));
+            return;
         }
-        spawn.CustomSpawn = true;
-        this.plugin.saveConfig(config);
-        player.sendMessage(ChatUtil.success("Plot world spawn set to your current position."));
+        float yaw = rot != null ? rot.getYaw() : 0f;
+        float pitch = rot != null ? rot.getPitch() : 0f;
+        plot.setSpawn(pos.x, pos.y, pos.z, yaw, pitch);
+        this.plugin.getPlotManager().savePlots();
+        player.sendMessage(ChatUtil.success("Plot spawn set to your current position."));
     }
 
     // ======================================================================== helpers

@@ -494,14 +494,21 @@ public class PlotManager implements IPlotManager {
             return;
         }
 
-        int gridX = plot.getGridX();
-        int gridZ = plot.getGridZ();
-        int worldX = plotConfig.gridToWorldX(gridX) + (plotConfig.getPlotSizeX() / 2);
-        int worldZ = plotConfig.gridToWorldZ(gridZ) - 2;
-        double spawnY = 66.5;
-
-        Vector3d pos = new Vector3d(worldX + 0.5, spawnY, worldZ + 0.5);
-        Vector3f rot = new Vector3f(0, 180, 0);
+        Vector3d pos;
+        Vector3f rot;
+        if (plot.hasSpawn()) {
+            Plot.PlotSpawn s = plot.getSpawn();
+            pos = new Vector3d(s.x, s.y, s.z);
+            rot = new Vector3f(0, s.yaw, 0);
+        } else {
+            int gridX = plot.getGridX();
+            int gridZ = plot.getGridZ();
+            int worldX = plotConfig.gridToWorldX(gridX) + (plotConfig.getPlotSizeX() / 2);
+            int worldZ = plotConfig.gridToWorldZ(gridZ) - 2;
+            double spawnY = 66.5;
+            pos = new Vector3d(worldX + 0.5, spawnY, worldZ + 0.5);
+            rot = new Vector3f(0, 180, 0);
+        }
 
         try {
             Teleport teleport = new Teleport(plotWorld, pos, rot);
