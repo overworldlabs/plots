@@ -22,6 +22,7 @@ public class PlotConfig {
         public int RoadSizeZ = 4;
         public int MaxPlotsDefault = 1;
         public int MaxPlotLimit = 50;
+        public int MaxWarpsPerPlot = 5;
         public String DefaultPlotName = "%owner%'s Plot";
     }
 
@@ -180,6 +181,14 @@ public class PlotConfig {
 
     public int getMaxPlotLimit() {
         return Plots.MaxPlotLimit;
+    }
+
+    public int getMaxWarpsPerPlot() {
+        return Plots.MaxWarpsPerPlot > 0 ? Plots.MaxWarpsPerPlot : 5;
+    }
+
+    public void setMaxWarpsPerPlot(int max) {
+        Plots.MaxWarpsPerPlot = max;
     }
 
     public String getDefaultPlotNameTemplate() {

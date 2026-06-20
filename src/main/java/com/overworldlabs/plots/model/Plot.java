@@ -33,6 +33,32 @@ public class Plot {
     private final long createdAt;
     /** Optional per-plot spawn point; null means use the computed plot center. */
     private PlotSpawn spawn;
+    /** Named per-plot warps. Lazily initialised (may be null after deserialization). */
+    private List<PlotWarp> warps;
+
+    /** A named teleport point inside a plot. */
+    public static final class PlotWarp {
+        @Nonnull
+        public String name;
+        public double x;
+        public double y;
+        public double z;
+        public float yaw;
+        public float pitch;
+
+        public PlotWarp() {
+            this.name = "";
+        }
+
+        public PlotWarp(@Nonnull String name, double x, double y, double z, float yaw, float pitch) {
+            this.name = name;
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.yaw = yaw;
+            this.pitch = pitch;
+        }
+    }
 
     /** Per-plot spawn location (world coordinates + rotation). */
     public static final class PlotSpawn {
@@ -217,6 +243,56 @@ public class Plot {
     /** Clears the custom spawn so the plot falls back to its computed center. */
     public void clearSpawn() {
         this.spawn = null;
+    }
+
+    /** Returns a copy of this plot's named warps (never null). */
+    @Nonnull
+    public List<PlotWarp> getWarps() {
+        return warps != null ? new ArrayList<>(warps) : new ArrayList<>();
+    }
+
+    public int getWarpCount() {
+        return warps != null ? warps.size() : 0;
+    }
+
+    /** Finds a warp by name (case-insensitive), or null. */
+    public PlotWarp getWarp(@Nonnull String name) {
+        if (warps == null) {
+            return null;
+        }
+        for (PlotWarp w : warps) {
+            if (w.name != null && w.name.equalsIgnoreCase(name)) {
+                return w;
+            }
+        }
+        return null;
+    }
+
+    /** Adds or replaces a warp by name. Returns false if the name is blank. */
+    public boolean setWarp(@Nonnull String name, double x, double y, double z, float yaw, float pitch) {
+        String trimmed = name.trim();
+        if (trimmed.isEmpty()) {
+            return false;
+        }
+        if (warps == null) {
+            warps = new ArrayList<>();
+        }
+        warps.removeIf(w -> w.name != null && w.name.equalsIgnoreCase(trimmed));
+        warps.add(new PlotWarp(trimmed, x, y, z, yaw, pitch));
+        return true;
+    }
+
+    /** Removes a warp by name (case-insensitive). Returns true if removed. */
+    public boolean removeWarp(@Nonnull String name) {
+        if (warps == null) {
+            return false;
+        }
+        return warps.removeIf(w -> w.name != null && w.name.equalsIgnoreCase(name));
+    }
+
+    /** Replaces the full warp list (used by storage on load). */
+    public void setWarps(List<PlotWarp> warps) {
+        this.warps = warps != null ? new ArrayList<>(warps) : null;
     }
 
     /**

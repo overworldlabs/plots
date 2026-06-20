@@ -517,4 +517,29 @@ public class PlotManager implements IPlotManager {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void teleportPlayerToWarp(Store<EntityStore> store, Ref<EntityStore> ref, Plot.PlotWarp warp) {
+        if (warp == null) {
+            return;
+        }
+        PlotConfig plotConfig = getConfig();
+        World plotWorld = Universe.get().getWorlds().get(plotConfig.getPlotWorldName());
+        if (plotWorld == null) {
+            return;
+        }
+        Vector3d pos = new Vector3d(warp.x, warp.y, warp.z);
+        Vector3f rot = new Vector3f(0, warp.yaw, 0);
+        try {
+            Teleport teleport = new Teleport(plotWorld, pos, rot);
+            store.addComponent(ref, Teleport.getComponentType(), teleport);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public int getMaxWarpsPerPlot() {
+        return getConfig().getMaxWarpsPerPlot();
+    }
 }

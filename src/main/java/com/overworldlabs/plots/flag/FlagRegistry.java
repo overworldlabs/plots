@@ -52,6 +52,8 @@ public class FlagRegistry {
                         new BooleanFlag("seat", "Allow sitting interactions", true));
         public static final BooleanFlag MOB_SPAWNING = register(
                         new BooleanFlag("mob-spawning", "Allow mob spawning", true));
+        public static final BooleanFlag VISIT = register(
+                        new BooleanFlag("visit", "List this plot's warps publicly and allow visitors to use them", true));
         public static final BooleanFlag KEEP_INVENTORY = register(
                         new BooleanFlag("keep-inventory", "Keep inventory on death", false));
         public static final BooleanFlag INVINCIBLE_ITEMS = register(

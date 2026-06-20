@@ -33,8 +33,8 @@ public class SqlPlotRepository implements IPlotRepository {
     private static final String SELECT_ALL_SQL = "SELECT * FROM " + TABLE;
     private static final String DELETE_SQL = "DELETE FROM " + TABLE + " WHERE grid_x = ? AND grid_z = ?";
     private static final String UPSERT_SQL = "INSERT INTO " + TABLE
-            + " (grid_x, grid_z, owner_uuid, owner_name, name, trusted_json, flags_json, merged_json, created_at, spawn_json) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+            + " (grid_x, grid_z, owner_uuid, owner_name, name, trusted_json, flags_json, merged_json, created_at, spawn_json, warps_json) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
             + "ON CONFLICT(grid_x, grid_z) DO UPDATE SET "
             + "owner_uuid = excluded.owner_uuid, "
             + "owner_name = excluded.owner_name, "
@@ -43,7 +43,8 @@ public class SqlPlotRepository implements IPlotRepository {
             + "flags_json = excluded.flags_json, "
             + "merged_json = excluded.merged_json, "
             + "created_at = excluded.created_at, "
-            + "spawn_json = excluded.spawn_json";
+            + "spawn_json = excluded.spawn_json, "
+            + "warps_json = excluded.warps_json";
 
     private final HikariDataSource dataSource;
     private final Gson gson = new Gson();
@@ -78,6 +79,7 @@ public class SqlPlotRepository implements IPlotRepository {
                 "merged_json TEXT NOT NULL, " +
                 "created_at BIGINT NOT NULL, " +
                 "spawn_json TEXT, " +
+                "warps_json TEXT, " +
                 "PRIMARY KEY (grid_x, grid_z)" +
                 ")";
         String ownerIndexSql = "CREATE INDEX IF NOT EXISTS idx_plots_owner_uuid ON " + TABLE + " (owner_uuid)";
@@ -92,6 +94,11 @@ public class SqlPlotRepository implements IPlotRepository {
         // when the column already exists (new installs created it above).
         try (Connection conn = dataSource.getConnection(); Statement st = conn.createStatement()) {
             st.execute("ALTER TABLE " + TABLE + " ADD COLUMN spawn_json TEXT");
+        } catch (SQLException ignored) {
+            // Column already present — nothing to do.
+        }
+        try (Connection conn = dataSource.getConnection(); Statement st = conn.createStatement()) {
+            st.execute("ALTER TABLE " + TABLE + " ADD COLUMN warps_json TEXT");
         } catch (SQLException ignored) {
             // Column already present — nothing to do.
         }
@@ -164,6 +171,18 @@ public class SqlPlotRepository implements IPlotRepository {
                     } catch (Exception ignored) {
                     }
                 }
+                String warpsJson = rs.getString("warps_json");
+                if (warpsJson != null && !warpsJson.isEmpty()) {
+                    try {
+                        Type warpType = new TypeToken<List<Plot.PlotWarp>>() {
+                        }.getType();
+                        List<Plot.PlotWarp> warps = gson.fromJson(warpsJson, warpType);
+                        if (warps != null) {
+                            plot.setWarps(warps);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                }
                 cache.put(key(gridX, gridZ), plot);
             }
             ConsoleColors.info("Loaded " + cache.size() + " plots from SQL storage.");
@@ -196,6 +215,7 @@ public class SqlPlotRepository implements IPlotRepository {
             ps.setString(8, gson.toJson(plot.getMergedPlots()));
             ps.setLong(9, plot.getCreatedAt());
             ps.setString(10, plot.getSpawn() != null ? gson.toJson(plot.getSpawn()) : null);
+            ps.setString(11, plot.getWarpCount() > 0 ? gson.toJson(plot.getWarps()) : null);
             ps.executeUpdate();
         } catch (SQLException e) {
             ConsoleColors.error("Failed to save plot [" + plot.getGridX() + "," + plot.getGridZ() + "]: " + e.getMessage());

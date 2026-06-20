@@ -80,4 +80,11 @@ public interface IPlotManager {
             Store<EntityStore> store,
             Ref<EntityStore> playerRef,
             Plot plot);
+
+    void teleportPlayerToWarp(
+            Store<EntityStore> store,
+            Ref<EntityStore> playerRef,
+            Plot.PlotWarp warp);
+
+    int getMaxWarpsPerPlot();
 }
