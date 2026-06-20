@@ -127,7 +127,7 @@ public class PlotWarpNamePopupPage extends InteractiveCustomUIPage<PlotWarpNameP
         try {
             plot.setWarp(name, pos.x, pos.y, pos.z, yaw, pitch);
             this.plugin.getPlotManager().savePlots();
-            player.sendMessage(ChatUtil.success("Warp '" + name + "' set to your current position."));
+            player.getPlayerRef().sendMessage(ChatUtil.success("Warp '" + name + "' set to your current position."));
         } catch (Exception ignored) {
         }
         PlotMenuPage.open(player, ref, store, this.playerRef, world, this.plugin);

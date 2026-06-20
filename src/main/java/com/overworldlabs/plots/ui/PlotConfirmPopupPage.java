@@ -118,9 +118,9 @@ public class PlotConfirmPopupPage extends InteractiveCustomUIPage<PlotConfirmPop
         try {
             this.plugin.getPlotManager().unclaimPlot(this.gridX, this.gridZ);
             this.plugin.getPlotManager().savePlots();
-            player.sendMessage(ChatUtil.success("Plot deleted."));
+            player.getPlayerRef().sendMessage(ChatUtil.success("Plot deleted."));
         } catch (Exception ex) {
-            player.sendMessage(ChatUtil.error("Failed to delete plot."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("Failed to delete plot."));
         }
         player.getPageManager().setPage(ref, store, Page.None);
     }
@@ -133,12 +133,12 @@ public class PlotConfirmPopupPage extends InteractiveCustomUIPage<PlotConfirmPop
                 plot.setOwnerName(safe(this.targetName));
                 plot.removeTrustedPlayer(this.targetUuid);
                 this.plugin.getPlotManager().savePlots();
-                player.sendMessage(ChatUtil.success("Plot transferred to " + safe(this.targetName) + "."));
+                player.getPlayerRef().sendMessage(ChatUtil.success("Plot transferred to " + safe(this.targetName) + "."));
             } else {
-                player.sendMessage(ChatUtil.error("Could not transfer plot."));
+                player.getPlayerRef().sendMessage(ChatUtil.error("Could not transfer plot."));
             }
         } catch (Exception ex) {
-            player.sendMessage(ChatUtil.error("Failed to transfer plot."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("Failed to transfer plot."));
         }
         PlotMenuPage.open(player, ref, store, this.playerRef, world, this.plugin);
     }

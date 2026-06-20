@@ -353,7 +353,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
 
         // Mutating actions require management permission.
         if (!canManage) {
-            player.sendMessage(ChatUtil.error("You do not have permission to manage this plot."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("You do not have permission to manage this plot."));
             reopen(player, ref, store, this.currentTab);
             return;
         }
@@ -379,10 +379,10 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
             case "SaveFlags" -> {
                 int skipped = handleSaveFlags(plot, data);
                 if (skipped > 0) {
-                    player.sendMessage(ChatUtil.error(
+                    player.getPlayerRef().sendMessage(ChatUtil.error(
                             "Some flags need the TaleGuard bridge and were left off. Install TaleGuard to enable them; basic protection still applies."));
                 } else {
-                    player.sendMessage(ChatUtil.success("Plot flags saved."));
+                    player.getPlayerRef().sendMessage(ChatUtil.success("Plot flags saved."));
                 }
                 reopen(player, ref, store, Tab.FLAGS);
             }
@@ -397,7 +397,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
             case "OpenAddWarp" -> {
                 int max = this.plugin.getPlotManager().getMaxWarpsPerPlot();
                 if (plot.getWarpCount() >= max) {
-                    player.sendMessage(ChatUtil.error("Warp limit reached (max " + max + ")."));
+                    player.getPlayerRef().sendMessage(ChatUtil.error("Warp limit reached (max " + max + ")."));
                     reopen(player, ref, store, Tab.WARPS);
                 } else {
                     player.getPageManager().openCustomPage(ref, store,
@@ -433,7 +433,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         UUID target = this.trustedView.get(index);
         plot.removeTrustedPlayer(target);
         this.plugin.getPlotManager().savePlots();
-        player.sendMessage(ChatUtil.success("Removed " + resolveName(target) + " from trusted players."));
+        player.getPlayerRef().sendMessage(ChatUtil.success("Removed " + resolveName(target) + " from trusted players."));
     }
 
     private void handleWarpTp(Player player, Ref<EntityStore> ref, Store<EntityStore> store, String param) {
@@ -463,7 +463,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         Plot.PlotWarp w = this.warpView.get(index);
         if (plot.removeWarp(w.name)) {
             this.plugin.getPlotManager().savePlots();
-            player.sendMessage(ChatUtil.success("Warp '" + safe(w.name) + "' removed."));
+            player.getPlayerRef().sendMessage(ChatUtil.success("Warp '" + safe(w.name) + "' removed."));
         }
     }
 
@@ -522,30 +522,30 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
             case "east" -> dx = 1;
             case "west" -> dx = -1;
             default -> {
-                player.sendMessage(ChatUtil.error("Invalid merge direction."));
+                player.getPlayerRef().sendMessage(ChatUtil.error("Invalid merge direction."));
                 return;
             }
         }
         if (!(this.plugin.getPlotManager() instanceof PlotManager pm)) {
-            player.sendMessage(ChatUtil.error("Merge is unavailable."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("Merge is unavailable."));
             return;
         }
         Plot neighbor = pm.getPlotByGrid(plot.getGridX() + dx, plot.getGridZ() + dz);
         if (neighbor == null) {
-            player.sendMessage(ChatUtil.error("No adjacent claimed plot to the " + dir + "."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("No adjacent claimed plot to the " + dir + "."));
             return;
         }
         if (!neighbor.getOwner().equals(plot.getOwner())) {
-            player.sendMessage(ChatUtil.error("That plot is owned by someone else."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("That plot is owned by someone else."));
             return;
         }
         if (pm.arePlotsMerged(plot, neighbor)) {
-            player.sendMessage(ChatUtil.info("Those plots are already merged."));
+            player.getPlayerRef().sendMessage(ChatUtil.info("Those plots are already merged."));
             return;
         }
         World world = resolveWorld(player);
         if (world == null || !pm.mergePlotsWithRoadPolicy(world, plot, neighbor, true)) {
-            player.sendMessage(ChatUtil.error("Merge failed."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("Merge failed."));
             return;
         }
         this.plugin.getRadarManager().updatePlotMarker(plot);
@@ -553,22 +553,22 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         this.plugin.getRadarManager().refreshAllPlotMarkers();
         this.plugin.getHologramManager().refreshMergedHolograms(java.util.List.of(plot, neighbor), store);
         this.plugin.getPlotManager().savePlots();
-        player.sendMessage(ChatUtil.success("Merged plot to the " + dir + "."));
+        player.getPlayerRef().sendMessage(ChatUtil.success("Merged plot to the " + dir + "."));
     }
 
     private void handleUnmerge(Player player, Ref<EntityStore> ref, Store<EntityStore> store, Plot plot) {
         if (!(this.plugin.getPlotManager() instanceof PlotManager pm)) {
-            player.sendMessage(ChatUtil.error("Unmerge is unavailable."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("Unmerge is unavailable."));
             return;
         }
         java.util.List<Plot> neighbors = pm.getMergedNeighbors(plot);
         if (neighbors.isEmpty()) {
-            player.sendMessage(ChatUtil.info("This plot is not merged with anything."));
+            player.getPlayerRef().sendMessage(ChatUtil.info("This plot is not merged with anything."));
             return;
         }
         World world = resolveWorld(player);
         if (world == null) {
-            player.sendMessage(ChatUtil.error("Unmerge failed."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("Unmerge failed."));
             return;
         }
         java.util.List<Plot> affected = new java.util.ArrayList<>();
@@ -587,13 +587,13 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
             this.plugin.getHologramManager().refreshMergedHolograms(affected, store);
         }
         this.plugin.getPlotManager().savePlots();
-        player.sendMessage(ChatUtil.success("Unmerged " + count + " link(s)."));
+        player.getPlayerRef().sendMessage(ChatUtil.success("Unmerged " + count + " link(s)."));
     }
 
     private void handleSetSpawn(Player player, Ref<EntityStore> ref, Store<EntityStore> store, Plot plot) {
         TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
         if (transform == null || transform.getPosition() == null) {
-            player.sendMessage(ChatUtil.error("Your position is unavailable."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("Your position is unavailable."));
             return;
         }
         org.joml.Vector3d pos = transform.getPosition();
@@ -601,14 +601,14 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         // Keep the spawn inside this plot's bounds so it can't be set elsewhere.
         if (!plot.equals(this.plugin.getPlotManager().getPlotAt(this.sourceWorld.getName(),
                 (int) Math.floor(pos.x), (int) Math.floor(pos.z)))) {
-            player.sendMessage(ChatUtil.error("Stand inside this plot to set its spawn."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("Stand inside this plot to set its spawn."));
             return;
         }
         float yaw = rot != null ? rot.yaw() : 0f;
         float pitch = rot != null ? rot.pitch() : 0f;
         plot.setSpawn(pos.x, pos.y, pos.z, yaw, pitch);
         this.plugin.getPlotManager().savePlots();
-        player.sendMessage(ChatUtil.success("Plot spawn set to your current position."));
+        player.getPlayerRef().sendMessage(ChatUtil.success("Plot spawn set to your current position."));
     }
 
     // ======================================================================== helpers

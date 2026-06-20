@@ -80,10 +80,10 @@ public class BuilderToolsIntegration {
     }
 
     private OperationFactory createProtectedFactory(String toolName, OperationFactory original) {
-        return (ref, player, packet, accessor) -> {
+        return (ref, player, playerRefArg, packet, accessor) -> {
             UUID playerUuid = null;
-            PlayerRef playerRef = null;
-            if (player != null) {
+            PlayerRef playerRef = playerRefArg;
+            if (playerRef == null && player != null) {
                 Ref<EntityStore> playerEntityRef = player.getReference();
                 if (playerEntityRef != null) {
                     playerRef = playerEntityRef.getStore().getComponent(playerEntityRef, PlayerRef.getComponentType());
@@ -108,7 +108,7 @@ public class BuilderToolsIntegration {
                 }
             }
 
-            ToolOperation operation = original.create(ref, player, packet, accessor);
+            ToolOperation operation = original.create(ref, player, playerRefArg, packet, accessor);
             if (operation != null && playerUuid != null) {
                 injectProtection(operation, playerUuid, toolName);
             }

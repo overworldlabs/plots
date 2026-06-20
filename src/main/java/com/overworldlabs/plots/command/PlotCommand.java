@@ -289,7 +289,7 @@ public class PlotCommand extends AbstractCommandCollection {
         } catch (Exception ignored) {
         }
         LOGGER.log(java.util.logging.Level.SEVERE,
-                "Failed to execute command '" + input + "' for " + sender.getDisplayName() + " (" + senderUuid
+                "Failed to execute command '" + input + "' for " + sender.getUsername() + " (" + senderUuid
                         + ")",
                 cause);
         ConsoleColors.error("Command error for input: " + input + " (" + cause.getClass().getSimpleName() + ")");

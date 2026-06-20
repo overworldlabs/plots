@@ -167,7 +167,7 @@ public class PlotPlayerPickerPage extends InteractiveCustomUIPage<PlotPlayerPick
             String targetName) {
         Plot plot = resolvePlot(ref, store);
         if (plot == null) {
-            player.sendMessage(ChatUtil.error("You are not standing on a plot."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("You are not standing on a plot."));
             PlotMenuPage.open(player, ref, store, this.playerRef, world, this.plugin);
             return;
         }
@@ -191,7 +191,7 @@ public class PlotPlayerPickerPage extends InteractiveCustomUIPage<PlotPlayerPick
             }
             plot.addTrustedPlayer(targetUuid);
             this.plugin.getPlotManager().savePlots();
-            player.sendMessage(ChatUtil.success("Trusted " + safe(targetName) + "."));
+            player.getPlayerRef().sendMessage(ChatUtil.success("Trusted " + safe(targetName) + "."));
             PlotMenuPage.open(player, ref, store, this.playerRef, world, this.plugin);
         } else {
             player.getPageManager().openCustomPage(ref, store,

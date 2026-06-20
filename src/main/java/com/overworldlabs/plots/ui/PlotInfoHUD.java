@@ -24,7 +24,7 @@ public class PlotInfoHUD extends CustomUIHud {
     private Mode mode = Mode.HIDDEN;
 
     public PlotInfoHUD(@Nonnull PlayerRef playerRef) {
-        super(playerRef);
+        super(playerRef, "plots_info_hud");
     }
 
     @Override

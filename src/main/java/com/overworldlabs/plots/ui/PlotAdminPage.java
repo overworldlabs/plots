@@ -295,7 +295,7 @@ public class PlotAdminPage extends InteractiveCustomUIPage<PlotAdminPage.PageDat
         }
 
         if (!isAdmin()) {
-            player.sendMessage(ChatUtil.error("You do not have permission to use the admin dashboard."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("You do not have permission to use the admin dashboard."));
             player.getPageManager().setPage(ref, store, Page.None);
             return;
         }
@@ -327,7 +327,7 @@ public class PlotAdminPage extends InteractiveCustomUIPage<PlotAdminPage.PageDat
     private void handleSaveSettings(Player player, PageData data) {
         PlotConfig config = resolveConfig();
         if (config == null) {
-            player.sendMessage(ChatUtil.error("Configuration is unavailable."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("Configuration is unavailable."));
             return;
         }
         boolean changed = false;
@@ -353,9 +353,9 @@ public class PlotAdminPage extends InteractiveCustomUIPage<PlotAdminPage.PageDat
         }
         if (changed) {
             this.plugin.saveConfig(config);
-            player.sendMessage(ChatUtil.success("Settings saved to config.json — persists across restarts."));
+            player.getPlayerRef().sendMessage(ChatUtil.success("Settings saved to config.json — persists across restarts."));
         } else {
-            player.sendMessage(ChatUtil.info("No valid changes to apply."));
+            player.getPlayerRef().sendMessage(ChatUtil.info("No valid changes to apply."));
         }
     }
 
@@ -369,7 +369,7 @@ public class PlotAdminPage extends InteractiveCustomUIPage<PlotAdminPage.PageDat
             this.plugin.getPlotManager().teleportPlayerToPlot(store, ref, plot);
             player.getPageManager().setPage(ref, store, Page.None);
         } catch (Exception ex) {
-            player.sendMessage(ChatUtil.error("Failed to teleport to plot."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("Failed to teleport to plot."));
             reopen(player, ref, store, Tab.PLOTS, this.page, null);
         }
     }
@@ -392,7 +392,7 @@ public class PlotAdminPage extends InteractiveCustomUIPage<PlotAdminPage.PageDat
         }
         String typed = safe(name).trim();
         if (typed.isEmpty()) {
-            player.sendMessage(ChatUtil.error("Enter a player name to transfer to."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("Enter a player name to transfer to."));
             reopen(player, ref, store, Tab.PLOTS, this.page, this.transferGrid);
             return;
         }
@@ -402,13 +402,13 @@ public class PlotAdminPage extends InteractiveCustomUIPage<PlotAdminPage.PageDat
         } catch (Exception ignored) {
         }
         if (target == null || target.getUuid() == null) {
-            player.sendMessage(ChatUtil.error("Player '" + typed + "' is not online."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("Player '" + typed + "' is not online."));
             reopen(player, ref, store, Tab.PLOTS, this.page, this.transferGrid);
             return;
         }
         Plot plot = safePlotByGrid(this.transferGrid[0], this.transferGrid[1]);
         if (plot == null) {
-            player.sendMessage(ChatUtil.error("Plot no longer exists."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("Plot no longer exists."));
             reopen(player, ref, store, Tab.PLOTS, this.page, null);
             return;
         }
@@ -417,9 +417,9 @@ public class PlotAdminPage extends InteractiveCustomUIPage<PlotAdminPage.PageDat
             plot.setOwnerName(safe(target.getUsername()));
             plot.removeTrustedPlayer(target.getUuid());
             this.plugin.getPlotManager().savePlots();
-            player.sendMessage(ChatUtil.success("Transferred plot to " + safe(target.getUsername()) + "."));
+            player.getPlayerRef().sendMessage(ChatUtil.success("Transferred plot to " + safe(target.getUsername()) + "."));
         } catch (Exception ex) {
-            player.sendMessage(ChatUtil.error("Failed to transfer plot."));
+            player.getPlayerRef().sendMessage(ChatUtil.error("Failed to transfer plot."));
         }
         reopen(player, ref, store, Tab.PLOTS, this.page, null);
     }

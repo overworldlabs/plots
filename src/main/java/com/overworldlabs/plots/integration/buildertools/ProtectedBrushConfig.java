@@ -127,7 +127,7 @@ public class ProtectedBrushConfig extends BrushConfig {
         }
         try {
             if (original.getOriginOffset() != null) {
-                super.setOriginOffset(original.getOriginOffset().clone());
+                super.setOriginOffset(new org.joml.Vector3i(original.getOriginOffset()));
             }
         } catch (Exception ignored) {
         }

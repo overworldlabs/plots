@@ -39,9 +39,9 @@ public final class PermissionUtil {
     public static boolean hasAdminPermission(@Nonnull UUID playerUuid) {
         Player onlinePlayer = getOnlinePlayer(playerUuid);
         if (onlinePlayer != null) {
-            return onlinePlayer.hasPermission(PERM_ADMIN_BYPASS)
-                    || onlinePlayer.hasPermission(PERM_ADMIN_LEGACY)
-                    || onlinePlayer.hasPermission(IPlotManager.PERM_ADMIN);
+            return onlinePlayer.getPlayerRef().hasPermission(PERM_ADMIN_BYPASS)
+                    || onlinePlayer.getPlayerRef().hasPermission(PERM_ADMIN_LEGACY)
+                    || onlinePlayer.getPlayerRef().hasPermission(IPlotManager.PERM_ADMIN);
         }
 
         return hasPermission(playerUuid, PERM_ADMIN_BYPASS)
@@ -52,9 +52,9 @@ public final class PermissionUtil {
     public static boolean hasAdminPermission(@Nonnull UUID playerUuid, @Nullable Player player) {
         if (player != null) {
             try {
-                if (player.hasPermission(PERM_ADMIN_BYPASS)
-                        || player.hasPermission(PERM_ADMIN_LEGACY)
-                        || player.hasPermission(IPlotManager.PERM_ADMIN)) {
+                if (player.getPlayerRef().hasPermission(PERM_ADMIN_BYPASS)
+                        || player.getPlayerRef().hasPermission(PERM_ADMIN_LEGACY)
+                        || player.getPlayerRef().hasPermission(IPlotManager.PERM_ADMIN)) {
                     return true;
                 }
             } catch (Exception ignored) {
