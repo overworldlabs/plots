@@ -23,8 +23,8 @@
         "Bedrock": "Rock_Bedrock",
         "PlotSurface": "Soil_Grass",
         "PlotSubSurface": "Soil_Dirt",
-        "RoadSurface": "Rock_Stone_Cobble",
-        "Border": "Rock_calcite_brick_smooth_half",
+        "RoadSurface": "Rubble_Stone",
+        "Border": "Rock_Calcite",
         "Filling": "Rock_Stone"
     },
     "Prefabs": {
