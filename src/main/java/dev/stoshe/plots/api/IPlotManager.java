@@ -23,6 +23,7 @@ public interface IPlotManager {
     String PERM_PLOT = "plots";
     String PERM_ADMIN = "plots.*";
     String PERM_CLAIM = "plots.claim";
+    String PERM_AUTO = "plots.auto";
     String PERM_DELETE = "plots.delete";
     String PERM_DELETE_ANY = "plots.delete.*";
     String PERM_SPAWN = "plots.spawn";
@@ -30,6 +31,7 @@ public interface IPlotManager {
     String PERM_INFO = "plots.info";
     String PERM_RENAME = "plots.rename";
     String PERM_TRUST = "plots.trust";
+    String PERM_UNTRUST = "plots.untrust";
     String PERM_TRANSFER = "plots.transfer";
     String PERM_FLAG = "plots.flag";
     String PERM_MERGE = "plots.merge";

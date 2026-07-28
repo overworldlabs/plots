@@ -9,15 +9,15 @@ These permissions are typically granted to players to allow standard plot intera
 | Node | Description | Default |
 |------|-------------|---------|
 | `plots` | **Mandatory base permission** required to use any command. | Player |
-| `plots.claim` | Permission to claim plots. | Player |
-| `plots.auto` | Permission to use `/plot auto`. | Player |
+| `plots.claim` | Permission to claim plots with `/plot claim`. | Player |
+| `plots.auto` | Permission to use `/plot auto`. `plots.claim` also grants it, so 1.1.x setups keep working. | Player |
 | `plots.info` | Permission to view plot metadata. | Player |
 | `plots.list` | Permission to list your own plots. | Player |
 | `plots.spawn` | Permission to teleport to world spawn. | Player |
 | `plots.limit.N` | Global shared plot limit across **all** worlds (e.g. `plots.limit.5`). See [Plot Limits](#plot-limits-hybrid-model). | — |
 | `plots.<world>.limit.N` | Independent plot limit for a **specific** world (e.g. `plots.premium.limit.10`). | — |
 | `plots.trust` | Permission to trust other players in your plots. | Player |
-| `plots.untrust` | Permission to remove trusted players from your plots. | Player |
+| `plots.untrust` | Permission to remove trusted players from your plots. `plots.trust` also grants it, so 1.1.x setups keep working. | Player |
 | `plots.rename` | Permission to rename your own plots. | Player |
 | `plots.flag` | Permission to manage flags on your own plots. | Player |
 | `plots.merge` | Permission to merge adjacent plots you own. | Player |

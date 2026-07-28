@@ -51,9 +51,11 @@ public class PlotUntrustCommand extends CommandBase {
     protected void executeSync(@Nonnull CommandContext context) {
         TranslationManager tm = Plots.getInstance().getTranslationManager();
 
-        if (!PermissionUtil.hasAdminPermission(context.sender())) {
-            CommandUtil.requirePermission(context.sender(),
-                    IPlotManager.PERM_TRUST);
+        // plots.untrust gates the command, but plots.trust keeps working on its own: it was the
+        // only node checked here before 1.2.0, so an upgrade must not break existing grants.
+        if (!PermissionUtil.hasAdminPermission(context.sender())
+                && !context.sender().hasPermission(IPlotManager.PERM_TRUST)) {
+            CommandUtil.requirePermission(context.sender(), IPlotManager.PERM_UNTRUST);
         }
 
         if (!context.isPlayer()) {

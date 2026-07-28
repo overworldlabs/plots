@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
+import com.hypixel.hytale.server.core.command.system.CommandUtil;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -35,6 +36,14 @@ public class PlotAutoCommand extends CommandBase {
     @Override
     protected void executeSync(@Nonnull CommandContext context) {
         TranslationManager tm = Plots.getInstance().getTranslationManager();
+
+        // plots.auto gates the command, but plots.claim keeps working on its own: until 1.2.0
+        // the documented node for /plot auto WAS plots.claim, and upgrading a server should not
+        // silently take auto-claim away from everyone who was granted it.
+        if (!PermissionUtil.hasAdminPermission(context.sender())
+                && !context.sender().hasPermission(IPlotManager.PERM_CLAIM)) {
+            CommandUtil.requirePermission(context.sender(), IPlotManager.PERM_AUTO);
+        }
 
         if (!context.isPlayer()) {
             context.sender().sendMessage(ChatUtil.error(tm.get("general.only_players")));
