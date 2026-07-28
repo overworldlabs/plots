@@ -2,6 +2,11 @@
 
 All notable changes to Plots. Dates are in UTC. The docs always describe the **current** release.
 
+## 1.2.1
+
+- `plots.auto` and `plots.untrust` are enforced. Both were documented but never checked: `/plot auto` asked only for the base `plots` node, and `/plot untrust` checked `plots.trust`. The node each one relied on still grants it — `plots.claim` for `/plot auto`, `plots.trust` for `/plot untrust` — so an upgrading server keeps the access it already granted.
+- A denied command now names the node that is missing, and points out that `plots` is required by every `/plot` command on top of the specific node. The old message was a bare "you don't have permission", which left admins guessing (#2).
+
 ## 1.2.0
 
 The biggest release since launch: Plots now runs **more than one plot world**, ships a full in-game

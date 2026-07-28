@@ -21,7 +21,7 @@ plugins {
 group = "dev.stoshe.plots"
 val pluginVersion = (findProperty("version") as? String)
     ?.takeIf { it.isNotBlank() && it != "unspecified" }
-    ?: "1.2.0"
+    ?: "1.2.1"
 version = pluginVersion
 
 val javaVersion = (findProperty("javaVersion") as? String) ?: "25"

@@ -49,6 +49,7 @@ import dev.stoshe.plots.util.Console;
 import dev.stoshe.plots.util.PermissionUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,6 +68,7 @@ public class PlotCommand extends AbstractCommandCollection {
     private static final Map<String, String[]> SUBCOMMAND_USAGE_KEYS = PlotCommandHelpCatalog.subcommandUsageKeys();
     private static final Field PARSE_FAILED_FIELD = resolveParseField("failed");
     private static final Field PARSE_REASONS_FIELD = resolveParseField("reasons");
+    private static final Field PERMISSION_FIELD = resolvePermissionField();
 
     public PlotCommand(@Nonnull IPlotManager plotManager) {
         this("plot", plotManager);
@@ -397,6 +399,18 @@ public class PlotCommand extends AbstractCommandCollection {
         Throwable cause = unwrap(throwable);
         if (cause instanceof NoPermissionException) {
             sender.sendMessage(ChatUtil.error(tm.get("general.no_permission")));
+
+            // Name the node. Without it the denial is unactionable — the usual cause is the
+            // base `plots` node missing while the specific one (plots.claim, ...) was granted,
+            // and a generic "no permission" gives the admin nothing to go on.
+            String node = missingPermission((NoPermissionException) cause);
+            if (node != null) {
+                sender.sendMessage(ChatUtil.info(tm.get("general.no_permission_node", "node", node)));
+
+                if (IPlotManager.PERM_BASE.equals(node)) {
+                    sender.sendMessage(ChatUtil.info(tm.get("general.no_permission_base")));
+                }
+            }
             return;
         }
 
@@ -420,6 +434,34 @@ public class PlotCommand extends AbstractCommandCollection {
         }
 
         return current;
+    }
+
+    /**
+     * The node a {@link NoPermissionException} was raised for. The server keeps it in a private
+     * field with no accessor, so it is read reflectively; a null return just means the message
+     * stays generic.
+     */
+    @Nullable
+    private static String missingPermission(@Nonnull NoPermissionException exception) {
+        try {
+            if (PERMISSION_FIELD == null) {
+                return null;
+            }
+            Object value = PERMISSION_FIELD.get(exception);
+            return value instanceof String node && !node.isBlank() ? node : null;
+        } catch (Throwable ignored) {
+            return null;
+        }
+    }
+
+    private static Field resolvePermissionField() {
+        try {
+            Field field = NoPermissionException.class.getDeclaredField("permission");
+            field.setAccessible(true);
+            return field;
+        } catch (Throwable ignored) {
+            return null;
+        }
     }
 
     private static Field resolveParseField(@Nonnull String name) {

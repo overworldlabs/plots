@@ -2,6 +2,8 @@
   "general": {
     "prefix": "{#f5c542}[Plots] {#95a5a6}",
     "no_permission": "Você não tem permissão para fazer isso!",
+    "no_permission_node": "Permissão faltando: %node%",
+    "no_permission_base": "Obs.: `plots` é exigido por todo comando /plot, além do nó específico.",
     "only_players": "Este comando só pode ser usado por jogadores.",
     "not_owner": "Você deve ser o dono do terreno para fazer isso.",
     "error_generic": "Ocorreu um erro inesperado. Tente novamente.",
