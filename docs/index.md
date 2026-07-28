@@ -4,8 +4,8 @@ layout: home
 hero:
   image:
     src: /logo.png
-    alt: Plots — Grid Plot Management for Hytale
-  tagline: "Turn a Hytale world into a plot server. Plots lays out a road-and-parcel grid, hands each player a claim they fully control, and keeps everything outside it protected — with flags, merging, multi-world support, economy hooks and a public API."
+    alt: Plots — plot worlds for Hytale
+  tagline: "A road-and-parcel grid, a claim each player fully owns, and protection that holds even against BuilderTools."
   actions:
     - theme: brand
       text: What is Plots?
