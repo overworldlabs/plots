@@ -67,9 +67,9 @@ In `config.json`, you can define manual offsets for your prefabs:
 
 ```json
 "Prefabs": {
-  "Road": "overworldlabs:road_standard",
-  "Plot": "overworldlabs:plot_house_base",
-  "Intersection": "overworldlabs:road_intersection",
+  "Road": "stoshe:road_standard",
+  "Plot": "stoshe:plot_house_base",
+  "Intersection": "stoshe:road_intersection",
   "PasteRoadOnTop": true,
   "AutoHeight": true,
   "PasteMismatches": false,

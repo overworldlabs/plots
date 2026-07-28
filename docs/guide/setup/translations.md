@@ -6,6 +6,6 @@ Plots ships with these locale files:
 - `es_es`
 - `ru_ru`
 
-Language files are generated in `mods/Hytale_Plots/lang/` and can be customized there.
+Language files are generated in `mods/Stoshe_Plots/lang/` and can be customized there.
 
 Set the active language through `Language` in your `config.json`.

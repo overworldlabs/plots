@@ -1,13 +1,13 @@
 # API Events
 
-Plots uses a custom event system to allow developers to react to plot changes. All events extend the base `Event` class and are located in `com.overworldlabs.plots.api.events`.
+Plots uses a custom event system to allow developers to react to plot changes. All events extend the base `Event` class and are located in `dev.stoshe.plots.api.events`.
 
 ## Listening to Events
 
 You can register a listener through the Plots API.
 
 ```java
-import com.overworldlabs.plots.api.events.ClaimEvent;
+import dev.stoshe.plots.api.events.ClaimEvent;
 import com.hypixel.hytale.server.core.universe.Universe;
 
 Plots.getApi().registerListener(ClaimEvent.class, event -> {

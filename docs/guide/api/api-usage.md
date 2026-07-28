@@ -6,7 +6,7 @@ Learn how to integrate with Plots and manipulate plot data programmatically.
 
 Add the Plots JAR as a `compileOnly` dependency in your `build.gradle`:
 
-```gradle
+```groovy
 repositories {
     flatDir {
         dirs 'libs'
@@ -23,8 +23,8 @@ dependencies {
 The entry point for all API operations is the `Plots` class.
 
 ```java
-import com.overworldlabs.plots.Plots;
-import com.overworldlabs.plots.api.PlotsAPI;
+import dev.stoshe.plots.Plots;
+import dev.stoshe.plots.api.PlotsAPI;
 
 // Get the API instance
 if (!Plots.enabled() || Plots.getAPI() == null) {
@@ -39,7 +39,7 @@ Use the `PlotManager` for advanced queries.
 
 ### Get Plot at Coordinates
 ```java
-import com.overworldlabs.plots.model.Plot;
+import dev.stoshe.plots.model.Plot;
 
 // Use the API for read-only access
 Plot plot = Plots.getAPI().getPlotAt(x, z);

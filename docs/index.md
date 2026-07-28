@@ -2,32 +2,53 @@
 layout: home
 
 hero:
-  name: "Plots"
-  text: "Grid Plot Management"
-  tagline: "Claim, protect, merge, and manage plot worlds with BuilderTools-safe protections and optional economy."
   image:
     src: /logo.png
-    alt: Plots
+    alt: Plots — Grid Plot Management for Hytale
+  tagline: "Turn a Hytale world into a plot server. Plots lays out a road-and-parcel grid, hands each player a claim they fully control, and keeps everything outside it protected — with flags, merging, multi-world support, economy hooks and a public API."
   actions:
     - theme: brand
-      text: Get Started
+      text: What is Plots?
+      link: /guide/intro/what-is-plots
+    - theme: alt
+      text: Getting Started
       link: /guide/intro/getting-started
     - theme: alt
-      text: View Commands
+      text: Commands
       link: /guide/reference/commands
 
 features:
-  - title: Complete Plot Workflow
-    details: Claim/auto-claim, trust/untrust, rename/delete, flags, list/info, and merge/unmerge with border restoration.
-  - title: BuilderTools-Safe Protection
-    details: Protection is enforced across packet/mask/accessor paths, including extrude and scripted brush scenarios.
-  - title: Production Integrations
-    details: Optional economy charging, Hylograms support, SQL persistence, localization, and public API/events for extensions.
+  - icon: 🧱
+    title: Grid World Generation
+    details: A generated plot world with roads, borders and configurable parcel sizes — plus prefab-driven terrain, so your plots look like your server instead of a flat slab.
+  - icon: 📜
+    title: Full Claim Workflow
+    details: Claim, auto-claim, rename, transfer, delete, trust and untrust. Players get a plot they own outright, plus list and info views to keep track of it.
+  - icon: 🛡️
+    title: Strict Protection
+    details: Roads and other players' plots are protected against breaking, placing, interaction, liquid spill, mobs and item flow — with explicit staff bypass permissions.
+  - icon: 🔧
+    title: BuilderTools-Safe
+    details: Protection is enforced across the packet, mask and chunk-accessor paths, so extrude and scripted brushes cannot tunnel through a neighbour's plot.
+  - icon: 🌍
+    title: Multi-World
+    details: Run more than one plot world side by side, each with its own grid, sizes and rules — created and browsed straight from the in-game admin panel.
+  - icon: 🚩
+    title: Plot Flags
+    details: Per-plot toggles for PvP, damage, weather, chat, item pickup and more, so each owner tunes their own parcel without anyone touching the server config.
+  - icon: 💰
+    title: Economy & Integrations
+    details: Optional charging for claim, auto, merge and unmerge with automatic provider detection, plus Hylograms ownership signs and PlaceholderAPI support.
+  - icon: 🔌
+    title: Public API & Events
+    details: Query and mutate plots programmatically, and hook claim, unclaim, rename and trust events from your own plugin.
+  - icon: 🌐
+    title: Localized
+    details: English, Portuguese, Spanish and Russian bundles out of the box — every string overridable, with translations open on Crowdin.
 ---
 
-<style Riley>
+<style>
 :root {
-  --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #bd34fe 30%, #41d1ff);
+  --vp-home-hero-image-filter: drop-shadow(0 12px 40px rgba(139, 43, 255, 0.32));
 }
 </style>

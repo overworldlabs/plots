@@ -1,56 +1,101 @@
-# Plots
+<p align="center">
+  <img src="https://github.com/stoshelabs/plots/blob/main/plots.png?raw=true" alt="Plots" width="720">
+</p>
 
-**Grid-based plot management for Hytale servers.**  
-Plots is focused on controlled building gameplay: claim system, strict protection, staff bypass, and configurable economy costs.
+<p align="center">
+  <b>Grid-based plot management for Hytale.</b><br>
+  A generated world of roads and parcels, a claim every player fully controls, and protection that holds even against BuilderTools.
+</p>
 
----
+<p align="center">
+  <a href="https://stoshelabs.github.io/plots/"><img src="https://img.shields.io/badge/docs-online-8B2BFF?style=for-the-badge" alt="Documentation"></a>
+  <img src="https://img.shields.io/badge/version-1.2.0-2ea44f?style=for-the-badge" alt="version 1.2.0">
+  <img src="https://img.shields.io/badge/Hytale-server%20plugin-22D3EE?style=for-the-badge" alt="Hytale server plugin">
+</p>
 
-## 🚀 Overview
+<p align="center">
+  <img src="https://img.shields.io/badge/worlds-multi--world-8B2BFF?style=flat-square" alt="multi-world">
+  <img src="https://img.shields.io/badge/protection-BuilderTools--safe-8B2BFF?style=flat-square" alt="BuilderTools-safe protection">
+  <img src="https://img.shields.io/badge/i18n-en__us%20%7C%20pt__br%20%7C%20es__es%20%7C%20ru__ru-8B2BFF?style=flat-square" alt="i18n en_us | pt_br | es_es | ru_ru">
+</p>
 
-Plots provides a complete workflow for plot servers:
-- **Core management**: claim, auto-claim, delete, rename, trust/untrust, plot list and info.
-- **Advanced management**: flags, merge/unmerge with road restoration.
-- **Protection layer**: break/place/interact checks, liquid border checks, PvP/item/chat flags.
-- **BuilderTools enforcement**: mask/accessor/packet protection including extrude and scripted brushes.
-- **Economy support**: optional claim/auto/merge/unmerge costs with provider detection.
-- **Admin model**: explicit bypass permissions for moderation flows.
-- **Localization**: `en_us`, `pt_br`, `es_es`, `ru_ru`.
-- **Public API**: programmatic access to plots and events.
-
----
-
-## 📖 Documentation
-
-For detailed guides, API references, and configuration tutorials, visit our documentation site:
-
-👉 [**Official Documentation Site**](https://overworldlabs.github.io/plots/)
+<p align="center">
+  📖 <b><a href="https://stoshelabs.github.io/plots/">Read the full documentation →</a></b>
+</p>
 
 ---
 
-## ⬇️ Downloads & Community
+## Overview
 
-- [**GitHub Releases**](https://github.com/overworldlabs/plots/releases) - Stable builds and source code.
+Plots turns a Hytale world into a **plot server**. It generates a grid of parcels separated by
+roads, hands each player a claim they own outright, and keeps everything outside that claim
+protected — roads, neighbours, and the rest of the world.
+
+The protection is the part that matters. Plots enforces it across the packet, mask and
+chunk-accessor paths, so a builder with **BuilderTools** cannot extrude or brush their way past a
+plot border — the flow most plot plugins leave open.
+
+- **Grid world generation** — configurable plot and road sizes, borders, and prefab-driven terrain
+- **Full claim workflow** — claim, auto-claim, rename, transfer (offline players included), delete, trust/untrust, list/info
+- **Strict protection** — break, place, interact, liquid, mobs and item flow, with explicit staff bypass permissions
+- **BuilderTools-safe** — mask, accessor and packet paths covered, including extrude and scripted brushes
+- **Multi-world** — several plot worlds side by side, each with its own grid and rules
+- **Plot flags** — per-plot PvP, damage, weather, chat and item toggles, plus merge/unmerge with road restoration
+- **In-game menu &amp; HUD** — the everyday actions without memorising commands, plus per-plot warps and spawn points
+- **Integrations** — optional economy charging, Hylograms ownership signs, PlaceholderAPI, SQL persistence
+- **Public API** — query plots and hook claim/unclaim/trust/rename events from your own plugin
+- **Localized** — English, Portuguese, Spanish and Russian, every string overridable
+
+---
+
+## Quick start
+
+1. Drop `Plots-1.2.0.jar` into your server's `mods/` folder.
+2. Start the server once to generate `config.json` and the language files.
+3. Run `/plot worlds` and create your first plot world (or follow the setup prompt shown on join).
+4. Head into that world and run `/plot auto` to claim a plot and start building.
+
+Aliases `/plots`, `/plotme` and `/p` all work. The
+**[Getting Started](https://stoshelabs.github.io/plots/guide/intro/getting-started)** guide covers
+this in full, including plot/road sizing and economy setup.
+
+---
+
+## Documentation
+
+Everything lives on the docs site — mechanics, every config key, and the full command reference:
+
+| | |
+| --- | --- |
+| 🚀 [Getting Started](https://stoshelabs.github.io/plots/guide/intro/getting-started) | Install to first claimed plot |
+| 🧱 [World Generation](https://stoshelabs.github.io/plots/guide/features/world-gen) · [Multi-World](https://stoshelabs.github.io/plots/guide/features/multiworld) · [Protection](https://stoshelabs.github.io/plots/guide/features/protection) · [Flags](https://stoshelabs.github.io/plots/guide/features/flags) | How it works |
+| ⚙️ [Config Reference](https://stoshelabs.github.io/plots/guide/setup/config) · [Prefabs](https://stoshelabs.github.io/plots/guide/setup/prefabs-customization) · [Translations](https://stoshelabs.github.io/plots/guide/setup/translations) | Configuration |
+| 🔌 [Hylograms](https://stoshelabs.github.io/plots/guide/integrations/hylograms) · [PlaceholderAPI](https://stoshelabs.github.io/plots/guide/integrations/placeholders) · [Developer API](https://stoshelabs.github.io/plots/guide/api/api) | Integrations &amp; API |
+| 📖 [Commands](https://stoshelabs.github.io/plots/guide/reference/commands) · [Permissions](https://stoshelabs.github.io/plots/guide/reference/permissions) | Reference |
+| 📝 [Changelog](https://stoshelabs.github.io/plots/guide/changelog) | What changed in each release |
+
+---
+
+## Downloads &amp; community
+
+- [**GitHub Releases**](https://github.com/stoshelabs/plots/releases) — stable builds and source
 - [**Modtale**](https://modtale.net/mod/plots-f9ee11f8-1fa2-4bb2-aa9b-d726474c712b)
 - [**CurseForge**](https://www.curseforge.com/hytale/mods/plot)
+- [**Discord**](https://discord.gg/rC9eSzH3tf) — support, announcements and community
+- [**Crowdin**](https://crowdin.com/project/hytaleplots) — help us localize
 
 ---
 
-## 🛠 Quick Start
+## Building from source
 
-1. Place the `.jar` in your server's `mods` folder.
-2. Start the server to generate `config.json`.
-3. Configure `PlotWorldName`, plot/road sizes, and optional economy/database settings.
-4. Use `/plot auto` or `/plot claim` (while standing on a plot) to start building.
-5. Use aliases `/plots`, `/plotme`, or `/p` if preferred.
-6. Visit the [Getting Started guide](https://overworldlabs.github.io/plots/guide/intro/getting-started) for more.
+```sh
+./gradlew jar        # → build/libs/Plots-<version>.jar
+```
+
+The build compiles against `HytaleServer.jar` from your Hytale install; point it elsewhere with
+`-Phytale_home=/path/to/Hytale`. The docs live in [`docs/`](docs) (VitePress) and deploy to GitHub
+Pages automatically on push to `main`.
 
 ---
 
-## 🤝 Contributing & Support
-
-- [**Report an Issue**](https://github.com/overworldlabs/plots/issues)
-- [**Feature Requests**](https://github.com/overworldlabs/plots/issues/new?labels=enhancement)
-- [**Crowdin Project**](https://crowdin.com/project/hytaleplots) - Help us localize!
-
-Released under the [MIT License](LICENSE).  
-Copyright © 2026-present **Overworld Labs**.
+<sub>Built for Hytale by <a href="https://github.com/gitgusilva">Gustavo Will</a> · Stoshe Labs · <a href="LICENSE">MIT</a></sub>

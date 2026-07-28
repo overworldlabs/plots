@@ -1,21 +1,83 @@
 # Configuration and Permissions
 
-## General Settings
+::: warning Breaking change — plugin Group renamed to `Stoshe`
+Starting with this version, the plugin manifest **Group** changed from `Hytale` to `Stoshe`.
+Because the plugin's data directory is derived from the Group, it moved from
+`mods/Hytale_Plots/` to `mods/Stoshe_Plots/`.
 
-The `config.json` file is automatically generated in the `mods/Hytale_Plots/` directory upon the first run.
+As a result, existing plot worlds and configuration are **not** picked up automatically.
+It is **recommended to recreate the plot world and the plugin configs** after updating
+(or manually migrate your old data into the new `mods/Stoshe_Plots/` directory).
+:::
 
-### World Settings
-- **`PlotWorldName`**: The specific world where plot rules and generation apply.
-- **`DefaultWorldTime`**: The standard time (in ticks) for the plot world (e.g., `6000` for noon).
+## Layout
 
-### Plot Settings
+The `config.json` file is automatically generated in the `mods/Stoshe_Plots/` directory
+upon the first run. It is split into **global** sections and a `Worlds` map, where each
+entry is a fully independent plot world:
+
+```json
+{
+  "General":   { "Language": "en_us", "AutoSaveIntervalSeconds": 300 },
+  "Limits":    { "GlobalSharedDefault": -1, "PerWorldDefault": 1, "HardCap": 50 },
+  "Holograms": { "Enabled": true, "HeightOffset": 2.0, "TitleColor": "#55ff55" },
+  "Database":  { "Enabled": false, "JdbcUrl": "jdbc:sqlite:plots.db" },
+  "Economy":   { "Enabled": false, "Provider": "auto" },
+  "Worlds": {
+    "plotworld": {
+      "PermissionKey": "plotworld",
+      "DefaultWorldTime": "midday",
+      "MaxPlotsDefault": -1,
+      "Plots":   { "PlotSizeX": 32, "PlotSizeZ": 32, "RoadSizeX": 4, "RoadSizeZ": 4 },
+      "Blocks":  { "PlotSurface": "Soil_Grass", "RoadSurface": "Rock_Stone_Cobble" },
+      "Prefabs": { "Plot": "", "Road": "", "Intersection": "" },
+      "Spawn":   { "CustomSpawn": false }
+    },
+    "premium": {
+      "MaxPlotsDefault": 10,
+      "Plots": { "PlotSizeX": 64, "PlotSizeZ": 64, "RoadSizeX": 6, "RoadSizeZ": 6 }
+    }
+  }
+}
+```
+
+::: tip Adding a world
+Add another entry under `Worlds` and restart — the plugin creates the world with its
+own generator on boot. The **first** world in the map is the default world used by
+legacy/single-world data and API calls.
+:::
+
+> Migrating from a single-world config? Old flat `World`/`Plots`/`Blocks`/`Prefabs`/`Spawn`
+> sections are automatically folded into one world entry on first load.
+
+## Global Settings
+
+### General
+- **`Language`**: Default translation language (e.g. `en_us`, `pt_br`).
+- **`AutoSaveIntervalSeconds`**: How often plot data is flushed to storage.
+
+### Limits
+Per-player plot limits use a **hybrid** model — see [Plot Limits](../reference/permissions#plot-limits-hybrid-model).
+- **`GlobalSharedDefault`**: Default total plots a player may own across **all** worlds (`-1` = unlimited).
+- **`PerWorldDefault`**: Default plots a player may own **per world** when the world doesn't override it.
+- **`HardCap`**: Absolute server ceiling on total plots a non-admin may own (`-1` = unlimited; `0` blocks all claims).
+
+## Per-World Settings (`Worlds`)
+
+Each entry under `Worlds` is keyed by the world name and accepts:
+
+- **`PermissionKey`**: Segment used in `plots.<key>.limit.N` permissions (defaults to the sanitized world name).
+- **`DefaultWorldTime`**: Time preset for the world (`midday`, `night`, `dawn`, a fraction like `0.5`, or an hour).
+- **`MaxPlotsDefault`**: Per-world plot budget (`-1` = inherit `Limits.PerWorldDefault`).
+
+### Plots
 - **`PlotSizeX`, `PlotSizeZ`**: The actual buildable area for each plot.
-- **`RoadSizeX`, `RoadSizeZ`**: The width of the roads separating plots. Set to `0` if you want no roads (plots will be adjacent).
-- **`MaxPlotsDefault`**: Number of plots a player can claim by default.
-- **`MaxPlotLimit`**: Absolute maximum plots a player can have (regardless of permissions).
+- **`RoadSizeX`, `RoadSizeZ`**: The width of the roads separating plots. Set to `0` for no roads (adjacent plots).
+- **`MaxWarpsPerPlot`**: Maximum named warps per plot.
+- **`DefaultPlotName`**: Template for new plot names (`%owner%`, `%x%`, `%z%`).
 
-### Block Settings
-Customizing these IDs allows you to change the look of the generated world without changing prefabs:
+### Blocks
+Customizing these IDs changes the look of the generated world without changing prefabs:
 - **`Bedrock`**: The bottom layer.
 - **`PlotSurface`**: The top layer of the builder's area.
 - **`PlotSubSurface`**: The material directly under the surface.
@@ -23,7 +85,7 @@ Customizing these IDs allows you to change the look of the generated world witho
 - **`Border`**: The block used for the plot perimeter.
 - **`Filling`**: The mass material from Y=1 to Y=60.
 
-### Prefab Settings
+### Prefabs
 - **`Road`**: The prefab name for roads.
 - **`Plot`**: The prefab name for plot areas.
 - **`Intersection`**: The prefab name for crossroads.
@@ -33,6 +95,12 @@ Customizing these IDs allows you to change the look of the generated world witho
 - **`Rotation`**: Rotation of the plot prefab in degrees (0, 90, 180, 270).
 - **`OffsetX`, `OffsetY`, `OffsetZ`**: Relative offsets for the plot prefab application.
 
+### Spawn
+- **`X`, `Y`, `Z`, `Pitch`, `Yaw`**: World coordinates for this world's spawn point.
+- **`CustomSpawn`**: If `true`, the plugin always uses these coordinates for the world spawn.
+
+## Other Global Settings
+
 ### Hologram Settings
 > [!IMPORTANT]
 > These settings require the [Hylograms Integration](../integrations/hylograms) to be enabled and the Hylograms mod to be installed on the server.
@@ -40,10 +108,6 @@ Customizing these IDs allows you to change the look of the generated world witho
 - **`Enabled`**: Whether to show plot info holograms at the border.
 - **`HeightOffset`**: How many blocks above the ground the hologram appears.
 - **`TitleColor`**: Hex color code for the plot owner's name.
-
-### Spawn Settings
-- **`X`, `Y`, `Z`, `Pitch`, `Yaw`**: World coordinates for the default spawn point.
-- **`CustomSpawn`**: If `true`, the plugin will always use these coordinates for the world spawn.
 
 ### Database Settings
 - **`Enabled`**: Enables SQL persistence.

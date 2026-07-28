@@ -82,7 +82,6 @@ If TaleGuard is missing, these flags cannot be enabled from `/plot flag` or the 
 | `explosions` (server-side explosion damage) | ExplosionBlockDamage |
 | Crop harvesting / farming-stage interactions | HarvestCropInteraction, ChangeFarmingStageInteraction, CycleBlockGroup, ChangeStateInteraction |
 | Fluid flow across plot borders | DefaultFluidTicker, FiniteFluidTicker |
-| Mount flying restriction | MountHandleInputFlying |
 
 > Some flags (e.g. `item-pickup-manual`, `build`/`hammer`, `interact`) have **partial**
 > native coverage and **full** coverage with TaleGuard.

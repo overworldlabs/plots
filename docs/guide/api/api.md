@@ -12,8 +12,8 @@ To get started, follow these sections:
 ## Quick Example
 
 ```java
-import com.overworldlabs.plots.Plots;
-import com.overworldlabs.plots.api.events.ClaimEvent;
+import dev.stoshe.plots.Plots;
+import dev.stoshe.plots.api.events.ClaimEvent;
 
 public void onEnable() {
     if (!Plots.enabled() || Plots.getAPI() == null) {

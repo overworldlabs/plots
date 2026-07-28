@@ -14,7 +14,8 @@ These permissions are typically granted to players to allow standard plot intera
 | `plots.info` | Permission to view plot metadata. | Player |
 | `plots.list` | Permission to list your own plots. | Player |
 | `plots.spawn` | Permission to teleport to world spawn. | Player |
-| `plots.limit.N` | Sets the maximum number of plots a player can have (e.g., `plots.limit.5`). | 1 |
+| `plots.limit.N` | Global shared plot limit across **all** worlds (e.g. `plots.limit.5`). See [Plot Limits](#plot-limits-hybrid-model). | — |
+| `plots.<world>.limit.N` | Independent plot limit for a **specific** world (e.g. `plots.premium.limit.10`). | — |
 | `plots.trust` | Permission to trust other players in your plots. | Player |
 | `plots.untrust` | Permission to remove trusted players from your plots. | Player |
 | `plots.rename` | Permission to rename your own plots. | Player |
@@ -34,6 +35,34 @@ These permissions should only be granted to staff members as they bypass standar
 | `plots.admin.bypass` | Explicit admin bypass node (equivalent admin access). | OP / Admin |
 | `plots.admin` | Legacy-compatible admin node still accepted by permission checks. | OP / Admin |
 | `plots.economy.bypass` | Bypasses economy costs for paid plot actions only. | OP / Admin |
+
+## Plot Limits (Hybrid Model)
+
+With multiple plot worlds, a player's limit is resolved from **three independent
+ceilings** — a claim is only allowed when **all three** pass:
+
+1. **Per-world budget** — how many plots the player may own *in that world*.
+2. **Global shared budget** — total plots the player may own *across all worlds*.
+3. **Hard cap** — an absolute server ceiling (`Limits.HardCap` in `config.json`).
+
+**Resolution order** (most specific wins):
+
+- Per-world budget: `plots.<world>.limit.N` permission → else the world's
+  `MaxPlotsDefault` in config → else `Limits.PerWorldDefault`.
+- Global budget: `plots.limit.N` permission → else `Limits.GlobalSharedDefault`
+  (`-1` = unlimited).
+- Admins (`plots.*` / `plots.admin`) bypass all limits.
+
+::: tip Examples
+- `plots.limit.5` → at most **5 plots total** across every world.
+- `plots.premium.limit.10` → up to **10 plots in the `premium` world**, counted
+  independently from other worlds.
+- Grant both and the player gets per-world budgets *capped* by the global total.
+:::
+
+> The `<world>` segment is the world's **permission key** (lower-cased, with any
+> non-alphanumeric character replaced by `_`). It defaults to the sanitized world
+> name and can be overridden per world via `PermissionKey` in `config.json`.
 
 ## Grouping Recommendations
 

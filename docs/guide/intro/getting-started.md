@@ -7,7 +7,7 @@ Plots is a high-performance plot management system designed specifically for Hyt
 1. Download the latest `plots.jar` from the releases page.
 2. Place the JAR file in your Hytale server's `mods` directory (NOT `plugins`).
 3. Restart the server.
-4. The plugin will create a `mods/Hytale_Plots` directory with a default `config.json` and translations.
+4. The plugin will create a `mods/Stoshe_Plots` directory with a default `config.json` and translations.
 
 ## Configuration
 
