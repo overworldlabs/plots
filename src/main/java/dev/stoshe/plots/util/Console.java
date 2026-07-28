@@ -1,21 +1,24 @@
 package dev.stoshe.plots.util;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Plugin console output, matching the other Stoshe plugins (AeroWars, AntiXray, Voltis):
- * level-prefixed lines for normal messages and a boxed, coloured banner for the boot header
- * and other one-off notices.
+ * Plugin console output. Normal messages go through the server's native {@link Logger} (named "Plots"),
+ * which already colours them by level. Only the one-off boot banner is written raw (bypassing the logger)
+ * so its art isn't broken up by the log prefix.
  *
- * <p>Everything goes through {@link System#out} — <b>not</b> {@link java.util.logging.Logger}
- * and not a fresh stream on {@link java.io.FileDescriptor}{@code .out}. The server replaces
- * {@code System.out} with a capturing stream that mirrors every line into
- * {@code logs/*_server.log} as {@code [SOUT]}. Logger lines and streams opened straight on
- * fd 1 both escape that capture, so they reach the terminal and nothing else — a diagnostic
- * you cannot read afterwards is worse than none, because you trust its silence.
+ * <p>Same shape as the other Stoshe plugins (AeroWars, AntiXray). Note that neither path is mirrored into
+ * {@code logs/*_server.log}: the server only captures {@link System#out}, so plugin output lives in the
+ * terminal alone.
  */
 public final class Console {
+    private static final Logger LOGGER = Logger.getLogger("Plots");
+    /** Direct handle to the real terminal (fd 1), used only for the banner. */
+    private static final PrintStream OUT = new PrintStream(new FileOutputStream(FileDescriptor.out), true);
     private static final String ESC = ((char) 27) + "[";
     private static final String RESET = ESC + "0m";
 
@@ -23,45 +26,32 @@ public final class Console {
     }
 
     public static void info(String msg) {
-        out("INFO", msg);
+        LOGGER.info(msg);
     }
 
     public static void success(String msg) {
-        out("INFO", msg);
+        LOGGER.info(msg);
     }
 
     public static void warning(String msg) {
-        out("WARN", msg);
+        LOGGER.warning(msg);
     }
 
     public static void error(String msg) {
-        out("ERROR", msg);
+        LOGGER.severe(msg);
     }
 
-    /**
-     * Error plus its stack trace. The trace goes through {@link System#out} as well —
-     * {@code printStackTrace()} writes to {@code System.err}, which the server does not
-     * mirror into the log file, so those traces only ever existed in the terminal.
-     */
+    /** Error plus its stack trace, formatted by the logger rather than printed to System.err. */
     public static void error(String msg, Throwable t) {
-        out("ERROR", msg);
-        if (t != null) {
-            StringWriter sw = new StringWriter();
-            t.printStackTrace(new PrintWriter(sw));
-            System.out.print(sw);
-        }
+        LOGGER.log(Level.SEVERE, msg, t);
     }
 
-    private static void out(String level, String msg) {
-        System.out.println("[Plots/" + level + "] " + msg);
-    }
-
-    /** Raw line, no level prefix — captured by the server into the log file as {@code [SOUT]}. */
+    /** Raw line straight to the terminal (no log prefix) — banner spacing. */
     public static void log(String msg) {
-        System.out.println(msg);
+        OUT.println(msg);
     }
 
-    /** High-visibility boxed banner in a single 256-colour. Lines must be plain text so the box aligns. */
+    /** High-visibility boxed banner straight to the terminal in a single 256-colour. */
     public static void banner(int color256, String... lines) {
         int width = 0;
         for (String l : lines) {
@@ -69,13 +59,13 @@ public final class Console {
         }
         String c = ESC + "38;5;" + color256 + "m";
         String rule = "═".repeat(width + 2);
-        System.out.println();
-        System.out.println(c + "╔" + rule + "╗");
+        OUT.println();
+        OUT.println(c + "╔" + rule + "╗");
         for (String l : lines) {
             String s = l == null ? "" : l;
-            System.out.println("║ " + s + " ".repeat(width - s.length()) + " ║");
+            OUT.println("║ " + s + " ".repeat(width - s.length()) + " ║");
         }
-        System.out.println("╚" + rule + "╝" + RESET);
-        System.out.println();
+        OUT.println("╚" + rule + "╝" + RESET);
+        OUT.println();
     }
 }
