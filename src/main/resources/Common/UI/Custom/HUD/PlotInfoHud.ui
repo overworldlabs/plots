@@ -1,7 +1,10 @@
 // Plot info HUD. Uses the SAME container widget/textures as the plot pages ($C.@Container from
 // PlotsCommon.ui), laid out like the AeroWars scoreboard: a title bar, then rows separated by
-// thin rules. Position is unchanged — pinned to the bottom-left corner. Element ids stay in sync
-// with PlotInfoHUD.java; the whole thing is shown/hidden by toggling #PlotInfoRoot.Visible.
+// thin rules. The title bar carries the plot NAME (no generic "PLOT" caption), so the content
+// area only holds owner/size and the Alt hint — everything below must fit in
+// Height - @TitleHeight - vertical padding, otherwise the footer spills outside the panel.
+// Position is unchanged — pinned to the bottom-left corner. Element ids stay in sync with
+// PlotInfoHUD.java; the whole thing is shown/hidden by toggling #PlotInfoRoot.Visible.
 $C = "../PlotsCommon.ui";
 
 Group #PlotInfoRoot {
@@ -12,26 +15,22 @@ Group #PlotInfoRoot {
     Anchor: (Left: 16, Bottom: 96, Width: 244, Height: 196);
     Visible: false;
 
+    // The plot name lives here — long names shrink instead of overflowing the header.
     #Title {
-      $C.@Title #PlotHudTitle { @Text = "PLOT"; }
+      $C.@Title #PlotHudTitle {
+        @Text = "";
+        Style: (...$C.@TitleStyle, RenderUppercase: false, TextColor: #ffffff, HorizontalAlignment: Center, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 10, Wrap: false);
+      }
     }
 
     #Content {
       LayoutMode: Top;
       Padding: (Top: 14, Bottom: 14, Left: 16, Right: 16);
 
-      Label #PlotName {
-        Text: "";
-        Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Start, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 11);
-        Anchor: (Horizontal: 0, Height: 20);
-      }
-
-      Group #PlotHudRule1 { Anchor: (Horizontal: 0, Height: 1, Top: 10); Background: (Color: #7a9cc655); }
-
       Label #PlotOwnerTitle {
         Text: "";
         Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: #878e9c, RenderUppercase: true, HorizontalAlignment: Start);
-        Anchor: (Horizontal: 0, Height: 14, Top: 9);
+        Anchor: (Horizontal: 0, Height: 14, Top: 4);
       }
       Label #PlotOwnerValue {
         Text: "";

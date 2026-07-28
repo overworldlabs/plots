@@ -93,9 +93,12 @@ public class PlotAdminPage extends InteractiveCustomUIPage<PlotAdminPage.PageDat
             @Nonnull UIEventBuilder eventBuilder, @Nonnull Store<EntityStore> store) {
         commandBuilder.append("Pages/PlotAdmin.ui");
 
-        // Aero-style sidebar nav; both variants of each entry trigger the same tab
-        // switch. The top-right close (#CloseButton) is dismissed natively by the
-        // client, so we don't bind it (binding it would break native close).
+        // The top-right close is our own Button (PlotsCommon.ui @Container), not a native
+        // widget — nothing dismisses the page unless we bind it ourselves.
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#CloseButton",
+                EventData.of("Action", "Close"), false);
+
+        // Aero-style sidebar nav; both variants of each entry trigger the same tab switch.
         bindNav(eventBuilder, "#NavSettings", "#NavSettingsActive", "TabSettings");
         bindNav(eventBuilder, "#NavPlots", "#NavPlotsActive", "TabPlots");
         bindNav(eventBuilder, "#NavStats", "#NavStatsActive", "TabStats");

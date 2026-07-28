@@ -48,7 +48,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
     private static final int MAX_WARP_ROWS = 10;
 
     private enum Tab {
-        TRUST, FLAGS, WARPS, MERGE, DANGER
+        TRUST, FLAGS, WARPS, PLOT
     }
 
     private final PlayerRef playerRef;
@@ -98,8 +98,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         return switch (tabId.trim().toLowerCase()) {
             case "flags" -> Tab.FLAGS;
             case "warps" -> Tab.WARPS;
-            case "merge" -> Tab.MERGE;
-            case "danger" -> Tab.DANGER;
+            case "plot", "danger" -> Tab.PLOT;
             default -> Tab.TRUST;
         };
     }
@@ -111,14 +110,17 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
             @Nonnull UIEventBuilder eventBuilder, @Nonnull Store<EntityStore> store) {
         commandBuilder.append("Pages/PlotMenu.ui");
 
-        // Aero-style sidebar nav; both variants of each entry trigger the same tab
-        // switch. The container's top-right close (#CloseButton) is dismissed natively
-        // by the client — binding it would break that, so we don't.
+        // The top-right close is our own Button (PlotsCommon.ui), not a native widget —
+        // nothing dismisses the page unless we bind it. It carries a page-unique id because
+        // both containers here would otherwise emit a `#CloseButton`. See PlotMenu.ui.
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#MenuCloseButton",
+                EventData.of("Action", "Close"), false);
+
+        // Aero-style sidebar nav; both variants of each entry trigger the same tab switch.
         bindNav(eventBuilder, "#TabTrust", "#TabTrustActive", "TabTrust");
         bindNav(eventBuilder, "#TabFlags", "#TabFlagsActive", "TabFlags");
         bindNav(eventBuilder, "#TabWarps", "#TabWarpsActive", "TabWarps");
-        bindNav(eventBuilder, "#TabMerge", "#TabMergeActive", "TabMerge");
-        bindNav(eventBuilder, "#TabDanger", "#TabDangerActive", "TabDanger");
+        bindNav(eventBuilder, "#TabPlot", "#TabPlotActive", "TabPlot");
 
         Plot plot = resolvePlot(ref, store);
         boolean canManage = plot != null && canManage(plot);
@@ -127,28 +129,24 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         setNavLabel(commandBuilder, "#TabTrust", "ui.menu.nav.trust");
         setNavLabel(commandBuilder, "#TabFlags", "ui.menu.nav.flags");
         setNavLabel(commandBuilder, "#TabWarps", "ui.menu.nav.warps");
-        setNavLabel(commandBuilder, "#TabMerge", "ui.menu.nav.merge");
-        setNavLabel(commandBuilder, "#TabDanger", "ui.menu.nav.danger");
+        setNavLabel(commandBuilder, "#TabPlot", "ui.menu.nav.plot");
 
         setNavActive(commandBuilder, "#TabTrust", this.currentTab == Tab.TRUST);
         setNavActive(commandBuilder, "#TabFlags", this.currentTab == Tab.FLAGS);
         setNavActive(commandBuilder, "#TabWarps", this.currentTab == Tab.WARPS);
-        setNavActive(commandBuilder, "#TabMerge", this.currentTab == Tab.MERGE);
-        setNavActive(commandBuilder, "#TabDanger", this.currentTab == Tab.DANGER);
+        setNavActive(commandBuilder, "#TabPlot", this.currentTab == Tab.PLOT);
 
         commandBuilder.set("#RightTitle.Text", switch (this.currentTab) {
             case TRUST -> Tr.t("ui.menu.title.trust");
             case FLAGS -> Tr.t("ui.menu.title.flags");
             case WARPS -> Tr.t("ui.menu.title.warps");
-            case MERGE -> Tr.t("ui.menu.title.merge");
-            case DANGER -> Tr.t("ui.menu.title.danger");
+            case PLOT -> Tr.t("ui.menu.title.plot");
         });
 
         commandBuilder.set("#PanelTrust.Visible", this.currentTab == Tab.TRUST);
         commandBuilder.set("#PanelFlags.Visible", this.currentTab == Tab.FLAGS);
         commandBuilder.set("#PanelWarps.Visible", this.currentTab == Tab.WARPS);
-        commandBuilder.set("#PanelMerge.Visible", this.currentTab == Tab.MERGE);
-        commandBuilder.set("#PanelDanger.Visible", this.currentTab == Tab.DANGER);
+        commandBuilder.set("#PanelPlot.Visible", this.currentTab == Tab.PLOT);
 
         boolean notice = plot == null || !canManage;
         commandBuilder.set("#PermNotice.Visible", notice);
@@ -231,6 +229,8 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         cb.set("#BtnHeroTeleport.Text", Tr.t("ui.menu.hero.teleport"));
         cb.set("#BtnHeroSetSpawn.Text", Tr.t("ui.menu.hero.set_spawn"));
         cb.set("#BtnHeroRename.Text", Tr.t("ui.menu.hero.rename"));
+        cb.set("#HeroWorldCaption.Text", Tr.t("ui.menu.hero.world"));
+        cb.set("#HeroGridCaption.Text", Tr.t("ui.menu.hero.grid"));
 
         int sizeX = this.plugin.getPlotManager().getConfig().getPlotSizeX();
         int sizeZ = this.plugin.getPlotManager().getConfig().getPlotSizeZ();
@@ -244,6 +244,8 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
             cb.set("#HeroWarps.Text", "0");
             cb.set("#HeroMerged.Text", "0");
             cb.set("#HeroCreated.Text", "-");
+            cb.set("#HeroWorld.Text", "-");
+            cb.set("#HeroGrid.Text", "-");
             return;
         }
         cb.set("#HeroPlotName.Text", safe(plot.getName()));
@@ -252,6 +254,8 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
         cb.set("#HeroWarps.Text", String.valueOf(plot.getWarpCount()));
         cb.set("#HeroMerged.Text", String.valueOf(plot.getMergedPlots().size()));
         cb.set("#HeroCreated.Text", formatDate(plot.getCreatedAt()));
+        cb.set("#HeroWorld.Text", safe(plot.getWorld()));
+        cb.set("#HeroGrid.Text", plot.getGridX() + ", " + plot.getGridZ());
     }
 
     private void buildTrust(UICommandBuilder cb, UIEventBuilder eb, Plot plot, boolean canManage) {
@@ -337,7 +341,19 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
                 false);
     }
 
+    /**
+     * The merge compass in the left panel: this plot in the middle, one button per
+     * neighbouring direction around it, plus "unmerge all".
+     */
     private void buildMerge(UICommandBuilder cb, UIEventBuilder eb, Plot plot, boolean canManage) {
+        cb.set("#MergeCaption.Text", Tr.t("ui.menu.merge.caption"));
+        cb.set("#MergeCenterLabel.Text", Tr.t("ui.menu.merge.center"));
+        cb.set("#BtnMergeNorth.Text", Tr.t("ui.menu.merge.dir_north"));
+        cb.set("#BtnMergeSouth.Text", Tr.t("ui.menu.merge.dir_south"));
+        cb.set("#BtnMergeEast.Text", Tr.t("ui.menu.merge.dir_east"));
+        cb.set("#BtnMergeWest.Text", Tr.t("ui.menu.merge.dir_west"));
+        cb.set("#BtnUnmerge.Text", Tr.t("ui.menu.merge.unmerge"));
+
         eb.addEventBinding(CustomUIEventBindingType.Activating, "#BtnMergeNorth",
                 EventData.of("Action", "Merge").append("Param", "north"), false);
         eb.addEventBinding(CustomUIEventBindingType.Activating, "#BtnMergeSouth",
@@ -351,6 +367,9 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
     }
 
     private void buildDanger(UICommandBuilder cb, UIEventBuilder eb, Plot plot, boolean canManage) {
+        cb.set("#DangerCaption.Text", Tr.t("ui.menu.danger.caption"));
+        cb.set("#DangerHint.Text", Tr.t("ui.menu.danger.hint"));
+
         eb.addEventBinding(CustomUIEventBindingType.Activating, "#BtnTransfer",
                 EventData.of("Action", "OpenTransfer"), false);
         eb.addEventBinding(CustomUIEventBindingType.Activating, "#BtnDelete",
@@ -384,12 +403,8 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
                 reopen(player, ref, store, Tab.FLAGS);
                 return;
             }
-            case "TabMerge" -> {
-                reopen(player, ref, store, Tab.MERGE);
-                return;
-            }
-            case "TabDanger" -> {
-                reopen(player, ref, store, Tab.DANGER);
+            case "TabPlot" -> {
+                reopen(player, ref, store, Tab.PLOT);
                 return;
             }
             case "TabWarps" -> {
@@ -696,8 +711,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
             case TRUST -> "Trust";
             case FLAGS -> "Flags";
             case WARPS -> "Warps";
-            case MERGE -> "Merge";
-            case DANGER -> "Danger";
+            case PLOT -> "Plot";
         };
     }
 

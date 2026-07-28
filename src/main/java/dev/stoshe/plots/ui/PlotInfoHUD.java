@@ -8,8 +8,8 @@ import dev.stoshe.plots.util.Tr;
 import javax.annotation.Nonnull;
 
 /**
- * Per-player HUD shown inside plot worlds. Renders the current plot's name,
- * owner and size while the player stands on a plot; hidden entirely on roads.
+ * Per-player HUD shown inside plot worlds. Renders the current plot's name (as the
+ * panel header), owner and size while the player stands on a plot; hidden on roads.
  * Driven by {@code PlotNotificationSystem}.
  */
 public class PlotInfoHUD extends CustomUIHud {
@@ -81,12 +81,12 @@ public class PlotInfoHUD extends CustomUIHud {
         builder.set("#PlotBanner.Visible", show);
 
         // Static, localized captions (kept in sync with the active language).
-        builder.set("#PlotHudTitle.Text", Tr.t("notification.hud_title"));
         builder.set("#PlotOwnerTitle.Text", Tr.t("notification.hud_status_owner"));
         builder.set("#PlotSizeTitle.Text", Tr.t("notification.hud_size"));
         builder.set("#PlotHudFooter.Text", Tr.t("notification.hud_hint"));
 
-        builder.set("#PlotName.Text", plotName);
+        // The plot name is the panel header — the content area only carries owner/size.
+        builder.set("#PlotHudTitle.Text", plotName);
         builder.set("#PlotOwnerValue.Text", ownerName);
         builder.set("#PlotSizeValue.Text", sizeText);
     }

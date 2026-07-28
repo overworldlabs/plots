@@ -158,7 +158,6 @@
   },
   "notification": {
     "hud_name_line": "{#55ffff}%plot_name%",
-    "hud_title": "LOTE",
     "hud_hint": "Alt — Menu do Lote",
     "hud_owner_line": "{#ffffff}Plot de %owner_name%",
     "hud_info_line": "%status% • Confiáveis: %trusted% • Mesclados: %merged%",
@@ -222,15 +221,13 @@
         "trust": "JOGADORES CONFIÁVEIS",
         "flags": "FLAGS DO LOTE",
         "warps": "WARPS DO LOTE",
-        "merge": "MESCLAR LOTES",
-        "danger": "ZONA DE PERIGO"
+        "plot": "LOTE"
       },
       "nav": {
         "trust": "Confiáveis",
         "flags": "Flags",
         "warps": "Warps",
-        "merge": "Unir",
-        "danger": "Perigo"
+        "plot": "Lote"
       },
       "notice": {
         "not_on_plot": "Você não está em um lote.",
@@ -264,7 +261,22 @@
       "hero": {
         "teleport": "TELEPORTAR",
         "set_spawn": "DEFINIR SPAWN",
-        "rename": "Renomear"
+        "rename": "Renomear",
+        "world": "Mundo:",
+        "grid": "Grade:"
+      },
+      "merge": {
+        "caption": "Mesclar",
+        "center": "Este lote",
+        "unmerge": "Separar",
+        "dir_north": "Norte",
+        "dir_south": "Sul",
+        "dir_east": "Leste",
+        "dir_west": "Oeste"
+      },
+      "danger": {
+        "caption": "Zona de perigo",
+        "hint": "Estas ações não podem ser desfeitas."
       }
     },
     "weather": {

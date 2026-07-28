@@ -19,99 +19,89 @@ Group #Root {
       LayoutMode: Top;
       Padding: (Full: 24);
 
+      // Identity card: plot name, dimensions and the rename action in one block.
       Group #PlotHero {
         LayoutMode: Top;
-        Anchor: (Horizontal: 0, Top: 12);
+        Anchor: (Horizontal: 0);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4, Color: #0f1822);
+        Padding: (Full: 18);
+
+        Label #HeroPlotName {
+          Text: "Plot";
+          Style: (FontSize: 22, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, Wrap: false, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 14);
+          Anchor: (Horizontal: 0, Height: 28);
+        }
 
         Group #PlotSizeRow {
           LayoutMode: Left;
-          Anchor: (Height: 28, Horizontal: 0, Bottom: 10);
-          Padding: (Horizontal: 4);
+          Anchor: (Horizontal: 0, Height: 22, Top: 8);
 
           Group { FlexWeight: 1; }
 
           Label #HeroSizeA {
             Text: "0";
-            Style: (FontSize: 16, TextColor: #ffffff, RenderBold: false, HorizontalAlignment: Center);
-            Anchor: (Height: 22);
+            Style: (FontSize: 15, TextColor: #d0dce6, HorizontalAlignment: Center);
+            Anchor: (Height: 20);
           }
 
           Label {
             Text: "x";
-            Style: (FontSize: 16, TextColor: #ffa500, RenderBold: true, HorizontalAlignment: Center);
-            Anchor: (Height: 22, Left: 4, Right: 4);
+            Style: (FontSize: 15, TextColor: #ffa500, RenderBold: true, HorizontalAlignment: Center);
+            Anchor: (Height: 20, Left: 4, Right: 4);
           }
 
           Label #HeroSizeB {
             Text: "0";
-            Style: (FontSize: 16, TextColor: #ffffff, RenderBold: false, HorizontalAlignment: Center);
-            Anchor: (Height: 22);
+            Style: (FontSize: 15, TextColor: #d0dce6, HorizontalAlignment: Center);
+            Anchor: (Height: 20);
           }
 
           Label {
             Text: "blocks";
-            Style: (FontSize: 16, TextColor: #ffa500, RenderBold: true, HorizontalAlignment: Center);
-            Anchor: (Height: 22, Left: 6);
+            Style: (FontSize: 13, TextColor: #7a8d9f, HorizontalAlignment: Center);
+            Anchor: (Height: 20, Left: 6);
           }
 
           Group { FlexWeight: 1; }
         }
 
-        Group #PlotImageContainer {
-          LayoutMode: Middle;
-          Anchor: (Horizontal: 0, Height: 140, Top: 4);
+        Group #PlotRenameRow {
+          LayoutMode: Left;
+          Anchor: (Horizontal: 0, Height: 32, Top: 14);
 
-          Group #PlotImage {
-            Anchor: (Left: 42, Right: 42, Height: 140);
-            LayoutMode: Middle;
-            Background: (TexturePath: "plot.png");
+          Group { FlexWeight: 1; }
 
-            Group #PlotNameRow {
-              LayoutMode: Left;
-              Anchor: (Horizontal: 0, Height: 30, Vertical: 0);
-              Padding: (Horizontal: 10);
-
-              Group { FlexWeight: 1; }
-
-              Label #HeroPlotName {
-                Text: "Plot";
-                Style: (FontSize: 18, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, Wrap: false);
-                Anchor: (Height: 24, Vertical: 0);
-              }
-
-              Group { Anchor: (Width: 8); }
-
-              $C.@SmallSecondaryTextButton #BtnHeroRename {
-                @Anchor = (Width: 92, Height: 28, Vertical: 0);
-                Text: "Rename";
-              }
-
-              Group { FlexWeight: 1; }
-            }
+          $C.@SmallSecondaryTextButton #BtnHeroRename {
+            @Anchor = (Width: 150);
+            Text: "Rename";
           }
+
+          Group { FlexWeight: 1; }
         }
       }
 
-      Group { FlexWeight: 1; }
+      Group { Anchor: (Height: 14); }
 
       Group #OwnerHeader {
-        Anchor: (Horizontal: 0, Height: 52);
+        Anchor: (Horizontal: 0, Height: 58);
         LayoutMode: Top;
-        Background: (Color: #21344B);
-        Padding: (Vertical: 8, Horizontal: 10);
+        Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4, Color: #16202d);
+        Padding: (Vertical: 10, Horizontal: 12);
 
         Label #OwnerCaption {
           Text: "OWNER";
-          Style: (FontSize: 12, TextColor: #7a8d9f, RenderBold: true, HorizontalAlignment: Center);
+          Style: (FontSize: 12, TextColor: #7a8d9f, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center);
           Anchor: (Height: 16, Horizontal: 0);
         }
 
         Label #HeroOwner {
           Text: "-";
-          Style: (FontSize: 18, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center);
+          Style: (FontSize: 18, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, Wrap: false, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 12);
           Anchor: (Height: 24, Horizontal: 0, Top: 2);
         }
       }
+
+      Group { Anchor: (Height: 10); }
 
       Group #StatsGrid {
         Anchor: (Horizontal: 0);
@@ -169,6 +159,34 @@ Group #Root {
             Label #HeroCreated { Text: "-"; Style: (FontSize: 14, TextColor: #d0dce6, RenderBold: true, HorizontalAlignment: Center); Anchor: (Height: 20, Horizontal: 0, Top: 2); }
           }
         }
+
+        Group { Anchor: (Height: 1, Horizontal: 4); Background: (Color: #2b3542); }
+
+        // Where the plot actually is — not shown anywhere else in the menu or the HUD.
+        Group {
+          Anchor: (Height: 48, Horizontal: 0);
+          LayoutMode: Left;
+
+          Group {
+            FlexWeight: 1;
+            LayoutMode: Middle;
+            Background: (Color: #0f1822);
+            Padding: (Full: 8);
+            Label #HeroWorldCaption { Text: "World:"; Style: (FontSize: 13, TextColor: #7a8d9f, HorizontalAlignment: Center); Anchor: (Height: 16, Horizontal: 0); }
+            Label #HeroWorld { Text: "-"; Style: (FontSize: 14, TextColor: #d0dce6, RenderBold: true, HorizontalAlignment: Center, Wrap: false, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 10); Anchor: (Height: 20, Horizontal: 0, Top: 2); }
+          }
+
+          Group { Anchor: (Width: 1, Top: 4, Bottom: 4); Background: (Color: #2b3542); }
+
+          Group {
+            FlexWeight: 1;
+            LayoutMode: Middle;
+            Background: (Color: #0f1822);
+            Padding: (Full: 8);
+            Label #HeroGridCaption { Text: "Grid:"; Style: (FontSize: 13, TextColor: #7a8d9f, HorizontalAlignment: Center); Anchor: (Height: 16, Horizontal: 0); }
+            Label #HeroGrid { Text: "-"; Style: (FontSize: 14, TextColor: #d0dce6, RenderBold: true, HorizontalAlignment: Center); Anchor: (Height: 20, Horizontal: 0, Top: 2); }
+          }
+        }
       }
 
       Group { FlexWeight: 1; }
@@ -204,7 +222,11 @@ Group #Root {
     Anchor: (Width: 672);
 
     $C.@DecoratedContainer #RightContainer {
-      @CloseButton = true;
+      // The container template's own close button is left off on purpose: BOTH containers on
+      // this page emit a `Button #CloseButton`, so that id is ambiguous here and an event
+      // binding on it cannot be aimed at the visible one. A uniquely-named button is used
+      // instead — #MenuCloseButton, bound in PlotMenuPage.java.
+      @CloseButton = false;
       Anchor: (Width: 672, Height: 620);
 
       #Title {
@@ -213,15 +235,28 @@ Group #Root {
         }
 
         $C.@Title #RightTitle { @Text = "PLOT MENU"; }
+
+        // Lives inside #Title (an override block, where new children are allowed) rather than
+        // directly under the instance — the parser rejects extra children there. #Title spans
+        // the container's top edge, so this lands on the same corner as the built-in button.
+        $C.@CloseButton #MenuCloseButton {
+          Anchor: (Width: 32, Height: 32, Top: -8, Right: -8);
+        }
       }
 
       #Content {
         LayoutMode: Left;
         Padding: (Full: 16);
 
+        // Nav rail. The panel background runs the full height of the content area, so
+        // the space left under the four tabs reads as part of the rail instead of a
+        // hole in the layout; the column itself is kept narrow and the body takes the
+        // width that frees up.
         Group #MenuNav {
-          Anchor: (Width: 176, Top: 0, Bottom: 0);
+          Anchor: (Width: 150, Top: 0, Bottom: 0);
           LayoutMode: Top;
+          Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4, Color: #0f1822);
+          Padding: (Vertical: 8, Horizontal: 6);
 
           $C.@AeroNavButton #TabTrust { @Text = "Trusted"; }
           $C.@AeroNavButtonActive #TabTrustActive { @Text = "Trusted"; Visible: false; }
@@ -229,15 +264,13 @@ Group #Root {
           $C.@AeroNavButtonActive #TabFlagsActive { @Text = "Flags"; Visible: false; }
           $C.@AeroNavButton #TabWarps { @Text = "Warps"; }
           $C.@AeroNavButtonActive #TabWarpsActive { @Text = "Warps"; Visible: false; }
-          $C.@AeroNavButton #TabMerge { @Text = "Merge"; }
-          $C.@AeroNavButtonActive #TabMergeActive { @Text = "Merge"; Visible: false; }
-          $C.@AeroNavButton #TabDanger { @Text = "Danger"; }
-          $C.@AeroNavButtonActive #TabDangerActive { @Text = "Danger"; Visible: false; }
+          $C.@AeroNavButton #TabPlot { @Text = "Plot"; }
+          $C.@AeroNavButtonActive #TabPlotActive { @Text = "Plot"; Visible: false; }
 
           Group { FlexWeight: 1; }
         }
 
-        Group { Anchor: (Width: 14); }
+        Group { Anchor: (Width: 12); }
 
         Group #MenuBody {
           FlexWeight: 1;
@@ -257,10 +290,7 @@ Group #Root {
             Anchor: (Horizontal: 0, Vertical: 0);
             LayoutMode: Top;
 
-            Group {
-              Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
-              $C.@SecondaryTextButton #BtnAddTrust { @Anchor = (Horizontal: 0, Height: 38); Text: "Add Trusted Player"; }
-            }
+            $C.@SecondaryTextButton #BtnAddTrust { @Anchor = (Horizontal: 0, Bottom: 8); Text: "Add Trusted Player"; }
 
             Label #TrustEmpty {
               Anchor: (Horizontal: 0, Height: 18, Bottom: 8);
@@ -275,18 +305,18 @@ Group #Root {
               LayoutMode: TopScrolling;
               ScrollbarStyle: $C.@DefaultScrollbarStyle;
 
-              Group #TrustRow0 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName0 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove0 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
-              Group #TrustRow1 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName1 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove1 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
-              Group #TrustRow2 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName2 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove2 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
-              Group #TrustRow3 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName3 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove3 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
-              Group #TrustRow4 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName4 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove4 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
-              Group #TrustRow5 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName5 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove5 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
-              Group #TrustRow6 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName6 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove6 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
-              Group #TrustRow7 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName7 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove7 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
-              Group #TrustRow8 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName8 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove8 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
-              Group #TrustRow9 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName9 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove9 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
-              Group #TrustRow10 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName10 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove10 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
-              Group #TrustRow11 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #TrustName11 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove11 { @Anchor = (Width: 110, Height: 28); Text: "Remove"; } }
+              Group #TrustRow0 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #TrustName0 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove0 { @Anchor = (Width: 110); Text: "Remove"; } }
+              Group #TrustRow1 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #TrustName1 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove1 { @Anchor = (Width: 110); Text: "Remove"; } }
+              Group #TrustRow2 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #TrustName2 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove2 { @Anchor = (Width: 110); Text: "Remove"; } }
+              Group #TrustRow3 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #TrustName3 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove3 { @Anchor = (Width: 110); Text: "Remove"; } }
+              Group #TrustRow4 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #TrustName4 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove4 { @Anchor = (Width: 110); Text: "Remove"; } }
+              Group #TrustRow5 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #TrustName5 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove5 { @Anchor = (Width: 110); Text: "Remove"; } }
+              Group #TrustRow6 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #TrustName6 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove6 { @Anchor = (Width: 110); Text: "Remove"; } }
+              Group #TrustRow7 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #TrustName7 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove7 { @Anchor = (Width: 110); Text: "Remove"; } }
+              Group #TrustRow8 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #TrustName8 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove8 { @Anchor = (Width: 110); Text: "Remove"; } }
+              Group #TrustRow9 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #TrustName9 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove9 { @Anchor = (Width: 110); Text: "Remove"; } }
+              Group #TrustRow10 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #TrustName10 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove10 { @Anchor = (Width: 110); Text: "Remove"; } }
+              Group #TrustRow11 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #TrustName11 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #TrustRemove11 { @Anchor = (Width: 110); Text: "Remove"; } }
             }
           }
 
@@ -345,19 +375,23 @@ Group #Root {
               $C.@Hr {}
 
               $C.@SectionLabel #FlagEnvironmentLabel { @Text = "Environment"; }
+              // Mirrors @FlagRow, but the button (a forced 32 tall) replaces the
+              // checkbox, so the content box is 32 instead of 22.
               Group #FlagWeatherRow {
                 LayoutMode: Left;
                 Anchor: (Horizontal: 0, Height: 36, Bottom: 4);
                 Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4, Color: #16202d);
-                Padding: (Left: 12, Right: 10);
-                Label #FlagWeatherLabel { Text: "Weather"; Style: (FontSize: 13, TextColor: #c4d2e0, VerticalAlignment: Center); Anchor: (Height: 20, Vertical: 0); FlexWeight: 1; }
-                Label #FlagWeatherValue { Text: ""; Style: (FontSize: 12, TextColor: #9fb3c6, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; }
+                Padding: (Left: 12, Right: 10, Vertical: 2);
+                Label #FlagWeatherLabel { Text: "Weather"; Style: (FontSize: 13, TextColor: #c4d2e0, VerticalAlignment: Center); Anchor: (Vertical: 0); FlexWeight: 1; }
+                Label #FlagWeatherValue { Text: ""; Style: (FontSize: 12, TextColor: #9fb3c6, VerticalAlignment: Center, HorizontalAlignment: End); Anchor: (Vertical: 0); FlexWeight: 1; }
                 Group { Anchor: (Width: 8); }
-                $C.@SmallSecondaryTextButton #BtnWeatherChange { @Anchor = (Width: 100, Height: 26); Text: "Change"; }
+                $C.@SmallSecondaryTextButton #BtnWeatherChange { @Anchor = (Width: 100); Text: "Change"; }
               }
 
               $C.@Hr {}
 
+              // NOTE: @SecondaryTextButton forces Height: @DefaultButtonHeight (44) AFTER spreading
+              // @Anchor, so declaring a height here is silently ignored — only spacing/insets stick.
               $C.@SectionLabel { @Text = "Messages"; }
               Group {
                 Anchor: (Horizontal: 0, Height: 56, Bottom: 6); LayoutMode: Top; Padding: (Horizontal: 4);
@@ -375,7 +409,7 @@ Group #Root {
                 $C.@TextField #FlagDenyMessage { @Anchor = (Horizontal: 0); }
               }
               $C.@SecondaryTextButton #BtnSaveMessages {
-                @Anchor = (Horizontal: 0, Height: 36, Bottom: 4);
+                @Anchor = (Horizontal: 4, Top: 4, Bottom: 6);
                 Text: "Save Messages";
               }
             }
@@ -388,25 +422,25 @@ Group #Root {
             LayoutMode: Top;
 
             Group {
-              Anchor: (Horizontal: 0, Height: 36, Bottom: 6);
+              Anchor: (Horizontal: 0, Height: 32, Bottom: 6);
               LayoutMode: Left;
 
               Label #WarpCount {
-                Anchor: (Height: 20, Vertical: 0);
+                Anchor: (Vertical: 0);
                 FlexWeight: 1;
                 Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #cbd9e8, VerticalAlignment: Center);
                 Text: "";
               }
 
               $C.@SmallSecondaryTextButton #WarpAdd {
-                @Anchor = (Width: 110, Vertical: 0);
+                @Anchor = (Width: 110);
                 Text: "Add Warp";
               }
 
               Group { Anchor: (Width: 6); }
 
               $C.@SmallSecondaryTextButton #WarpBrowse {
-                @Anchor = (Width: 140, Vertical: 0);
+                @Anchor = (Width: 140);
                 Text: "Public Warps";
               }
             }
@@ -424,77 +458,101 @@ Group #Root {
               LayoutMode: TopScrolling;
               ScrollbarStyle: $C.@DefaultScrollbarStyle;
 
-              Group #WarpRow0 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName0 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp0 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel0 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
-              Group #WarpRow1 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName1 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp1 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel1 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
-              Group #WarpRow2 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName2 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp2 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel2 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
-              Group #WarpRow3 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName3 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp3 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel3 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
-              Group #WarpRow4 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName4 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp4 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel4 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
-              Group #WarpRow5 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName5 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp5 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel5 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
-              Group #WarpRow6 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName6 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp6 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel6 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
-              Group #WarpRow7 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName7 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp7 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel7 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
-              Group #WarpRow8 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName8 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp8 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel8 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
-              Group #WarpRow9 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WarpName9 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp9 { @Anchor = (Width: 90, Height: 28); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel9 { @Anchor = (Width: 80, Height: 28); Text: "Delete"; } }
+              Group #WarpRow0 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #WarpName0 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp0 { @Anchor = (Width: 90); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel0 { @Anchor = (Width: 80); Text: "Delete"; } }
+              Group #WarpRow1 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #WarpName1 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp1 { @Anchor = (Width: 90); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel1 { @Anchor = (Width: 80); Text: "Delete"; } }
+              Group #WarpRow2 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #WarpName2 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp2 { @Anchor = (Width: 90); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel2 { @Anchor = (Width: 80); Text: "Delete"; } }
+              Group #WarpRow3 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #WarpName3 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp3 { @Anchor = (Width: 90); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel3 { @Anchor = (Width: 80); Text: "Delete"; } }
+              Group #WarpRow4 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #WarpName4 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp4 { @Anchor = (Width: 90); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel4 { @Anchor = (Width: 80); Text: "Delete"; } }
+              Group #WarpRow5 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #WarpName5 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp5 { @Anchor = (Width: 90); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel5 { @Anchor = (Width: 80); Text: "Delete"; } }
+              Group #WarpRow6 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #WarpName6 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp6 { @Anchor = (Width: 90); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel6 { @Anchor = (Width: 80); Text: "Delete"; } }
+              Group #WarpRow7 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #WarpName7 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp7 { @Anchor = (Width: 90); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel7 { @Anchor = (Width: 80); Text: "Delete"; } }
+              Group #WarpRow8 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #WarpName8 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp8 { @Anchor = (Width: 90); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel8 { @Anchor = (Width: 80); Text: "Delete"; } }
+              Group #WarpRow9 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #WarpName9 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WarpTp9 { @Anchor = (Width: 90); Text: "Teleport"; } Group { Anchor: (Width: 4); } $C.@SmallSecondaryTextButton #WarpDel9 { @Anchor = (Width: 80); Text: "Delete"; } }
             }
           }
 
-          // ===== MERGE PANEL =====
-          Group #PanelMerge {
+          // ===== PLOT PANEL — structural actions: merge/unmerge, then the danger zone =====
+          Group #PanelPlot {
             Visible: false;
             Anchor: (Horizontal: 0);
             LayoutMode: Top;
 
-            Label #MergeHint {
-              Anchor: (Horizontal: 0, Height: 36, Bottom: 8);
-              Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #b2c1d0, HorizontalAlignment: Center, Wrap: true);
-              Text: "Merge this plot with an adjacent plot you own.";
+            Group {
+              LayoutMode: Left;
+              Anchor: (Horizontal: 0, Height: 32, Bottom: 10);
+
+              Label #MergeCaption {
+                Text: "MERGE";
+                Style: (FontSize: 12, TextColor: #7a8d9f, RenderBold: true, RenderUppercase: true, LetterSpacing: 1, VerticalAlignment: Center);
+                Anchor: (Height: 18, Vertical: 0);
+                FlexWeight: 1;
+              }
+
+              $C.@SmallSecondaryTextButton #BtnUnmerge { @Anchor = (Width: 130); Text: "Unmerge"; }
+            }
+
+            // Compass: this plot in the middle, one button per neighbouring direction.
+            Group {
+              LayoutMode: Left;
+              Anchor: (Horizontal: 0, Height: 32, Bottom: 6);
+
+              Group { FlexWeight: 1; }
+              $C.@SmallSecondaryTextButton #BtnMergeNorth { @Anchor = (Width: 130); Text: "N"; }
+              Group { FlexWeight: 1; }
             }
 
             Group {
-              Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
-              $C.@SecondaryTextButton #BtnMergeNorth { @Anchor = (Horizontal: 0, Height: 38); Text: "Merge North"; }
-            }
-            Group {
-              Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
-              $C.@SecondaryTextButton #BtnMergeSouth { @Anchor = (Horizontal: 0, Height: 38); Text: "Merge South"; }
-            }
-            Group {
-              Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
-              $C.@SecondaryTextButton #BtnMergeEast { @Anchor = (Horizontal: 0, Height: 38); Text: "Merge East"; }
-            }
-            Group {
-              Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
-              $C.@SecondaryTextButton #BtnMergeWest { @Anchor = (Horizontal: 0, Height: 38); Text: "Merge West"; }
+              LayoutMode: Left;
+              Anchor: (Horizontal: 0, Height: 32, Bottom: 6);
+
+              Group { FlexWeight: 1; }
+              $C.@SmallSecondaryTextButton #BtnMergeWest { @Anchor = (Width: 130); Text: "W"; }
+              Group { Anchor: (Width: 6); }
+
+              Group #MergeCenter {
+                Anchor: (Width: 130, Vertical: 0);
+                LayoutMode: Middle;
+                Background: (TexturePath: "../Common/ContainerPanelPatch.png", Border: 4, Color: #21344B);
+
+                Label #MergeCenterLabel {
+                  Text: "THIS PLOT";
+                  Style: (FontSize: 11, TextColor: #c4d2e0, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center, VerticalAlignment: Center, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 9);
+                  Anchor: (Horizontal: 6, Height: 16);
+                }
+              }
+
+              Group { Anchor: (Width: 6); }
+              $C.@SmallSecondaryTextButton #BtnMergeEast { @Anchor = (Width: 130); Text: "E"; }
+              Group { FlexWeight: 1; }
             }
 
-            $C.@Hr { @Spacing = 16; }
-
             Group {
-              Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
-              $C.@SecondaryTextButton #BtnUnmerge { @Anchor = (Horizontal: 0, Height: 38); Text: "Unmerge All"; }
-            }
-          }
+              LayoutMode: Left;
+              Anchor: (Horizontal: 0, Height: 32);
 
-          // ===== DANGER PANEL =====
-          Group #PanelDanger {
-            Visible: false;
-            Anchor: (Horizontal: 0);
-            LayoutMode: Top;
+              Group { FlexWeight: 1; }
+              $C.@SmallSecondaryTextButton #BtnMergeSouth { @Anchor = (Width: 130); Text: "S"; }
+              Group { FlexWeight: 1; }
+            }
+
+            $C.@Hr { @Spacing = 24; }
+
+            Label #DangerCaption {
+              Text: "DANGER ZONE";
+              Style: (FontSize: 12, TextColor: #d6a6a6, RenderBold: true, RenderUppercase: true, LetterSpacing: 1);
+              Anchor: (Horizontal: 0, Height: 18, Bottom: 4);
+            }
 
             Label #DangerHint {
-              Anchor: (Horizontal: 0, Height: 36, Bottom: 10);
-              Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffd6c8, HorizontalAlignment: Center, Wrap: true);
+              Anchor: (Horizontal: 0, Height: 20, Bottom: 10);
+              Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffd6c8, Wrap: true);
               Text: "These actions cannot be undone.";
             }
 
-            Group {
-              Anchor: (Horizontal: 0, Height: 40, Bottom: 6); LayoutMode: Top;
-              $C.@SecondaryTextButton #BtnTransfer { @Anchor = (Horizontal: 0, Height: 38); Text: "Transfer Ownership"; }
-            }
-
-            $C.@Hr { @Spacing = 16; }
+            $C.@SecondaryTextButton #BtnTransfer { @Anchor = (Horizontal: 0, Bottom: 6); Text: "Transfer Ownership"; }
 
             $C.@CancelTextButton #BtnDelete {
-              @Anchor = (Horizontal: 0, Height: 40);
+              @Anchor = (Horizontal: 0);
               Text: "Delete Plot";
             }
           }

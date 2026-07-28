@@ -158,7 +158,6 @@
   },
   "notification": {
     "hud_name_line": "{#55ffff}%plot_name%",
-    "hud_title": "PLOT",
     "hud_hint": "Alt — Plot Menu",
     "hud_owner_line": "{#ffffff}%owner_name%'s Plot",
     "hud_info_line": "%status% • Trusted: %trusted% • Merged: %merged%",
@@ -222,15 +221,13 @@
         "trust": "TRUSTED PLAYERS",
         "flags": "PLOT FLAGS",
         "warps": "PLOT WARPS",
-        "merge": "MERGE PLOTS",
-        "danger": "DANGER ZONE"
+        "plot": "PLOT"
       },
       "nav": {
         "trust": "Trusted",
         "flags": "Flags",
         "warps": "Warps",
-        "merge": "Merge",
-        "danger": "Danger"
+        "plot": "Plot"
       },
       "notice": {
         "not_on_plot": "You are not standing on a plot.",
@@ -264,7 +261,22 @@
       "hero": {
         "teleport": "TELEPORT",
         "set_spawn": "SET SPAWN",
-        "rename": "Rename"
+        "rename": "Rename",
+        "world": "World:",
+        "grid": "Grid:"
+      },
+      "merge": {
+        "caption": "Merge",
+        "center": "This plot",
+        "unmerge": "Unmerge",
+        "dir_north": "North",
+        "dir_south": "South",
+        "dir_east": "East",
+        "dir_west": "West"
+      },
+      "danger": {
+        "caption": "Danger zone",
+        "hint": "These actions cannot be undone."
       }
     },
     "weather": {
