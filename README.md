@@ -86,4 +86,4 @@ Pages automatically on push to `main`.
 ---
 
 <sub>Built for Hytale by <a href="https://github.com/gitgusilva">Gustavo Will</a> · Stoshe Labs · <a href="LICENSE">MIT</a><br>
-Also on <a href="https://modtale.net/mod/plots-f9ee11f8-1fa2-4bb2-aa9b-d726474c712b">Modtale</a> &amp; <a href="https://www.curseforge.com/hytale/mods/plot">CurseForge</a> · <a href="https://discord.gg/rC9eSzH3tf">Discord</a> · help translate on <a href="https://crowdin.com/project/hytaleplots">Crowdin</a></sub>
+Also on <a href="https://www.curseforge.com/hytale/mods/plot">CurseForge</a> · <a href="https://discord.gg/rC9eSzH3tf">Discord</a> · help translate on <a href="https://crowdin.com/project/hytaleplots">Crowdin</a></sub>

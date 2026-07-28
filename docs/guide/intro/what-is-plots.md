@@ -30,7 +30,6 @@ to display ownership information floating in the world itself.
 ## Downloads
 
 - [**GitHub Releases**](https://github.com/stoshelabs/plots/releases) — official builds and source.
-- [**Modtale**](https://modtale.net/mod/plots-f9ee11f8-1fa2-4bb2-aa9b-d726474c712b)
 - [**CurseForge**](https://www.curseforge.com/hytale/mods/plot)
 
 ## Support
