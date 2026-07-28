@@ -1,46 +1,66 @@
+// Plot info HUD. Uses the SAME container widget/textures as the plot pages ($C.@Container from
+// PlotsCommon.ui), laid out like the AeroWars scoreboard: a title bar, then rows separated by
+// thin rules. Position is unchanged — pinned to the bottom-left corner. Element ids stay in sync
+// with PlotInfoHUD.java; the whole thing is shown/hidden by toggling #PlotInfoRoot.Visible.
+$C = "../PlotsCommon.ui";
+
 Group #PlotInfoRoot {
-  LayoutMode: Top;
-  Anchor: (Left: 24, Bottom: 24, Width: 300, Height: 86);
+  Anchor: (Left: 0, Right: 0, Top: 0, Bottom: 0);
   Visible: false;
 
-  Group #PlotInfoBody {
-    Anchor: (Width: 300, Height: 86);
-    Background: (Color: #101820);
+  $C.@Container #PlotBanner {
+    Anchor: (Left: 16, Bottom: 96, Width: 244, Height: 196);
     Visible: false;
 
-    Group {
-      Anchor: (Left: 0, Top: 0, Bottom: 0, Width: 4);
-      Background: (Color: #55ff7a);
+    #Title {
+      $C.@Title #PlotHudTitle { @Text = "PLOT"; }
     }
 
-    Label #PlotName {
-      Anchor: (Left: 16, Width: 272, Height: 24, Top: 10);
-      Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Start);
-      Text: "";
-    }
+    #Content {
+      LayoutMode: Top;
+      Padding: (Top: 14, Bottom: 14, Left: 16, Right: 16);
 
-    Label #PlotOwner {
-      Anchor: (Left: 16, Width: 272, Height: 20, Top: 36);
-      Style: (FontSize: 12, TextColor: #c7d2da, HorizontalAlignment: Start);
-      Text: "";
-    }
+      Label #PlotName {
+        Text: "";
+        Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Start, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 11);
+        Anchor: (Horizontal: 0, Height: 20);
+      }
 
-    Label #PlotInfoLine {
-      Anchor: (Left: 16, Width: 272, Height: 18, Top: 58);
-      Style: (FontSize: 11, TextColor: #8fa3b3, HorizontalAlignment: Start);
-      Text: "";
-    }
-  }
+      Group #PlotHudRule1 { Anchor: (Horizontal: 0, Height: 1, Top: 10); Background: (Color: #7a9cc655); }
 
-  Group #PlotFallback {
-    Anchor: (Width: 300, Height: 44);
-    Background: (Color: #101820);
-    Visible: false;
+      Label #PlotOwnerTitle {
+        Text: "";
+        Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: #878e9c, RenderUppercase: true, HorizontalAlignment: Start);
+        Anchor: (Horizontal: 0, Height: 14, Top: 9);
+      }
+      Label #PlotOwnerValue {
+        Text: "";
+        Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Start, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 11);
+        Anchor: (Horizontal: 0, Height: 20, Top: 1);
+      }
 
-    Label #PlotFallbackText {
-      Anchor: (Width: 300, Height: 44, Top: 0);
-      Style: (FontSize: 12, TextColor: #c7d2da, HorizontalAlignment: Center);
-      Text: "";
+      Group #PlotHudRule2 { Anchor: (Horizontal: 0, Height: 1, Top: 10); Background: (Color: #ffffff1f); }
+
+      Label #PlotSizeTitle {
+        Text: "";
+        Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: #878e9c, RenderUppercase: true, HorizontalAlignment: Start);
+        Anchor: (Horizontal: 0, Height: 14, Top: 9);
+      }
+      Label #PlotSizeValue {
+        Text: "";
+        Style: (...$C.@DefaultLabelStyle, FontSize: 15, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Start);
+        Anchor: (Horizontal: 0, Height: 20, Top: 1);
+      }
+
+      // Flexible spacer pushes the footer to the bottom of the panel.
+      Group { Anchor: (Horizontal: 0); FlexWeight: 1; }
+
+      Group #PlotHudFooterRule { Anchor: (Horizontal: 0, Height: 1, Bottom: 6); Background: (Color: #ffffff14); }
+      Label #PlotHudFooter {
+        Text: "";
+        Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #7ac0ff, RenderBold: true, HorizontalAlignment: Center);
+        Anchor: (Horizontal: 0, Height: 16);
+      }
     }
   }
 }

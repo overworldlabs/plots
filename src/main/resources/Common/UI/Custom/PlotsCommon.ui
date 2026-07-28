@@ -605,6 +605,44 @@ $Sounds = "PlotsSounds.ui";
   Background: (Color: #2b3542);
 };
 
+// Horizontal rule with vertical breathing room (top + bottom spacing baked in).
+@Hr = Group {
+  @Spacing = 12;
+
+  LayoutMode: Middle;
+  Anchor: (Horizontal: 0, Height: @Spacing);
+
+  Group {
+    Anchor: (Horizontal: 6, Height: 1, Vertical: 0);
+    Background: (Color: #2b3542);
+  }
+};
+
+// Small uppercase caption that heads a group of settings inside a panel.
+@SectionLabel = Label {
+  @Text = "";
+  Style: (FontSize: 12, TextColor: #7a8d9f, RenderBold: true, RenderUppercase: true, LetterSpacing: 1, VerticalAlignment: Center);
+  Anchor: (Horizontal: 8, Height: 18, Bottom: 4);
+  Text: @Text;
+};
+
+// One flag row: label on the left, checkbox on the right, subtle card background.
+@FlagRow = Group {
+  @Text = "";
+
+  LayoutMode: Left;
+  Anchor: (Horizontal: 0, Height: 36, Bottom: 4);
+  Background: (TexturePath: "Common/ContainerPanelPatch.png", Border: 4, Color: #16202d);
+  Padding: (Left: 12, Right: 10);
+
+  Label {
+    Text: @Text;
+    Style: (FontSize: 13, TextColor: #c4d2e0, VerticalAlignment: Center);
+    Anchor: (Height: 20, Vertical: 0);
+    FlexWeight: 1;
+  }
+};
+
 @DefaultSpinner = Sprite {
   @Anchor = ();
   Anchor: (...@Anchor, Width: 32, Height: 32);
@@ -876,6 +914,44 @@ $Sounds = "PlotsSounds.ui";
 
 @PageOverlay = Group {
   Background: #000000(0.45);
+};
+
+// ===== Aero-style admin sidebar nav (mirrors the /aero AdminDashboard) =====
+@AeroNavLabelDefault = LabelStyle(...@DefaultLabelStyle, FontSize: 13, TextColor: #8fa4bc, RenderUppercase: true, RenderBold: true, HorizontalAlignment: Start, VerticalAlignment: Center);
+@AeroNavLabelActive = LabelStyle(...@DefaultLabelStyle, FontSize: 13, TextColor: #ffffff, RenderUppercase: true, RenderBold: true, HorizontalAlignment: Start, VerticalAlignment: Center);
+
+@AeroNavButtonStyle = TextButtonStyle(
+  Default: (Background: (Color: #00000000), LabelStyle: @AeroNavLabelDefault),
+  Hovered: (Background: (Color: #1a2738), LabelStyle: (...@AeroNavLabelDefault, TextColor: #c7d9ea)),
+  Pressed: (Background: (Color: #223149), LabelStyle: @AeroNavLabelActive),
+  Disabled: (Background: (Color: #00000000), LabelStyle: (...@AeroNavLabelDefault, TextColor: #56687d)),
+  Sounds: $Sounds.@ButtonsLight
+);
+
+@AeroNavButtonActiveStyle = TextButtonStyle(
+  Default: (Background: (Color: #223149), LabelStyle: @AeroNavLabelActive),
+  Hovered: (Background: (Color: #223149), LabelStyle: @AeroNavLabelActive),
+  Pressed: (Background: (Color: #223149), LabelStyle: @AeroNavLabelActive),
+  Disabled: (Background: (Color: #223149), LabelStyle: @AeroNavLabelActive),
+  Sounds: $Sounds.@ButtonsLight
+);
+
+@AeroNavButton = TextButton {
+  @Anchor = ();
+  @Text = "";
+  Anchor: (...@Anchor, Horizontal: 0, Height: 34, Bottom: 4);
+  Padding: (Left: 12, Right: 12);
+  Style: @AeroNavButtonStyle;
+  Text: @Text;
+};
+
+@AeroNavButtonActive = TextButton {
+  @Anchor = ();
+  @Text = "";
+  Anchor: (...@Anchor, Horizontal: 0, Height: 34, Bottom: 4);
+  Padding: (Left: 12, Right: 12);
+  Style: @AeroNavButtonActiveStyle;
+  Text: @Text;
 };
 
 @DefaultSliderStyle = SliderStyle(

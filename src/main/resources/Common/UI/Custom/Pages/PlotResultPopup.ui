@@ -1,0 +1,41 @@
+$C = "../PlotsCommon.ui";
+$Sounds = "../PlotsSounds.ui";
+
+$C.@PageOverlay {}
+
+$C.@Container {
+  Anchor: (Width: 460, Height: 240);
+
+  #Title {
+    $C.@Title #ResultPopupTitle { @Text = "RESULT"; }
+  }
+
+  #Content {
+    LayoutMode: Top;
+    Padding: (Top: 18, Bottom: 20, Left: 24, Right: 24);
+
+    // Thin accent strip; the matching colour is toggled per success/error from Java.
+    Group #ResultAccentSuccess {
+      Anchor: (Horizontal: 30, Height: 3, Bottom: 14);
+      Background: (Color: #3aa76d);
+    }
+    Group #ResultAccentError {
+      Anchor: (Horizontal: 30, Height: 3, Bottom: 14);
+      Background: (Color: #d05a5a);
+      Visible: false;
+    }
+
+    Label #ResultPopupMessage {
+      Anchor: (Horizontal: 0, Height: 66, Bottom: 12);
+      Style: (...$C.@DefaultLabelStyle, FontSize: 13, TextColor: #d0dce6, HorizontalAlignment: Center, VerticalAlignment: Center, Wrap: true);
+      Text: "";
+    }
+
+    Group { FlexWeight: 1; }
+
+    $C.@TextButton #BtnResultOk {
+      @Anchor = (Horizontal: 0, Height: 38);
+      Text: "OK";
+    }
+  }
+}

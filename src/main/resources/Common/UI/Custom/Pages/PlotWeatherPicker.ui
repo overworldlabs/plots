@@ -1,0 +1,82 @@
+$C = "../PlotsCommon.ui";
+$Sounds = "../PlotsSounds.ui";
+
+$C.@PageOverlay {}
+
+$C.@Container {
+  Anchor: (Width: 620, Height: 560);
+
+  #Title {
+    $C.@Title #WeatherTitle { @Text = "PLOT WEATHER"; }
+  }
+
+  #Content {
+    LayoutMode: Top;
+    Padding: (Top: 16, Bottom: 16, Left: 18, Right: 18);
+
+    Label #WeatherSubtitle {
+      Anchor: (Horizontal: 0, Height: 18, Bottom: 6);
+      Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #b2c1d0);
+      Text: "";
+    }
+
+    Label #WeatherCurrent {
+      Anchor: (Horizontal: 0, Height: 18, Bottom: 8);
+      Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #cbd9e8);
+      Text: "";
+    }
+
+    Label #WeatherEmpty {
+      Anchor: (Horizontal: 0, Height: 18, Bottom: 8);
+      Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #d6a6a6);
+      Text: "No weather assets available.";
+      Visible: false;
+    }
+
+    Group {
+      Anchor: (Horizontal: 0, Bottom: 8);
+      FlexWeight: 1;
+      LayoutMode: TopScrolling;
+      ScrollbarStyle: $C.@DefaultScrollbarStyle;
+
+      Group #WeatherRow0 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WeatherName0 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WeatherPick0 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
+      Group #WeatherRow1 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WeatherName1 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WeatherPick1 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
+      Group #WeatherRow2 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WeatherName2 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WeatherPick2 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
+      Group #WeatherRow3 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WeatherName3 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WeatherPick3 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
+      Group #WeatherRow4 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WeatherName4 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WeatherPick4 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
+      Group #WeatherRow5 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WeatherName5 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WeatherPick5 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
+      Group #WeatherRow6 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WeatherName6 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WeatherPick6 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
+      Group #WeatherRow7 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WeatherName7 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WeatherPick7 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
+      Group #WeatherRow8 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WeatherName8 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WeatherPick8 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
+      Group #WeatherRow9 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #WeatherName9 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #WeatherPick9 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
+    }
+
+    Group {
+      Anchor: (Horizontal: 0, Height: 34, Bottom: 6);
+      LayoutMode: Left;
+
+      $C.@SmallSecondaryTextButton #WeatherPrev {
+        @Anchor = (Width: 110, Vertical: 0);
+        Text: "Prev";
+      }
+
+      Label #WeatherPageLabel {
+        Anchor: (Height: 18, Vertical: 0);
+        FlexWeight: 1;
+        Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #cbd9e8, HorizontalAlignment: Center, VerticalAlignment: Center);
+        Text: "";
+      }
+
+      $C.@SmallSecondaryTextButton #WeatherNext {
+        @Anchor = (Width: 110, Vertical: 0);
+        Text: "Next";
+      }
+    }
+
+    $C.@SecondaryTextButton #WeatherBackButton {
+      @Sounds = $Sounds.@ButtonsCancel;
+      @Anchor = (Height: 36, Bottom: 4);
+      Text: "Back";
+    }
+  }
+}

@@ -1,0 +1,54 @@
+$C = "../PlotsCommon.ui";
+$Sounds = "../PlotsSounds.ui";
+
+$C.@PageOverlay {}
+
+$C.@DecoratedContainer #RightContainer {
+  @CloseButton = true;
+  Anchor: (Width: 674, Height: 554);
+
+  #Title {
+    Group #ContainerDecorationTop {
+      Visible: false;
+    }
+
+    $C.@Title #RightTitle { @Text = "PLOT COMMANDS"; }
+  }
+
+  #Content {
+    LayoutMode: Top;
+    Padding: (Full: 16);
+
+    Group {
+      Anchor: (Horizontal: 0, Bottom: 6);
+      FlexWeight: 1;
+      LayoutMode: TopScrolling;
+      ScrollbarStyle: $C.@DefaultScrollbarStyle;
+
+      Group #HpRow0 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText0 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow1 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText1 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow2 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText2 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow3 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText3 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow4 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText4 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow5 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText5 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow6 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText6 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow7 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText7 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow8 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText8 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow9 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText9 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow10 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText10 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow11 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText11 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow12 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText12 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow13 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText13 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow14 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText14 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow15 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText15 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow16 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText16 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow17 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText17 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow18 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText18 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow19 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText19 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow20 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText20 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow21 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText21 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow22 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText22 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+      Group #HpRow23 { Anchor: (Height: 22, Horizontal: 0, Bottom: 2); LayoutMode: Left; Padding: (Left: 8, Right: 6); Visible: false; Label #HpRowText23 { Anchor: (Height: 14, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } }
+    }
+  }
+}

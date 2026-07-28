@@ -142,6 +142,8 @@
     },
     "notification": {
         "hud_name_line": "{#55ffff}%plot_name%",
+        "hud_title": "PARCELA",
+        "hud_hint": "Alt — Menú de Parcela",
         "hud_owner_line": "{#ffffff}Plot de %owner_name%",
         "world_enter": {
             "title": "Mundo de Plots",
