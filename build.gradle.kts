@@ -18,10 +18,10 @@ plugins {
     id("java")
 }
 
-group = "com.overworldlabs.plots"
+group = "dev.stoshe.plots"
 val pluginVersion = (findProperty("version") as? String)
     ?.takeIf { it.isNotBlank() && it != "unspecified" }
-    ?: "1.1.1"
+    ?: "1.2.0"
 version = pluginVersion
 
 val javaVersion = (findProperty("javaVersion") as? String) ?: "25"
@@ -92,6 +92,7 @@ dependencies {
     compileOnly(files(hytaleServerJar))
     compileOnly(files("libs/hylograms-1.1.1.jar"))
     compileOnly(files("libs/TaleGuard-1.0.0.jar"))
+    compileOnly(files("libs/Placeholder-1.0.0.jar"))
     compileOnly(fileTree("libs/economy") { include("*.jar") })
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.zaxxer:HikariCP:5.1.0")
