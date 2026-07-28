@@ -5,6 +5,7 @@ import com.hypixel.hytale.server.core.command.system.ParseResult;
 import com.hypixel.hytale.server.core.command.system.ParserContext;
 import com.hypixel.hytale.server.core.command.system.exceptions.NoPermissionException;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractCommandCollection;
+import com.hypixel.hytale.server.core.command.system.pages.CommandListPage;
 import dev.stoshe.plots.Plots;
 import dev.stoshe.plots.api.IPlotManager;
 import dev.stoshe.plots.command.feedback.CommandFeedbackRenderer;
@@ -23,7 +24,6 @@ import dev.stoshe.plots.command.sub.PlotAdminCommand;
 import dev.stoshe.plots.command.sub.PlotWarpsCommand;
 import dev.stoshe.plots.command.sub.PlotWorldsCommand;
 import dev.stoshe.plots.command.sub.PlotHelpCommand;
-import dev.stoshe.plots.ui.PlotHelpPage;
 import dev.stoshe.plots.util.PlotSetup;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -186,7 +186,8 @@ public class PlotCommand extends AbstractCommandCollection {
             if (playerRef == null || player == null) {
                 return;
             }
-            PlotHelpPage.open(player, ref, store, playerRef, world, Plots.getInstance());
+            // Bare /plot opens the same native help UI as /plot help. See PlotHelpCommand.
+            player.getPageManager().openCustomPage(ref, store, new CommandListPage(playerRef, "plot"));
         });
         return true;
     }

@@ -4,6 +4,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
+import com.hypixel.hytale.server.core.command.system.pages.CommandListPage;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
@@ -12,7 +13,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.stoshe.plots.Plots;
 import dev.stoshe.plots.api.IPlotManager;
 import dev.stoshe.plots.manager.TranslationManager;
-import dev.stoshe.plots.ui.PlotHelpPage;
 import dev.stoshe.plots.util.ChatUtil;
 import dev.stoshe.plots.util.CommandSenderIdentity;
 
@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import java.util.UUID;
 
 /**
- * Command: {@code /plot help} — opens a modal listing the plot commands.
+ * Command: {@code /plot help} — opens Hytale's native command help UI, scoped to /plot.
  */
 public class PlotHelpCommand extends CommandBase {
     private final IPlotManager plotManager;
@@ -64,7 +64,10 @@ public class PlotHelpCommand extends CommandBase {
             if (playerRef == null || player == null) {
                 return;
             }
-            PlotHelpPage.open(player, ref, store, playerRef, currentWorld, Plots.getInstance());
+            // Hytale's own help UI, scoped to /plot: searchable command list, per-subcommand
+            // description/usage/parameters, breadcrumbs and "send to chat" — all driven by the
+            // native command registration, so it stays in sync with the subcommands for free.
+            player.getPageManager().openCustomPage(ref, store, new CommandListPage(playerRef, "plot"));
         });
     }
 }
