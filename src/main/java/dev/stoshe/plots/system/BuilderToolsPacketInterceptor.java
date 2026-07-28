@@ -17,7 +17,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.stoshe.plots.manager.PlotManager;
 import dev.stoshe.plots.manager.TranslationManager;
 import dev.stoshe.plots.util.ChatUtil;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 import dev.stoshe.plots.util.PermissionUtil;
 
 import javax.annotation.Nonnull;
@@ -59,7 +59,7 @@ public class BuilderToolsPacketInterceptor {
         try {
             Field handlerField = resolveHandlerField();
             if (handlerField == null) {
-                ConsoleColors.warning(
+                Console.warning(
                         "[BuilderToolsPacketInterceptor] Failed to hook packet handler: no compatible handler field found.");
                 return false;
             }
@@ -72,7 +72,7 @@ public class BuilderToolsPacketInterceptor {
 
             Class<?>[] interfaces = resolveProxyInterfaces(originalHandler, handlerField);
             if (interfaces.length == 0) {
-                ConsoleColors.warning("[BuilderToolsPacketInterceptor] Could not hook packet handler: no interfaces.");
+                Console.warning("[BuilderToolsPacketInterceptor] Could not hook packet handler: no interfaces.");
                 return false;
             }
 
@@ -82,7 +82,7 @@ public class BuilderToolsPacketInterceptor {
                     new PacketHandlerProxy(originalHandler));
 
             if (!handlerField.getType().isInstance(proxiedHandler)) {
-                ConsoleColors.warning(
+                Console.warning(
                         "[BuilderToolsPacketInterceptor] Could not hook packet handler: proxy type not assignable.");
                 return false;
             }
@@ -94,7 +94,7 @@ public class BuilderToolsPacketInterceptor {
             hooked = true;
             return true;
         } catch (Exception e) {
-            ConsoleColors.warning("[BuilderToolsPacketInterceptor] Failed to hook packet handler: " + e.getMessage());
+            Console.warning("[BuilderToolsPacketInterceptor] Failed to hook packet handler: " + e.getMessage());
             return false;
         }
     }
@@ -118,7 +118,7 @@ public class BuilderToolsPacketInterceptor {
             hooked = false;
 
         } catch (Exception e) {
-            ConsoleColors.warning("[BuilderToolsPacketInterceptor] Failed to unhook packet handler: " + e.getMessage());
+            Console.warning("[BuilderToolsPacketInterceptor] Failed to unhook packet handler: " + e.getMessage());
         }
     }
 

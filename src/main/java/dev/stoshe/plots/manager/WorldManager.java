@@ -7,7 +7,7 @@ import com.hypixel.hytale.server.core.universe.world.WorldConfig;
 import com.hypixel.hytale.server.core.universe.world.spawn.GlobalSpawnProvider;
 import dev.stoshe.plots.api.IWorldManager;
 import dev.stoshe.plots.config.PlotConfig;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 import dev.stoshe.plots.worldgen.PlotWorldGenProvider;
 
 import javax.annotation.Nonnull;
@@ -80,7 +80,7 @@ public class WorldManager implements IWorldManager {
         // Iterate a snapshot of the names: createWorld can mutate the live Worlds map.
         for (String name : plotConfig.getWorldNames()) {
             if (getPlotWorld(name) != null) {
-                ConsoleColors.info("Plot world '" + name + "' already exists");
+                Console.info("Plot world '" + name + "' already exists");
                 continue;
             }
             createWorld(name, plotConfig.world(name));
@@ -96,7 +96,7 @@ public class WorldManager implements IWorldManager {
         }
 
         String defaultTime = entry.getDefaultWorldTime();
-        ConsoleColors.info("Creating plot world '" + name + "' with time: " + defaultTime);
+        Console.info("Creating plot world '" + name + "' with time: " + defaultTime);
 
         try {
             Path worldPath = Universe.get().getPath().resolve("worlds").resolve(name);
@@ -122,15 +122,13 @@ public class WorldManager implements IWorldManager {
                     .makeWorld(name, Objects.requireNonNull(worldPath), config)
                     .whenComplete((world, throwable) -> {
                         if (throwable != null) {
-                            ConsoleColors.error("Failed to create plot world '" + name + "'!");
-                            throwable.printStackTrace();
+                            Console.error("Failed to create plot world '" + name + "'!", throwable);
                         } else if (world != null) {
-                            ConsoleColors.success("Successfully created plot world '" + name + "'");
+                            Console.success("Successfully created plot world '" + name + "'");
                         }
                     });
         } catch (Exception e) {
-            ConsoleColors.error("Exception while creating plot world '" + name + "'!");
-            e.printStackTrace();
+            Console.error("Exception while creating plot world '" + name + "'!", e);
             return CompletableFuture.failedFuture(e);
         }
     }

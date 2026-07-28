@@ -8,7 +8,7 @@ import dev.stoshe.plots.config.PlotConfig;
 import dev.stoshe.plots.manager.PlotManager;
 import dev.stoshe.plots.manager.TranslationManager;
 import dev.stoshe.plots.model.Plot;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
@@ -88,7 +88,7 @@ public class HologramManager {
         } catch (ClassNotFoundException ignored) {
             // Try legacy API below.
         } catch (ReflectiveOperationException e) {
-            ConsoleColors.error("Failed to initialize Hylograms developer API: " + e.getMessage());
+            Console.error("Failed to initialize Hylograms developer API: " + e.getMessage());
         }
 
         if (!isAvailable) {
@@ -99,14 +99,14 @@ public class HologramManager {
                 legacyCreate = legacyApiClass.getMethod("create", String.class, Store.class);
                 isAvailable = true;
             } catch (ClassNotFoundException e) {
-                ConsoleColors.warning("Hylograms not found. Hologram integration disabled.");
+                Console.warning("Hylograms not found. Hologram integration disabled.");
             } catch (ReflectiveOperationException e) {
-                ConsoleColors.error("Failed to initialize Hylograms legacy API: " + e.getMessage());
+                Console.error("Failed to initialize Hylograms legacy API: " + e.getMessage());
             }
         }
 
         if (isAvailable) {
-            ConsoleColors.info("Hylograms integration enabled.");
+            Console.info("Hylograms integration enabled.");
         }
 
         this.developerApi = devApi;
@@ -162,9 +162,8 @@ public class HologramManager {
                         config.getHologramTitleColor());
             }
         } catch (Throwable e) {
-            ConsoleColors.error("Failed to update hologram for plot at " + plot.getGridX() + ","
-                    + plot.getGridZ() + ": " + e.getMessage());
-            e.printStackTrace();
+            Console.error("Failed to update hologram for plot at " + plot.getGridX() + ","
+                    + plot.getGridZ() + ": " + e.getMessage(), e);
         }
     }
 
@@ -181,7 +180,7 @@ public class HologramManager {
                 removeWithLegacyApi(id, store);
             }
         } catch (Throwable e) {
-            ConsoleColors.error("Failed to remove hologram for plot at " + plot.getGridX() + ","
+            Console.error("Failed to remove hologram for plot at " + plot.getGridX() + ","
                     + plot.getGridZ() + ": " + e.getMessage());
         }
     }
@@ -200,7 +199,7 @@ public class HologramManager {
             return;
         }
 
-        ConsoleColors.info("Hologram system is enabled. Holograms will appear when plots are claimed or renamed.");
+        Console.info("Hologram system is enabled. Holograms will appear when plots are claimed or renamed.");
     }
 
     /**

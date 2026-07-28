@@ -37,7 +37,7 @@ import dev.stoshe.plots.system.PlotNotificationSystem;
 import dev.stoshe.plots.system.RadarMarkerSystem;
 import dev.stoshe.plots.system.ServerBlockProtectionSystem;
 import dev.stoshe.plots.system.UpdateNotificationSystem;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 import dev.stoshe.plots.util.UpdateChecker;
 import dev.stoshe.plots.worldgen.PlotWorldGenProvider;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
@@ -48,13 +48,11 @@ import com.hypixel.hytale.server.core.universe.world.worldgen.provider.IWorldGen
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Logger;
 
 /**
  * Main plugin class for the Plots system
  */
 public class Plots extends JavaPlugin {
-    private static final Logger LOGGER = Logger.getLogger("Plots");
     private static Plots instance;
     private static PlotsAPI api;
     private static volatile boolean started;
@@ -115,7 +113,7 @@ public class Plots extends JavaPlugin {
     @Override
     protected void setup() {
         super.setup();
-        ConsoleColors.info("Setting up Plots plugin...");
+        printBanner();
 
         // Force every plugin class to load now, on the enable thread, before any
         // world/worker thread can reference one lazily. See preloadPluginClasses().
@@ -130,7 +128,6 @@ public class Plots extends JavaPlugin {
         serviceRegistry.register(PlotEconomyService.class, economyService);
 
         initializeTranslationManager(dataDir, config);
-        printBanner();
         initializeManagers(dataDir, config);
         // World generator is registered earlier, in preLoad(), so it exists before
         // the Universe module loads saved worlds. See preLoad().
@@ -144,22 +141,22 @@ public class Plots extends JavaPlugin {
         // gracefully falls back to basic protection when it is absent.
         if (MixinBridgeStatus.isReadyForMixinFlags()) {
             if (MixinBridgeStatus.isMixinsLoaded()) {
-                ConsoleColors.success("TaleGuard bridge active — full protection coverage enabled.");
+                Console.success("TaleGuard bridge active — full protection coverage enabled.");
             } else {
-                ConsoleColors.info("TaleGuard bridge bootstrap is ready. Mixins will be applied as target classes load.");
+                Console.info("TaleGuard bridge bootstrap is ready. Mixins will be applied as target classes load.");
             }
         } else if (MixinBridgeStatus.isActive()) {
-            ConsoleColors.warning("Protection bridge detected, but bootstrap is not ready — running with basic protection only.");
+            Console.warning("Protection bridge detected, but bootstrap is not ready — running with basic protection only.");
         } else {
-            ConsoleColors.warning("No protection bridge detected — running with BASIC protection (ECS) only.");
-            ConsoleColors.warning("Mixin-required flags are disabled. Install TaleGuard for full protection coverage.");
+            Console.warning("No protection bridge detected — running with BASIC protection (ECS) only.");
+            Console.warning("Mixin-required flags are disabled. Install TaleGuard for full protection coverage.");
         }
         // Keep the legacy plots-native registry populated (harmless if unused) and
         // register the adapter hook with the shared TaleGuard bridge registry.
         PlotsMixinsCompatibility.register(getPlotManager());
         PlotsMixinsCompatibility.registerTaleGuard(getPlotManager());
 
-        ConsoleColors.success("Setup complete! Plugin is ready.");
+        Console.success("Plots enabled.");
 
         checkForUpdates();
     }
@@ -182,7 +179,7 @@ public class Plots extends JavaPlugin {
         ClassLoader loader = getClass().getClassLoader();
         java.security.CodeSource codeSource = getClass().getProtectionDomain().getCodeSource();
         if (codeSource == null || codeSource.getLocation() == null) {
-            ConsoleColors.warning("Could not locate plugin jar; skipping class pre-load.");
+            Console.warning("Could not locate plugin jar; skipping class pre-load.");
             return;
         }
 
@@ -219,10 +216,10 @@ public class Plots extends JavaPlugin {
                 }
             }
         } catch (Exception ex) {
-            ConsoleColors.warning("Class pre-load aborted: " + ex.getMessage());
+            Console.warning("Class pre-load aborted: " + ex.getMessage());
             return;
         }
-        ConsoleColors.info("Pre-loaded " + loaded + " plugin classes (" + skipped
+        Console.info("Pre-loaded " + loaded + " plugin classes (" + skipped
                 + " skipped) to avoid lazy class-loading crashes.");
     }
 
@@ -289,10 +286,10 @@ public class Plots extends JavaPlugin {
             if (jdbcUrl != null && jdbcUrl.startsWith("jdbc:sqlite:") && !jdbcUrl.contains("/") && !jdbcUrl.contains("\\")) {
                 jdbcUrl = "jdbc:sqlite:" + new File(dataDir, jdbcUrl.substring("jdbc:sqlite:".length())).getAbsolutePath();
             }
-            ConsoleColors.info("Using SQL repository (HikariCP): " + jdbcUrl);
+            Console.info("Using SQL repository (HikariCP): " + jdbcUrl);
             return new SqlPlotRepository(jdbcUrl, db.Username, db.Password, db.MaxPoolSize, legacyWorldName);
         }
-        ConsoleColors.info("Using JSON repository.");
+        Console.info("Using JSON repository.");
         return new JsonPlotRepository(new File(dataDir, "plots.json"), legacyWorldName);
     }
 
@@ -305,9 +302,9 @@ public class Plots extends JavaPlugin {
                     PlotWorldGenProvider.ID,
                     PlotWorldGenProvider.class,
                     PlotWorldGenProvider.CODEC);
-            ConsoleColors.success("Registered custom world generator: " + PlotWorldGenProvider.ID);
+            Console.success("Registered custom world generator: " + PlotWorldGenProvider.ID);
         } catch (Exception e) {
-            ConsoleColors.error("Failed to register world generator: " + e.getMessage());
+            Console.error("Failed to register world generator: " + e.getMessage());
         }
     }
 
@@ -348,7 +345,7 @@ public class Plots extends JavaPlugin {
         BuilderToolsPacketInterceptor interceptor = new BuilderToolsPacketInterceptor(
                 (PlotManager) plotManager, translationManager);
         if (!interceptor.hookPacketHandler()) {
-            ConsoleColors.warning("BuilderTools packet interceptor hook was not applied. Using mask/accessor protection only.");
+            Console.warning("BuilderTools packet interceptor hook was not applied. Using mask/accessor protection only.");
         }
 
     }
@@ -359,11 +356,15 @@ public class Plots extends JavaPlugin {
     private void checkForUpdates() {
         UpdateChecker.checkForUpdates(getVersion()).thenAccept(latestVersion -> {
             if (latestVersion != null && UpdateChecker.isNewerVersion(getVersion(), latestVersion)) {
-                ConsoleColors.info("A new version is available: " + latestVersion);
-                ConsoleColors.info("Download: https://github.dev/stoshe/plots/releases");
-                ConsoleColors.info("Join our Discord: https://discord.gg/rC9eSzH3tf");
+                // Gold high-visibility banner (colour 220), same terminal treatment as the boot banner.
+                Console.banner(220,
+                        ">>  Plots UPDATE AVAILABLE",
+                        "",
+                        "    You have  v" + getVersion() + "   ->   latest is  v" + latestVersion,
+                        "    Download:  " + UpdateChecker.RELEASES_URL,
+                        "    Discord:   https://discord.gg/rC9eSzH3tf");
             } else if (latestVersion != null) {
-                ConsoleColors.success("You are running the latest version (" + getVersion() + ")");
+                Console.success("You are running the latest version (" + getVersion() + ").");
             }
         });
     }
@@ -375,7 +376,6 @@ public class Plots extends JavaPlugin {
     @Override
     protected void start() {
         super.start();
-        ConsoleColors.info("Starting Plots...");
         getWorldManager().createWorldsIfNeeded();
         getRadarManager().refreshAllPlotMarkers();
         menuKeybindManager = new dev.stoshe.plots.menu.PlotMenuKeybindManager(this);
@@ -392,14 +392,12 @@ public class Plots extends JavaPlugin {
         try {
             dev.stoshe.plots.integration.placeholder.PlaceholderIntegration.register();
         } catch (Throwable t) {
-            ConsoleColors.info("PlaceholderAPI not present; skipping plots placeholder expansion.");
+            Console.info("PlaceholderAPI not present; skipping plots placeholder expansion.");
         }
     }
 
     @Override
     protected void shutdown() {
-        ConsoleColors.info("Shutting down...");
-
         if (menuKeybindManager != null) {
             menuKeybindManager.shutdown();
             menuKeybindManager = null;
@@ -420,7 +418,7 @@ public class Plots extends JavaPlugin {
 
         super.shutdown();
         started = false;
-        ConsoleColors.success("Shutdown complete!");
+        Console.info("Plots disabled.");
     }
 
     /**
@@ -441,9 +439,9 @@ public class Plots extends JavaPlugin {
 
             try (java.io.FileWriter writer = new java.io.FileWriter(configFile)) {
                 gson.toJson(defaultConfig, writer);
-                ConsoleColors.info("Created default config.json");
+                Console.info("Created default config.json");
             } catch (java.io.IOException e) {
-                ConsoleColors.error("Failed to save default config: " + e.getMessage());
+                Console.error("Failed to save default config: " + e.getMessage());
             }
 
             return defaultConfig;
@@ -457,7 +455,7 @@ public class Plots extends JavaPlugin {
             config.normalizeAfterLoad();
             return config;
         } catch (java.io.IOException e) {
-            ConsoleColors.error("Failed to load config: " + e.getMessage());
+            Console.error("Failed to load config: " + e.getMessage());
             return PlotConfig.getDefault();
         }
     }
@@ -502,9 +500,9 @@ public class Plots extends JavaPlugin {
         cachedConfig = config;
         try (java.io.FileWriter writer = new java.io.FileWriter(configFile)) {
             gson.toJson(config, writer);
-            ConsoleColors.success("Successfully saved config.json");
+            Console.success("Successfully saved config.json");
         } catch (java.io.IOException e) {
-            ConsoleColors.error("Failed to save config: " + e.getMessage());
+            Console.error("Failed to save config: " + e.getMessage());
         }
     }
 
@@ -554,16 +552,10 @@ public class Plots extends JavaPlugin {
     }
 
     /**
-     * Prints the plugin banner on startup
+     * Prints the boot banner — same boxed, single-colour treatment the other Stoshe
+     * plugins use (AeroWars, AntiXray, Voltis), in plot green.
      */
     private void printBanner() {
-        LOGGER.info(" ");
-        LOGGER.info("  ____  _       _");
-        LOGGER.info(" |  _ \\| |     | |");
-        LOGGER.info(" | |_) | | ___ | |_ ___   Plots v" + getVersion());
-        LOGGER.info(" |  __/| |/ _ \\| __/ __|  Running on Hytale");
-        LOGGER.info(" | |   | | (_) | |_\\__ \\");
-        LOGGER.info(" |_|   |_|\\___/ \\__|___/");
-        LOGGER.info(" ");
+        Console.banner(40, "Plots v" + getVersion(), "Grid-based plot management  |  Running on Hytale");
     }
 }

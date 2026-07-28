@@ -1,7 +1,7 @@
 package dev.stoshe.plots.integration.placeholder;
 
 import com.overworldlabs.placeholder.api.PlaceholderAPI;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 
 /**
  * Optional integration with the PlaceholderAPI plugin. All references to the
@@ -23,6 +23,6 @@ public final class PlaceholderIntegration {
         PlotsPlaceholderExpansion expansion = new PlotsPlaceholderExpansion();
         expansion.register();
         PlaceholderAPI.registerListener(manager -> expansion.register());
-        ConsoleColors.success("Registered PlaceholderAPI expansion: %plots_...%");
+        Console.success("Registered PlaceholderAPI expansion: %plots_...%");
     }
 }

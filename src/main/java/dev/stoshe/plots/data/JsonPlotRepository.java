@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import dev.stoshe.plots.api.IPlotRepository;
 import dev.stoshe.plots.model.Plot;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -127,10 +127,10 @@ public class JsonPlotRepository implements IPlotRepository {
                     }
                     plots.put(key(plot.getWorld(), plot.getGridX(), plot.getGridZ()), plot);
                 }
-                ConsoleColors.info("Loaded " + plots.size() + " plots from " + dataFile.getName());
+                Console.info("Loaded " + plots.size() + " plots from " + dataFile.getName());
             }
         } catch (IOException e) {
-            ConsoleColors.error("Failed to load plots: " + e.getMessage());
+            Console.error("Failed to load plots: " + e.getMessage());
         }
     }
 
@@ -146,7 +146,7 @@ public class JsonPlotRepository implements IPlotRepository {
                 gson.toJson(plots, writer);
             }
         } catch (IOException e) {
-            ConsoleColors.error("Failed to save plots: " + e.getMessage());
+            Console.error("Failed to save plots: " + e.getMessage());
         }
     }
 }

@@ -2,7 +2,7 @@ package dev.stoshe.plots.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -72,7 +72,7 @@ public class TranslationManager {
                 Files.copy(is, target.toPath());
             }
         } catch (Exception e) {
-            ConsoleColors.error("Failed to export " + name + ": " + e.getMessage());
+            Console.error("Failed to export " + name + ": " + e.getMessage());
         }
     }
 
@@ -84,8 +84,7 @@ public class TranslationManager {
         try (InputStream bundled = getClass().getResourceAsStream("/lang/" + fileName)) {
             loadFromStream(bundled);
         } catch (Exception e) {
-            ConsoleColors.error("Failed to load bundled language " + lang + ": " + e.getMessage());
-            e.printStackTrace();
+            Console.error("Failed to load bundled language " + lang + ": " + e.getMessage(), e);
         }
 
         // 2) Overlay custom file (if present) so user edits still win.
@@ -93,8 +92,7 @@ public class TranslationManager {
             try (InputStream custom = new FileInputStream(file)) {
                 loadFromStream(custom);
             } catch (Exception e) {
-                ConsoleColors.error("Failed to load custom language " + lang + ": " + e.getMessage());
-                e.printStackTrace();
+                Console.error("Failed to load custom language " + lang + ": " + e.getMessage(), e);
             }
         }
     }

@@ -5,7 +5,7 @@ import com.hypixel.hytale.builtin.buildertools.scriptedbrushes.BrushConfig;
 import com.hypixel.hytale.builtin.buildertools.scriptedbrushes.BrushConfigCommandExecutor;
 import com.hypixel.hytale.builtin.buildertools.tooloperations.ToolOperation;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -62,7 +62,7 @@ final class BuilderToolsScriptedBrushGuard {
             if (e.getMessage() != null && !e.getMessage().isBlank()) {
                 reason += " - " + e.getMessage();
             }
-            ConsoleColors.warning(
+            Console.warning(
                     "[BuilderToolsIntegration] Scripted brush protection disabled for this session: " + reason);
         }
     }
@@ -86,7 +86,7 @@ final class BuilderToolsScriptedBrushGuard {
                     .getDeclaredField("brushConfigCommandExecutor");
             brushConfigExecutorField.setAccessible(true);
         } catch (Exception e) {
-            ConsoleColors.warning("[BuilderToolsIntegration] Failed to access scripted brush fields: " + e.getMessage());
+            Console.warning("[BuilderToolsIntegration] Failed to access scripted brush fields: " + e.getMessage());
         } finally {
             brushFieldsInitialized = true;
         }

@@ -3,7 +3,7 @@ package dev.stoshe.plots.manager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,9 +58,9 @@ public final class KnownPlayersService {
                     }
                 }
             }
-            ConsoleColors.info("Loaded " + byUuid.size() + " known players.");
+            Console.info("Loaded " + byUuid.size() + " known players.");
         } catch (Exception e) {
-            ConsoleColors.warning("Failed to load known players: " + e.getMessage());
+            Console.warning("Failed to load known players: " + e.getMessage());
         }
     }
 
@@ -78,7 +78,7 @@ public final class KnownPlayersService {
                 gson.toJson(raw, writer);
             }
         } catch (Exception e) {
-            ConsoleColors.warning("Failed to save known players: " + e.getMessage());
+            Console.warning("Failed to save known players: " + e.getMessage());
         }
     }
 

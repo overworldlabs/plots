@@ -15,7 +15,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.stoshe.plots.Plots;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 import dev.stoshe.plots.util.PermissionUtil;
 import dev.stoshe.plots.util.ChatUtil;
 
@@ -41,7 +41,7 @@ public class BuilderToolsIntegration {
         try {
             ensureHooksInstalled();
         } catch (Exception e) {
-            e.printStackTrace();
+            Console.error("Failed to install BuilderTools hooks: " + e.getMessage(), e);
         }
     }
 
@@ -245,7 +245,7 @@ public class BuilderToolsIntegration {
             PlotProtectionMask protectedMask = new PlotProtectionMask(playerUuid, null);
             injectMaskIntoObject(operation, protectedMask, playerUuid, new HashSet<>(), 0);
         } catch (Exception e) {
-            ConsoleColors.warning("[BuilderToolsIntegration] Failed to inject protection for " + toolName + ": "
+            Console.warning("[BuilderToolsIntegration] Failed to inject protection for " + toolName + ": "
                     + e.getMessage());
         }
     }

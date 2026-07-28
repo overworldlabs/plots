@@ -15,6 +15,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public class UpdateChecker {
     private static final String GITHUB_API_URL = "https://api.github.com/repos/stoshelabs/plots/releases/latest";
+    public static final String RELEASES_URL = "https://github.com/stoshelabs/plots/releases";
     private static final int TIMEOUT_MS = 5000;
 
     /**
@@ -56,7 +57,7 @@ public class UpdateChecker {
 
                 return latestVersion;
             } catch (Exception e) {
-                ConsoleColors.error("Failed to check for updates: " + e.getMessage());
+                Console.error("Failed to check for updates: " + e.getMessage());
                 return null;
             }
         });

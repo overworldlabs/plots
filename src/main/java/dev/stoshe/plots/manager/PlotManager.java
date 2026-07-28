@@ -19,7 +19,7 @@ import dev.stoshe.plots.flag.FlagRegistry;
 import dev.stoshe.plots.model.Plot;
 import dev.stoshe.plots.config.PlotConfig;
 import dev.stoshe.plots.model.Prefab;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 import dev.stoshe.plots.util.PermissionUtil;
 
 import javax.annotation.Nonnull;
@@ -61,14 +61,14 @@ public class PlotManager implements IPlotManager {
             int detectedRoadSizeZ = roadPrefab.getDepthZ();
             config.setPlotSizeX(detectedPlotSizeX);
             config.setRoadSizeZ(detectedRoadSizeZ);
-            ConsoleColors.info("Auto-adjusted dimensions from Road Prefab: PlotSizeX=" + detectedPlotSizeX
+            Console.info("Auto-adjusted dimensions from Road Prefab: PlotSizeX=" + detectedPlotSizeX
                     + ", RoadSizeZ=" + detectedRoadSizeZ);
         }
 
         if (plotPrefab != null) {
             config.setPlotSizeX(plotPrefab.getWidthX());
             config.setPlotSizeZ(plotPrefab.getDepthZ());
-            ConsoleColors.info("Auto-adjusted dimensions from Plot Prefab: PlotSizeX=" + config.getPlotSizeX()
+            Console.info("Auto-adjusted dimensions from Plot Prefab: PlotSizeX=" + config.getPlotSizeX()
                     + ", PlotSizeZ=" + config.getPlotSizeZ());
         }
     }
@@ -761,7 +761,7 @@ public class PlotManager implements IPlotManager {
             Teleport teleport = new Teleport(world, position, rotation);
             store.addComponent(ref, Teleport.getComponentType(), teleport);
         } catch (Exception e) {
-            e.printStackTrace();
+            Console.error("Failed to teleport entity: " + e.getMessage(), e);
         }
     }
 

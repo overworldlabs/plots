@@ -9,7 +9,7 @@ import dev.stoshe.plots.api.IPlotManager;
 import dev.stoshe.plots.flag.FlagRegistry;
 import dev.stoshe.plots.model.Plot;
 import dev.stoshe.plots.util.ChatUtil;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 import dev.stoshe.plots.util.PermissionUtil;
 
 import javax.annotation.Nonnull;
@@ -70,9 +70,9 @@ public final class PlotsMixinsCompatibility {
             registry.put(DEATH_HOOK, new DeathHook(plotManager));
             registry.put(DURABILITY_HOOK, new DurabilityHook(plotManager));
 
-            ConsoleColors.info("Plots mixin hooks registered.");
+            Console.info("Plots mixin hooks registered.");
         } catch (Exception e) {
-            ConsoleColors.warning("Failed to register plots mixin hooks: " + e.getMessage());
+            Console.warning("Failed to register plots mixin hooks: " + e.getMessage());
         }
     }
 
@@ -91,9 +91,9 @@ public final class PlotsMixinsCompatibility {
                 System.getProperties().put(TALEGUARD_REGISTRY_KEY, registry);
             }
             registry.put(TALEGUARD_HOOK_KEY, new PlotsProtectionHook(plotManager));
-            ConsoleColors.info("Plots protection hook registered with TaleGuard bridge.");
+            Console.info("Plots protection hook registered with TaleGuard bridge.");
         } catch (Exception e) {
-            ConsoleColors.warning("Failed to register Plots hook with TaleGuard: " + e.getMessage());
+            Console.warning("Failed to register Plots hook with TaleGuard: " + e.getMessage());
         }
     }
 

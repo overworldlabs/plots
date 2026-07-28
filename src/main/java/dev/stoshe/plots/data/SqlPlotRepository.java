@@ -3,7 +3,7 @@ package dev.stoshe.plots.data;
 import com.google.gson.Gson;
 import dev.stoshe.plots.api.IPlotRepository;
 import dev.stoshe.plots.model.Plot;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -116,7 +116,7 @@ public class SqlPlotRepository implements IPlotRepository {
             if (isSqlite()) {
                 migrateToWorldKeyed();
             } else {
-                ConsoleColors.error("Legacy plots table detected on a non-SQLite database. Automatic"
+                Console.error("Legacy plots table detected on a non-SQLite database. Automatic"
                         + " migration to the multi-world schema is disabled here to avoid data loss."
                         + " Please add a 'world' column + (world, grid_x, grid_z) primary key manually,"
                         + " backfilling world='" + legacyWorldName + "'.");
@@ -125,7 +125,7 @@ public class SqlPlotRepository implements IPlotRepository {
         try (Connection conn = dataSource.getConnection(); Statement st = conn.createStatement()) {
             st.execute(ownerIndexSql);
         } catch (SQLException e) {
-            ConsoleColors.error("Failed to create owner index: " + e.getMessage());
+            Console.error("Failed to create owner index: " + e.getMessage());
         }
     }
 
@@ -147,7 +147,7 @@ public class SqlPlotRepository implements IPlotRepository {
     /** Rebuilds the legacy table assigning every existing row to the legacy world. */
     private void migrateToWorldKeyed() {
         backupSqliteFile();
-        ConsoleColors.info("Migrating plots table to multi-world schema (assigning existing plots to '"
+        Console.info("Migrating plots table to multi-world schema (assigning existing plots to '"
                 + legacyWorldName + "')...");
         String createNew = "CREATE TABLE " + TABLE + " (" +
                 "world VARCHAR(64) NOT NULL, grid_x INT NOT NULL, grid_z INT NOT NULL, " +
@@ -167,7 +167,7 @@ public class SqlPlotRepository implements IPlotRepository {
                         + "', grid_x, grid_z, owner_uuid, owner_name, name, trusted_json, flags_json, merged_json, created_at, spawn_json, warps_json FROM plots_old");
                 st.execute("DROP TABLE plots_old");
                 conn.commit();
-                ConsoleColors.success("Plots table migrated to multi-world schema.");
+                Console.success("Plots table migrated to multi-world schema.");
             } catch (SQLException e) {
                 conn.rollback();
                 throw e;
@@ -193,10 +193,10 @@ public class SqlPlotRepository implements IPlotRepository {
             if (java.nio.file.Files.exists(src)) {
                 java.nio.file.Path bak = java.nio.file.Paths.get(path + ".pre-multiworld.bak");
                 java.nio.file.Files.copy(src, bak, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                ConsoleColors.info("Backed up plots database to " + bak.getFileName());
+                Console.info("Backed up plots database to " + bak.getFileName());
             }
         } catch (Exception e) {
-            ConsoleColors.error("Could not back up plots database before migration: " + e.getMessage());
+            Console.error("Could not back up plots database before migration: " + e.getMessage());
         }
     }
 
@@ -261,7 +261,7 @@ public class SqlPlotRepository implements IPlotRepository {
             ps.setInt(3, gridZ);
             ps.executeUpdate();
         } catch (SQLException e) {
-            ConsoleColors.error("Failed to delete plot [" + world + ":" + gridX + "," + gridZ + "]: " + e.getMessage());
+            Console.error("Failed to delete plot [" + world + ":" + gridX + "," + gridZ + "]: " + e.getMessage());
         }
     }
 
@@ -313,9 +313,9 @@ public class SqlPlotRepository implements IPlotRepository {
                 }
                 cache.put(key(world, gridX, gridZ), plot);
             }
-            ConsoleColors.info("Loaded " + cache.size() + " plots from SQL storage.");
+            Console.info("Loaded " + cache.size() + " plots from SQL storage.");
         } catch (SQLException e) {
-            ConsoleColors.error("Failed to load plots from SQL: " + e.getMessage());
+            Console.error("Failed to load plots from SQL: " + e.getMessage());
         }
     }
 
@@ -348,7 +348,7 @@ public class SqlPlotRepository implements IPlotRepository {
             ps.setString(12, plot.getWarpCount() > 0 ? gson.toJson(plot.getWarps()) : null);
             ps.executeUpdate();
         } catch (SQLException e) {
-            ConsoleColors.error("Failed to save plot [" + world + ":" + plot.getGridX() + "," + plot.getGridZ()
+            Console.error("Failed to save plot [" + world + ":" + plot.getGridX() + "," + plot.getGridZ()
                     + "]: " + e.getMessage());
         }
     }

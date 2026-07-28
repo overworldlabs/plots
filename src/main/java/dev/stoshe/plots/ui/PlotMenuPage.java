@@ -415,7 +415,7 @@ public class PlotMenuPage extends InteractiveCustomUIPage<PlotMenuPage.PageData>
             Object owner = plot.getOwner();
             boolean isOwner = viewer != null && viewer.equals(owner);
             boolean admin = viewer != null && PermissionUtil.hasAdminPermission(viewer);
-            dev.stoshe.plots.util.ConsoleColors.warning("[PlotsPermDebug] action=" + action
+            dev.stoshe.plots.util.Console.warning("[PlotsPermDebug] action=" + action
                     + " viewer=" + viewer + " owner=" + owner + " ownerName=" + plot.getOwnerName()
                     + " isOwner=" + isOwner + " hasAdmin=" + admin + " canManage=" + canManage);
         } catch (Exception ignored) {

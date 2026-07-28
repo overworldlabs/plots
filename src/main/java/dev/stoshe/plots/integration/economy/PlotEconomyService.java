@@ -1,7 +1,7 @@
 package dev.stoshe.plots.integration.economy;
 
 import dev.stoshe.plots.config.PlotConfig;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +29,7 @@ public class PlotEconomyService {
     public void initialize() {
         if (!config.isEconomyEnabled()) {
             provider = null;
-            ConsoleColors.info("Economy support is disabled in config.");
+            Console.info("Economy support is disabled in config.");
             return;
         }
 
@@ -37,11 +37,11 @@ public class PlotEconomyService {
         provider = resolveProvider(preferredProvider);
 
         if (provider == null) {
-            ConsoleColors.warning("Economy enabled, but no compatible provider was found.");
+            Console.warning("Economy enabled, but no compatible provider was found.");
             return;
         }
 
-        ConsoleColors.success("Economy provider active: " + provider.name());
+        Console.success("Economy provider active: " + provider.name());
     }
 
     public boolean isEnabled() {
@@ -97,7 +97,7 @@ public class PlotEconomyService {
 
         provider = resolveProvider(preferredProvider);
         if (provider != null) {
-            ConsoleColors.success("Economy provider active: " + provider.name());
+            Console.success("Economy provider active: " + provider.name());
         }
     }
 
@@ -108,7 +108,7 @@ public class PlotEconomyService {
             if (chosen != null) {
                 return chosen;
             }
-            ConsoleColors.warning("Configured economy provider '" + preferred + "' is unavailable. Falling back to auto.");
+            Console.warning("Configured economy provider '" + preferred + "' is unavailable. Falling back to auto.");
         }
 
         String[] order = new String[] { "eliteessentials", "economysystem", "ecotale", "essentialsplus" };

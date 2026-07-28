@@ -3,20 +3,18 @@ package dev.stoshe.plots.manager;
 import com.google.gson.Gson;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import dev.stoshe.plots.model.Prefab;
+import dev.stoshe.plots.util.Console;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Manager for loading and accessing prefabs
  */
 public class PrefabManager {
-    private static final Logger LOGGER = Logger.getLogger("Plots");
     private final Map<String, Prefab> loadedPrefabs = new HashMap<>();
     private final Gson gson = new Gson();
     private final Path prefabDir;
@@ -30,9 +28,9 @@ public class PrefabManager {
         File dir = prefabDir.toFile();
         if (!dir.exists()) {
             if (dir.mkdirs()) {
-                LOGGER.info("Created prefabs directory at: " + dir.getAbsolutePath());
+                Console.info("Created prefabs directory at: " + dir.getAbsolutePath());
             } else {
-                LOGGER.severe("Failed to create prefabs directory!");
+                Console.error("Failed to create prefabs directory!");
             }
         }
     }
@@ -54,7 +52,7 @@ public class PrefabManager {
 
         File file = prefabDir.resolve(fileName).toFile();
         if (!file.exists()) {
-            LOGGER.log(Level.WARNING, "Prefab file not found: " + file.getAbsolutePath());
+            Console.warning("Prefab file not found: " + file.getAbsolutePath());
             return null;
         }
 
@@ -63,11 +61,11 @@ public class PrefabManager {
             if (prefab != null) {
                 resolveBlockIds(prefab);
                 loadedPrefabs.put(fileName, prefab);
-                LOGGER.info("Loaded prefab: " + fileName + " with " + prefab.getBlocks().size() + " blocks.");
+                Console.info("Loaded prefab: " + fileName + " with " + prefab.getBlocks().size() + " blocks.");
                 return prefab;
             }
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to load prefab: " + fileName, e);
+            Console.error("Failed to load prefab: " + fileName + ": " + e.getMessage(), e);
         }
 
         return null;

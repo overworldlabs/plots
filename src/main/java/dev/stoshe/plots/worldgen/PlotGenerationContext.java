@@ -6,7 +6,7 @@ import com.hypixel.hytale.server.core.asset.type.fluid.Fluid;
 import dev.stoshe.plots.Plots;
 import dev.stoshe.plots.config.PlotConfig;
 import dev.stoshe.plots.model.Prefab;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 
 /**
  * Data Transfer Object containing a snapshot of the generation requirements.
@@ -91,7 +91,7 @@ public class PlotGenerationContext {
         if (id > 0) {
             return id;
         }
-        ConsoleColors.warning("Plot world block '" + name + "' not found on this server build; "
+        Console.warning("Plot world block '" + name + "' not found on this server build; "
                 + "using a safe default block instead. Update the Blocks section of config.json.");
         return safeDefaultBlockId;
     }

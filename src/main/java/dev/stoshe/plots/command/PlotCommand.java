@@ -45,7 +45,7 @@ import dev.stoshe.plots.command.sub.PlotUntrustCommand;
 import dev.stoshe.plots.manager.TranslationManager;
 import dev.stoshe.plots.util.ChatUtil;
 import dev.stoshe.plots.util.CommandSenderIdentity;
-import dev.stoshe.plots.util.ConsoleColors;
+import dev.stoshe.plots.util.Console;
 import dev.stoshe.plots.util.PermissionUtil;
 
 import javax.annotation.Nonnull;
@@ -64,7 +64,6 @@ import java.util.concurrent.CompletableFuture;
  * info, etc.
  */
 public class PlotCommand extends AbstractCommandCollection {
-    private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger("Plots");
     private static final Map<String, String[]> SUBCOMMAND_USAGE_KEYS = PlotCommandHelpCatalog.subcommandUsageKeys();
     private static final Field PARSE_FAILED_FIELD = resolveParseField("failed");
     private static final Field PARSE_REASONS_FIELD = resolveParseField("reasons");
@@ -405,11 +404,8 @@ public class PlotCommand extends AbstractCommandCollection {
             senderUuid = String.valueOf(CommandSenderIdentity.uuid(sender));
         } catch (Exception ignored) {
         }
-        LOGGER.log(java.util.logging.Level.SEVERE,
-                "Failed to execute command '" + input + "' for " + sender.getUsername() + " (" + senderUuid
-                        + ")",
-                cause);
-        ConsoleColors.error("Command error for input: " + input + " (" + cause.getClass().getSimpleName() + ")");
+        Console.error("Failed to execute command '" + input + "' for " + sender.getUsername()
+                + " (" + senderUuid + ")", cause);
         sender.sendMessage(ChatUtil.error(tm.get("general.error_generic")));
     }
 

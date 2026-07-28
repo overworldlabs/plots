@@ -7,6 +7,7 @@ import dev.stoshe.plots.api.PlotWorldGenOverride;
 import dev.stoshe.plots.manager.PlotManager;
 import dev.stoshe.plots.manager.WorldManager;
 import dev.stoshe.plots.model.Plot;
+import dev.stoshe.plots.util.Console;
 import dev.stoshe.plots.worldgen.WorldGenOverrideRegistry;
 
 import javax.annotation.Nonnull;
@@ -288,7 +289,7 @@ public class PlotsAPIImpl implements PlotsAPI {
             try {
                 listener.accept(event);
             } catch (Exception e) {
-                e.printStackTrace();
+                Console.error("A claim event listener threw: " + e.getMessage(), e);
             }
         });
     }
@@ -298,7 +299,7 @@ public class PlotsAPIImpl implements PlotsAPI {
             try {
                 listener.accept(event);
             } catch (Exception e) {
-                e.printStackTrace();
+                Console.error("A unclaim event listener threw: " + e.getMessage(), e);
             }
         });
     }
@@ -308,7 +309,7 @@ public class PlotsAPIImpl implements PlotsAPI {
             try {
                 listener.accept(event);
             } catch (Exception e) {
-                e.printStackTrace();
+                Console.error("A rename event listener threw: " + e.getMessage(), e);
             }
         });
     }
@@ -318,7 +319,7 @@ public class PlotsAPIImpl implements PlotsAPI {
             try {
                 listener.accept(event);
             } catch (Exception e) {
-                e.printStackTrace();
+                Console.error("A trust event listener threw: " + e.getMessage(), e);
             }
         });
     }
