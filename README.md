@@ -16,6 +16,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/worlds-multi--world-8B2BFF?style=flat-square" alt="multi-world">
   <img src="https://img.shields.io/badge/protection-BuilderTools--safe-8B2BFF?style=flat-square" alt="BuilderTools-safe protection">
+  <a href="https://www.curseforge.com/hytale/mods/taleguard"><img src="https://img.shields.io/badge/TaleGuard-optional-8B2BFF?style=flat-square" alt="TaleGuard optional"></a>
   <img src="https://img.shields.io/badge/i18n-en__us%20%7C%20pt__br%20%7C%20es__es%20%7C%20ru__ru-8B2BFF?style=flat-square" alt="i18n en_us | pt_br | es_es | ru_ru">
 </p>
 
@@ -40,7 +41,7 @@ flow most plot plugins leave open.
 - **BuilderTools-safe protection** — break, place, interact, liquid, mobs and item flow, with staff bypass permissions
 - **Multi-world** — several plot worlds side by side, each with its own grid and rules
 - **In-game menu &amp; HUD** — the everyday actions without memorising commands, plus per-plot warps and spawn points
-- **Integrations** — optional economy charging, Hylograms ownership signs, PlaceholderAPI, SQL persistence
+- **Integrations** — all optional: [TaleGuard](https://github.com/stoshelabs/taleguard) for the mixin-only flags, economy charging, Hylograms ownership signs, PlaceholderAPI, SQL persistence
 - **Public API** — query plots and hook claim/unclaim/trust/rename events from your own plugin
 
 ---
@@ -67,7 +68,7 @@ Everything lives on the docs site — mechanics, every config key, and the full 
 | 🚀 [Getting Started](https://stoshelabs.github.io/plots/guide/intro/getting-started) | Install to first claimed plot |
 | 🧱 [World Generation](https://stoshelabs.github.io/plots/guide/features/world-gen) · [Multi-World](https://stoshelabs.github.io/plots/guide/features/multiworld) · [Protection](https://stoshelabs.github.io/plots/guide/features/protection) · [Flags](https://stoshelabs.github.io/plots/guide/features/flags) | How it works |
 | ⚙️ [Config Reference](https://stoshelabs.github.io/plots/guide/setup/config) · [Prefabs](https://stoshelabs.github.io/plots/guide/setup/prefabs-customization) · [Translations](https://stoshelabs.github.io/plots/guide/setup/translations) | Configuration |
-| 🔌 [Hylograms](https://stoshelabs.github.io/plots/guide/integrations/hylograms) · [PlaceholderAPI](https://stoshelabs.github.io/plots/guide/integrations/placeholders) · [Developer API](https://stoshelabs.github.io/plots/guide/api/api) | Integrations &amp; API |
+| 🔌 [TaleGuard](https://stoshelabs.github.io/plots/guide/integrations/taleguard) · [Hylograms](https://stoshelabs.github.io/plots/guide/integrations/hylograms) · [PlaceholderAPI](https://stoshelabs.github.io/plots/guide/integrations/placeholders) · [Developer API](https://stoshelabs.github.io/plots/guide/api/api) | Integrations &amp; API |
 | 📖 [Commands](https://stoshelabs.github.io/plots/guide/reference/commands) · [Permissions](https://stoshelabs.github.io/plots/guide/reference/permissions) | Reference |
 | 📝 [Changelog](https://stoshelabs.github.io/plots/guide/changelog) | What changed in each release |
 

@@ -52,6 +52,7 @@ export default defineConfig({
             {
                 text: 'Integrations',
                 items: [
+                    { text: 'TaleGuard', link: '/guide/integrations/taleguard' },
                     { text: 'Hylograms', link: '/guide/integrations/hylograms' },
                     { text: 'PlaceholderAPI', link: '/guide/integrations/placeholders' },
                 ],

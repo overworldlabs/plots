@@ -9,6 +9,19 @@ Plots is a high-performance plot management system designed specifically for Hyt
 3. Restart the server.
 4. The plugin will create a `mods/Stoshe_Plots` directory with a default `config.json` and translations.
 
+## Optional dependencies
+
+Plots runs on its own — nothing below is required, and none of it is bundled.
+
+| Plugin | What it adds | Without it |
+| --- | --- | --- |
+| [**TaleGuard**](/guide/integrations/taleguard) | The mixin-only flags: item pickup, mob spawning, keep inventory, explosions, BuilderTools internals | Every other flag is still enforced natively; the bridge-only ones are hidden instead of failing silently |
+| [**Hylograms**](/guide/integrations/hylograms) | Floating ownership signs above plots | Holograms are disabled |
+| [**PlaceholderAPI**](/guide/integrations/placeholders) | Plot placeholders in scoreboards, tab lists and chat | No placeholders are registered |
+| An economy plugin | Charging for claims and merges | Plot actions are free |
+
+TaleGuard goes in `earlyplugins/`, not `mods/` — it has to bootstrap before the classes it patches load.
+
 ## Configuration
 
 Before generating your world, you can customize the plot dimensions and materials in the `config.json`.

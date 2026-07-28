@@ -37,10 +37,10 @@ Plots enforces protection in two layers, mirroring the skyblock design:
   are the core grief protections and work out of the box.
 - **Bridge protection (TaleGuard)** — adds the protections that can only be enforced by
   bytecode mixins (auto item pickup, builder tools internals, command filtering, etc.).
-  Plots consumes the shared [**TaleGuard**](https://github.com/) bridge and registers a
-  protection hook with it. When TaleGuard is **not** installed, the plugin **refuses to
-  enable** the bridge-only flags (and warns the player), so a flag never silently fails to
-  protect — native protection still applies.
+  Plots consumes the shared [**TaleGuard**](/guide/integrations/taleguard) bridge and
+  registers a protection hook with it. When TaleGuard is **not** installed, the plugin
+  **refuses to enable** the bridge-only flags (and warns the player), so a flag never
+  silently fails to protect — native protection still applies.
 
 > Plots automatically detects TaleGuard at startup and logs the active mode:
 > `TaleGuard bridge active — full protection coverage enabled` or
