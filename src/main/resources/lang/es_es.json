@@ -1,183 +1,349 @@
 {
-    "general": {
-        "prefix": "{#f5c542}[Plots] {#95a5a6}",
-        "no_permission": "No tienes permiso para hacer esto.",
-        "only_players": "Este comando solo puede ser usado por jugadores.",
-        "not_owner": "Debes ser el propietario del plot para hacer esto.",
-        "error_generic": "Ocurrió un error inesperado. Inténtalo de nuevo.",
-        "world_not_found": "Mundo no encontrado."
+  "general": {
+    "prefix": "{#f5c542}[Plots] {#95a5a6}",
+    "no_permission": "No tienes permiso para hacer esto.",
+    "only_players": "Este comando solo puede ser usado por jugadores.",
+    "not_owner": "Debes ser el propietario del plot para hacer esto.",
+    "error_generic": "Ocurrió un error inesperado. Inténtalo de nuevo.",
+    "world_not_found": "Mundo no encontrado."
+  },
+  "commandsystem": {
+    "command_not_recognized": "Comando no reconocido: %command%",
+    "usage_header": "--- Uso del Comando ---",
+    "arguments_header": "--- Argumentos ---",
+    "root_usage": "Uso: %root% <subcomando>",
+    "subcommands_hint": "Usa uno de los subcomandos de abajo.",
+    "subcommands_header": "--- Subcomandos ---",
+    "subcommand_item": "- %command%",
+    "help_title": "Plots",
+    "help_section_basic": "Basico",
+    "help_section_management": "Gestion",
+    "help_section_trust_flags": "Confianza y Flags",
+    "help_section_confirmation": "Confirmacion",
+    "help_sub_usage_title": "Sintaxis correcta",
+    "help_tip_root": "Consejo: usa /plot para ver todos los subcomandos.",
+    "did_you_mean": "¿Quisiste decir: %suggestions%?"
+  },
+  "claim": {
+    "standing_on_road": "Estas en el camino. Muévete a un plot para reclamarlo.",
+    "plot_claimed": "Plot reclamado con éxito en x=%x%, y=%y%.",
+    "plot_auto_claimed": "Plot reclamado automáticamente en x=%x%, y=%y%.",
+    "plot_already_claimed": "Este plot ya fue reclamado por otra persona.",
+    "max_plots_reached": "Has alcanzado tu limite maximo de plots."
+  },
+  "delete": {
+    "usage": "Uso: /plot delete [gridX] [gridZ]",
+    "success": "El plot fue eliminado correctamente.",
+    "need_permission": "Necesitas el permiso plots.delete.* para eliminar plots por coordenadas."
+  },
+  "management": {
+    "not_found": "No se encontro un plot en esta ubicacion.",
+    "renamed": "Plot renombrado a %plot_name%.",
+    "rename_provide_name": "Por favor, proporciona un nombre para el plot.",
+    "no_permission": "No tienes permiso para administrar este plot."
+  },
+  "rename": {
+    "usage": "/plot rename <name>"
+  },
+  "refresh": {
+    "usage": "Uso: /plot refresh",
+    "success": "Configuración y caché de Plots recargadas correctamente.",
+    "failed": "No se pudo recargar: %error%"
+  },
+  "transfer": {
+    "usage": "Uso: /plot transfer <jugador>",
+    "already_owner": "Este jugador ya es el propietario de este plot.",
+    "success": "Se transfirieron %count% plot(s) a %player%."
+  },
+  "confirm": {
+    "usage_confirm": "Uso: /plot confirm",
+    "usage_cancel": "Uso: /plot cancel",
+    "request": "Accion pendiente: %action%. Escribe %confirm_cmd% para continuar o %cancel_cmd% para cancelar. Expira en %seconds%s.",
+    "command_confirm": "{#55ffff}/plot confirm{#3498db}",
+    "command_cancel": "{#55ffff}/plot cancel{#3498db}",
+    "command_deny": "{#55ffff}/plot deny{#3498db}",
+    "none": "No tienes ninguna accion pendiente para confirmar.",
+    "expired": "Tu accion pendiente ha expirado. Ejecuta el comando otra vez.",
+    "confirmed": "Confirmado: %action%.",
+    "cancelled": "Cancelado: %action%.",
+    "action_rename": "renombrar el plot a %plot_name%",
+    "action_delete": "eliminar el plot en x=%x%, y=%y%",
+    "action_transfer": "transferir %count% plot(s) a %player%",
+    "action_flag_apply_merged": "aplicar la flag %flag%=%value% a %count% plots fusionados (esto sobrescribe las diferencias entre ellos)",
+    "action_flag_remove_merged": "quitar la flag %flag% de %count% plots fusionados (esto sobrescribe las diferencias entre ellos)"
+  },
+  "merge": {
+    "usage": "Uso: /plot merge <north|south|east|west|all>",
+    "none": "No se fusionaron plots adyacentes.",
+    "merged_count": "Se fusionaron %count% plot(s) adyacente(s).",
+    "no_adjacent_claimed": "No hay plot adyacente reclamado en esa direccion.",
+    "owner_mismatch": "El plot adyacente debe tener el mismo propietario.",
+    "already_merged": "Esos plots ya estan fusionados.",
+    "failed": "No se pudieron fusionar los plots.",
+    "success": "Plots fusionados correctamente."
+  },
+  "unmerge": {
+    "usage": "Uso: /plot unmerge <north|south|east|west|all>",
+    "none": "No se separaron plots adyacentes.",
+    "unmerged_count": "Se separaron %count% plot(s) adyacente(s).",
+    "no_adjacent_claimed": "No hay plot adyacente reclamado en esa direccion.",
+    "owner_mismatch": "El plot adyacente debe tener el mismo propietario.",
+    "not_merged": "Esos plots no estan fusionados.",
+    "failed": "No se pudieron separar los plots.",
+    "success": "Plots separados correctamente."
+  },
+  "flag": {
+    "usage": "Uso: /plot flag <set|remove|list>",
+    "usage_set": "Uso: /plot flag set <flag> <value>",
+    "usage_remove": "Uso: /plot flag remove <flag>",
+    "usage_list": "Uso: /plot flag list",
+    "unknown": "Flag desconocida: %flag%",
+    "requires_mixin_bridge": "La flag %flag% requiere que los mixins de Plots estén cargados (bridge inicial + runtime de mixins).",
+    "set": "Flag %flag% establecida a %value%",
+    "invalid_value": "Valor invalido para la flag %flag%: %value%",
+    "invalid_value_with_hint": "Valor invalido para la flag %flag%: %value% (esperado: %expected%)",
+    "value_hint": {
+      "generic": "valor valido",
+      "boolean": "true/false",
+      "integer": "numero entero",
+      "string": "texto",
+      "weather": "id de weather asset (usa /weather list)",
+      "greet_message": "texto",
+      "allowed_cmds": "lista CSV de comandos, ej: spawn,home,msg",
+      "blocked_cmds": "lista CSV de comandos, ej: kill,tp,plot"
     },
-    "commandsystem": {
-        "command_not_recognized": "Comando no reconocido: %command%",
-        "usage_header": "--- Uso del Comando ---",
-        "arguments_header": "--- Argumentos ---",
-        "root_usage": "Uso: %root% <subcomando>",
-        "subcommands_hint": "Usa uno de los subcomandos de abajo.",
-        "subcommands_header": "--- Subcomandos ---",
-        "subcommand_item": "- %command%",
-        "help_title": "Plots",
-        "help_section_basic": "Basico",
-        "help_section_management": "Gestion",
-        "help_section_trust_flags": "Confianza y Flags",
-        "help_section_confirmation": "Confirmacion",
-        "help_sub_usage_title": "Sintaxis correcta",
-        "help_tip_root": "Consejo: usa /plot para ver todos los subcomandos."
-    },
-    "claim": {
-        "standing_on_road": "Estas en el camino. Muévete a un plot para reclamarlo.",
-        "plot_claimed": "Plot reclamado con éxito en x=%x%, y=%y%.",
-        "plot_auto_claimed": "Plot reclamado automáticamente en x=%x%, y=%y%.",
-        "plot_already_claimed": "Este plot ya fue reclamado por otra persona.",
-        "max_plots_reached": "Has alcanzado tu limite maximo de plots."
-    },
-    "delete": {
-        "usage": "Uso: /plot delete [gridX] [gridZ]",
-        "success": "El plot fue eliminado correctamente.",
-        "need_permission": "Necesitas el permiso plots.delete.* para eliminar plots por coordenadas."
-    },
-    "management": {
-        "not_found": "No se encontro un plot en esta ubicacion.",
-        "renamed": "Plot renombrado a %plot_name%.",
-        "rename_provide_name": "Por favor, proporciona un nombre para el plot.",
-        "no_permission": "No tienes permiso para administrar este plot."
-    },
-    "rename": {
-        "usage": "/plot rename <name>"
-    },
-    "confirm": {
-        "usage_confirm": "Uso: /plot confirm",
-        "usage_cancel": "Uso: /plot cancel",
-        "request": "Accion pendiente: %action%. Escribe %confirm_cmd% para continuar o %cancel_cmd% para cancelar. Expira en %seconds%s.",
-        "command_confirm": "{#55ffff}/plot confirm{#3498db}",
-        "command_cancel": "{#55ffff}/plot cancel{#3498db}",
-        "command_deny": "{#55ffff}/plot deny{#3498db}",
-        "none": "No tienes ninguna accion pendiente para confirmar.",
-        "expired": "Tu accion pendiente ha expirado. Ejecuta el comando otra vez.",
-        "confirmed": "Confirmado: %action%.",
-        "cancelled": "Cancelado: %action%.",
-        "action_rename": "renombrar el plot a %plot_name%",
-        "action_delete": "eliminar el plot en x=%x%, y=%y%"
-    },
-    "merge": {
-        "usage": "Uso: /plot merge <north|south|east|west|all>",
-        "none": "No se fusionaron plots adyacentes.",
-        "merged_count": "Se fusionaron %count% plot(s) adyacente(s).",
-        "no_adjacent_claimed": "No hay plot adyacente reclamado en esa direccion.",
-        "owner_mismatch": "El plot adyacente debe tener el mismo propietario.",
-        "already_merged": "Esos plots ya estan fusionados.",
-        "failed": "No se pudieron fusionar los plots.",
-        "success": "Plots fusionados correctamente."
-    },
-    "unmerge": {
-        "usage": "Uso: /plot unmerge <north|south|east|west|all>",
-        "none": "No se separaron plots adyacentes.",
-        "unmerged_count": "Se separaron %count% plot(s) adyacente(s).",
-        "no_adjacent_claimed": "No hay plot adyacente reclamado en esa direccion.",
-        "owner_mismatch": "El plot adyacente debe tener el mismo propietario.",
-        "not_merged": "Esos plots no estan fusionados.",
-        "failed": "No se pudieron separar los plots.",
-        "success": "Plots separados correctamente."
-    },
-    "flag": {
-        "usage": "Uso: /plot flag <set|remove|list>",
-        "usage_set": "Uso: /plot flag set <flag> <value>",
-        "usage_remove": "Uso: /plot flag remove <flag>",
-        "usage_list": "Uso: /plot flag list",
-        "unknown": "Flag desconocida: %flag%",
-        "set": "Flag %flag% establecida a %value%",
-        "invalid_value": "Valor invalido para la flag %flag%: %value%",
-        "invalid_value_with_hint": "Valor invalido para la flag %flag%: %value% (esperado: %expected%)",
-        "value_hint": {
-            "generic": "valor valido",
-            "boolean": "true/false",
-            "integer": "numero entero",
-            "string": "texto",
-            "weather": "id de weather asset (usa /weather list)",
-            "greet_message": "texto",
-            "allowed_cmds": "lista CSV de comandos, ej: spawn,home,msg",
-            "blocked_cmds": "lista CSV de comandos, ej: kill,tp,plot"
-        },
-        "removed": "Flag %flag% eliminada (valor por defecto restaurado)",
-        "list_header": "--- Flags Disponibles ---",
-        "list_item": "- %flag%: %value% %status%",
-        "list_footer": "----------------------"
-    },
-    "teleport": {
-        "usage": "Uso: /plot tp <nombre>",
-        "teleporting": "Teleportando al plot...",
-        "world_not_loaded": "El mundo de plots no esta cargado.",
-        "failed": "Fallo el teletransporte: %error%",
-        "set_spawn": "El punto de spawn del mundo %world% fue establecido.",
-        "set_spawn_error": "No se pudo establecer el punto de spawn: %error%",
-        "position_unavailable": "No se pudo obtener tu posicion."
-    },
-    "info": {
-        "no_permission": "No tienes permiso para ver informacion del plot.",
-        "not_in_plot": "No estas en un plot reclamado.",
-        "header": "{#55ffff}--- Informacion del Plot ---",
-        "footer": "{#55ffff}-----------------------",
-        "label": {
-            "name": "Nombre: ",
-            "owner": "Propietario: ",
-            "grid": "Grid: ",
-            "trusted": "Confiables: ",
-            "created": "Creado: "
-        }
-    },
-    "list": {
-        "header": "{#55ffff}--- Tus Plots (%count%) ---",
-        "item": "{#ffffff}- {#55ff55}%plot_name% {#95a5a6}(%x%, %z%)",
-        "empty": "No tienes plots."
-    },
-    "trust": {
-        "usage": "Uso: /plot trust <jugador>",
-        "usage_untrust": "Uso: /plot untrust <jugador>",
-        "player_offline": "El jugador debe estar en linea para actualizar confianza.",
-        "cannot_owner": "No puedes modificar la confianza del propietario del plot.",
-        "invalid_action": "Accion invalida. Usa 'add' o 'remove'.",
-        "added": "Se agrego a %player% a jugadores confiables.",
-        "removed": "Se elimino a %player% de jugadores confiables.",
-        "already_trusted": "%player% ya es confiable en este plot.",
-        "not_trusted": "%player% no es confiable en este plot."
-    },
-    "notification": {
-        "hud_name_line": "{#55ffff}%plot_name%",
-        "hud_title": "PARCELA",
-        "hud_hint": "Alt — Menú de Parcela",
-        "hud_owner_line": "{#ffffff}Plot de %owner_name%",
-        "world_enter": {
-            "title": "Mundo de Plots",
-            "subtitle": "Construye tus sueños aqui."
-        },
-        "plot_enter": {
-            "title": "%plot_name%",
-            "subtitle": "Plot de %owner_name%"
-        }
-    },
-    "hologram": {
-        "title": "%plot_name%",
-        "subtitle": "Propietario: %owner_name%"
-    },
-    "economy": {
-        "not_available": "No hay un proveedor de economia compatible disponible actualmente.",
-        "insufficient_funds": "Necesitas %amount% para realizar esta accion.",
-        "withdraw_failed": "No se pudo procesar el pago. Intentalo de nuevo.",
-        "charged": "Cobrado %amount%.",
-        "reason": {
-            "claim": "Reclamacion de plot",
-            "auto_claim": "Reclamacion automatica de plot",
-            "merge": "Fusion de plot",
-            "unmerge": "Separacion de plot"
-        }
-    },
-    "protection": {
-        "no_permission_break": "No tienes permiso para romper bloques aqui.",
-        "no_permission_place": "No tienes permiso para colocar bloques aqui.",
-        "no_permission_place_liquid": "No puedes colocar liquidos en bordes del plot que fluyan fuera de tu plot.",
-        "no_permission_buildertools": "No tienes permiso para usar BuilderTools aqui.",
-        "no_permission_pvp": "El PvP esta desactivado en este plot.",
-        "item_drop_disabled": "Soltar objetos esta desactivado en este plot.",
-        "item_pickup_disabled": "Recoger objetos esta desactivado en este plot.",
-        "chat_disabled": "El chat esta desactivado en este plot."
+    "removed": "Flag %flag% eliminada (valor por defecto restaurado)",
+    "list_header": "--- Flags Disponibles ---",
+    "list_item": "- %flag%: %value% %status%",
+    "list_footer": "----------------------"
+  },
+  "teleport": {
+    "usage": "Uso: /plot tp <nombre>",
+    "teleporting": "Teleportando al plot...",
+    "world_not_loaded": "El mundo de plots no esta cargado.",
+    "world_not_managed": "'%world%' no es un mundo de plots gestionado.",
+    "failed": "Fallo el teletransporte: %error%",
+    "set_spawn": "El punto de spawn del mundo %world% fue establecido.",
+    "set_spawn_error": "No se pudo establecer el punto de spawn: %error%",
+    "position_unavailable": "No se pudo obtener tu posicion."
+  },
+  "info": {
+    "no_permission": "No tienes permiso para ver informacion del plot.",
+    "not_in_plot": "No estas en un plot reclamado.",
+    "header": "{#55ffff}--- Informacion del Plot ---",
+    "footer": "{#55ffff}-----------------------",
+    "label": {
+      "name": "Nombre: ",
+      "owner": "Propietario: ",
+      "grid": "Grid: ",
+      "trusted": "Confiables: ",
+      "created": "Creado: "
     }
+  },
+  "list": {
+    "header": "{#55ffff}--- Tus Plots (%count%) ---",
+    "item": "{#ffffff}- {#55ff55}%plot_name% {#95a5a6}(%x%, %z%)",
+    "empty": "No tienes plots."
+  },
+  "trust": {
+    "usage": "Uso: /plot trust <jugador>",
+    "usage_untrust": "Uso: /plot untrust <jugador>",
+    "player_offline": "El jugador debe estar en linea para actualizar confianza.",
+    "cannot_owner": "No puedes modificar la confianza del propietario del plot.",
+    "invalid_action": "Accion invalida. Usa 'add' o 'remove'.",
+    "added": "Se agrego a %player% a jugadores confiables.",
+    "removed": "Se elimino a %player% de jugadores confiables.",
+    "already_trusted": "%player% ya es confiable en este plot.",
+    "not_trusted": "%player% no es confiable en este plot."
+  },
+  "notification": {
+    "hud_name_line": "{#55ffff}%plot_name%",
+    "hud_hint": "Alt — Menú de Parcela",
+    "hud_owner_line": "{#ffffff}Plot de %owner_name%",
+    "hud_info_line": "%status% • Confiables: %trusted% • Fusionados: %merged%",
+    "hud_status_owner": "Propietario",
+    "hud_status_trusted": "Confiable",
+    "hud_status_visitor": "Visitante",
+    "hud_size": "Tamaño",
+    "world_enter": {
+      "title": "Mundo de Plots",
+      "subtitle": "Construye tus sueños aqui."
+    },
+    "plot_enter": {
+      "title": "%plot_name%",
+      "subtitle": "Plot de %owner_name%"
+    }
+  },
+  "hologram": {
+    "title": "%plot_name%",
+    "subtitle": "Propietario: %owner_name%"
+  },
+  "economy": {
+    "not_available": "No hay un proveedor de economia compatible disponible actualmente.",
+    "insufficient_funds": "Necesitas %amount% para realizar esta accion.",
+    "withdraw_failed": "No se pudo procesar el pago. Intentalo de nuevo.",
+    "charged": "Cobrado %amount%.",
+    "reason": {
+      "claim": "Reclamacion de plot",
+      "auto_claim": "Reclamacion automatica de plot",
+      "merge": "Fusion de plot",
+      "unmerge": "Separacion de plot"
+    }
+  },
+  "protection": {
+    "no_permission_break": "No tienes permiso para romper bloques aqui.",
+    "no_permission_interact": "No tienes permiso para interactuar aquí.",
+    "no_permission_place": "No tienes permiso para colocar bloques aqui.",
+    "no_permission_place_liquid": "No puedes colocar liquidos en bordes del plot que fluyan fuera de tu plot.",
+    "no_permission_buildertools": "No tienes permiso para usar BuilderTools aqui.",
+    "no_permission_pvp": "El PvP esta desactivado en este plot.",
+    "item_drop_disabled": "Soltar objetos esta desactivado en este plot.",
+    "item_pickup_disabled": "Recoger objetos esta desactivado en este plot.",
+    "chat_disabled": "El chat esta desactivado en este plot."
+  },
+  "ui": {
+    "common": {
+      "success": "Éxito",
+      "error": "Error",
+      "ok": "OK",
+      "back": "Volver",
+      "prev": "Anterior",
+      "next": "Siguiente",
+      "select": "Seleccionar",
+      "close": "Cerrar",
+      "transfer": "Transferir",
+      "delete": "Eliminar",
+      "cancel": "Cancelar",
+      "page_of": "Página %page% / %total%"
+    },
+    "menu": {
+      "title": {
+        "trust": "JUGADORES CONFIABLES",
+        "flags": "FLAGS DEL PLOT",
+        "warps": "WARPS DEL PLOT",
+        "plot": "PLOT"
+      },
+      "nav": {
+        "trust": "Confiables",
+        "flags": "Flags",
+        "warps": "Warps",
+        "plot": "Plot"
+      },
+      "notice": {
+        "not_on_plot": "No estás sobre un plot.",
+        "read_only": "Solo lectura: no eres el propietario de este plot."
+      },
+      "section": {
+        "environment": "Entorno"
+      },
+      "flags": {
+        "save_messages": "Guardar mensajes",
+        "bridge_required": "Esa flag necesita el bridge de TaleGuard. Instala TaleGuard para activarla; la protección básica sigue aplicándose."
+      },
+      "warps": {
+        "count": "Warps: %count% / %max%",
+        "limit_reached": "Límite de warps alcanzado (máx. %max%).",
+        "removed": "Warp '%name%' eliminado."
+      },
+      "msg": {
+        "messages_saved": "Mensajes del plot guardados.",
+        "merge_invalid_dir": "Dirección de fusión inválida.",
+        "merge_unavailable": "La fusión no está disponible.",
+        "merge_failed": "No se pudo fusionar.",
+        "merged": "Plot fusionado hacia el %dir%.",
+        "unmerge_unavailable": "La separación no está disponible.",
+        "not_merged": "Este plot no está fusionado con nada.",
+        "unmerge_failed": "No se pudo separar.",
+        "unmerged": "Se separaron %count% enlace(s).",
+        "spawn_outside": "Colócate dentro de este plot para fijar su spawn.",
+        "spawn_set": "Spawn del plot fijado en tu posición actual."
+      },
+      "hero": {
+        "teleport": "TELETRANSPORTAR",
+        "set_spawn": "FIJAR SPAWN",
+        "rename": "Renombrar",
+        "world": "Mundo:",
+        "grid": "Grid:"
+      },
+      "merge": {
+        "caption": "Fusionar",
+        "center": "Este plot",
+        "unmerge": "Separar",
+        "dir_north": "Norte",
+        "dir_south": "Sur",
+        "dir_east": "Este",
+        "dir_west": "Oeste"
+      },
+      "danger": {
+        "caption": "Zona de peligro",
+        "hint": "Estas acciones no se pueden deshacer."
+      }
+    },
+    "weather": {
+      "title": "CLIMA DEL PLOT",
+      "subtitle": "Elige el clima que se aplica dentro de este plot.",
+      "current": "Actual: %weather%",
+      "default": "Predeterminado",
+      "active": "Activo",
+      "none": "Sin recursos de clima",
+      "set": "Clima establecido en %weather%.",
+      "label": "Clima",
+      "change": "Cambiar"
+    },
+    "admin": {
+      "no_permission": "No tienes permiso para usar el panel de administración.",
+      "nav": {
+        "settings": "Ajustes",
+        "plots": "Plots",
+        "stats": "Estadísticas",
+        "worlds": "Mundos"
+      },
+      "title": {
+        "settings": "AJUSTES GLOBALES",
+        "plots": "TODOS LOS PLOTS",
+        "stats": "ESTADÍSTICAS"
+      },
+      "settings": {
+        "note": "Los cambios de tamaño se guardan en config.json y persisten tras reiniciar. Afectan a los plots generados desde ahora; los existentes mantienen su distribución.",
+        "editable": "EDITABLE",
+        "readonly": "SOLO LECTURA",
+        "plot_size_x": "Tamaño X del plot",
+        "plot_size_z": "Tamaño Z del plot",
+        "road_size_x": "Ancho X del camino",
+        "road_size_z": "Ancho Z del camino",
+        "world_name": "Nombre del mundo:",
+        "managed_world": "Mundo gestionado:",
+        "default_name": "Nombre por defecto:",
+        "max_plots": "Plots máximos:",
+        "max_limit": "Límite máximo:",
+        "holograms": "Hologramas:",
+        "economy": "Economía:",
+        "save": "Guardar ajustes",
+        "saved": "Ajustes guardados en config.json — persisten tras reiniciar.",
+        "no_changes": "No hay cambios válidos que aplicar.",
+        "unavailable": "La configuración no está disponible."
+      },
+      "plots": {
+        "tp": "Tp",
+        "empty": "No hay plots reclamados.",
+        "none": "Sin plots",
+        "page": "Página %page% / %total%  (%count% plots)",
+        "transfer_to": "Transferir el plot %plot% a:",
+        "transfer_enter_name": "Escribe el nombre del jugador que lo recibirá.",
+        "player_offline": "El jugador '%player%' no está en línea.",
+        "plot_gone": "El plot ya no existe.",
+        "transferred": "Plot transferido a %player%.",
+        "transfer_failed": "No se pudo transferir el plot.",
+        "tp_failed": "No se pudo teletransportar al plot."
+      },
+      "stats": {
+        "total": "Plots totales:",
+        "claimed": "Reclamados:",
+        "unclaimed": "Sin reclamar:",
+        "owners": "Propietarios distintos:",
+        "top_owners": "TOP PROPIETARIOS",
+        "no_data": "Sin datos."
+      }
+    }
+  }
 }

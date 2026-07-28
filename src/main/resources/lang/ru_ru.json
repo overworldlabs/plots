@@ -1,183 +1,349 @@
 {
-    "general": {
-        "prefix": "{#f5c542}[Plots] {#95a5a6}",
-        "no_permission": "У вас нет прав для этого.",
-        "only_players": "Эту команду могут использовать только игроки.",
-        "not_owner": "Вы должны быть владельцем участка, чтобы сделать это.",
-        "error_generic": "Произошла непредвиденная ошибка. Попробуйте снова.",
-        "world_not_found": "Мир не найден."
+  "general": {
+    "prefix": "{#f5c542}[Plots] {#95a5a6}",
+    "no_permission": "У вас нет прав для этого.",
+    "only_players": "Эту команду могут использовать только игроки.",
+    "not_owner": "Вы должны быть владельцем участка, чтобы сделать это.",
+    "error_generic": "Произошла непредвиденная ошибка. Попробуйте снова.",
+    "world_not_found": "Мир не найден."
+  },
+  "commandsystem": {
+    "command_not_recognized": "Команда не распознана: %command%",
+    "usage_header": "--- Использование Команды ---",
+    "arguments_header": "--- Аргументы ---",
+    "root_usage": "Использование: %root% <подкоманда>",
+    "subcommands_hint": "Используйте одну из подкоманд ниже.",
+    "subcommands_header": "--- Подкоманды ---",
+    "subcommand_item": "- %command%",
+    "help_title": "Plots",
+    "help_section_basic": "Основное",
+    "help_section_management": "Управление",
+    "help_section_trust_flags": "Доверие и Флаги",
+    "help_section_confirmation": "Подтверждение",
+    "help_sub_usage_title": "Правильный синтаксис",
+    "help_tip_root": "Подсказка: используйте /plot, чтобы увидеть все подкоманды.",
+    "did_you_mean": "Возможно, вы имели в виду: %suggestions%?"
+  },
+  "claim": {
+    "standing_on_road": "Вы стоите на дороге. Перейдите на участок, чтобы занять его.",
+    "plot_claimed": "Участок успешно занят на x=%x%, y=%y%.",
+    "plot_auto_claimed": "Участок автоматически занят на x=%x%, y=%y%.",
+    "plot_already_claimed": "Этот участок уже занят другим игроком.",
+    "max_plots_reached": "Вы достигли максимального лимита участков."
+  },
+  "delete": {
+    "usage": "Использование: /plot delete [gridX] [gridZ]",
+    "success": "Участок успешно удален.",
+    "need_permission": "Вам нужно право plots.delete.* для удаления участков по координатам."
+  },
+  "management": {
+    "not_found": "Участок в этой локации не найден.",
+    "renamed": "Участок переименован в %plot_name%.",
+    "rename_provide_name": "Пожалуйста, укажите название участка.",
+    "no_permission": "У вас нет прав управлять этим участком."
+  },
+  "rename": {
+    "usage": "/plot rename <name>"
+  },
+  "refresh": {
+    "usage": "Использование: /plot refresh",
+    "success": "Конфигурация и кэш Plots успешно перезагружены.",
+    "failed": "Не удалось перезагрузить: %error%"
+  },
+  "transfer": {
+    "usage": "Использование: /plot transfer <player>",
+    "already_owner": "Этот игрок уже владеет этим участком.",
+    "success": "Передано участков: %count% игроку %player%."
+  },
+  "confirm": {
+    "usage_confirm": "Использование: /plot confirm",
+    "usage_cancel": "Использование: /plot cancel",
+    "request": "Ожидает подтверждения: %action%. Напишите %confirm_cmd% для продолжения или %cancel_cmd% для отмены. Истекает через %seconds%с.",
+    "command_confirm": "{#55ffff}/plot confirm{#3498db}",
+    "command_cancel": "{#55ffff}/plot cancel{#3498db}",
+    "command_deny": "{#55ffff}/plot deny{#3498db}",
+    "none": "У вас нет ожидающих действий для подтверждения.",
+    "expired": "Ожидающее действие истекло. Выполните команду снова.",
+    "confirmed": "Подтверждено: %action%.",
+    "cancelled": "Отменено: %action%.",
+    "action_rename": "переименовать участок в %plot_name%",
+    "action_delete": "удалить участок на x=%x%, y=%y%",
+    "action_transfer": "передать %count% участок(ов) игроку %player%",
+    "action_flag_apply_merged": "применить флаг %flag%=%value% к %count% объединённым участкам (это перезапишет различия между ними)",
+    "action_flag_remove_merged": "удалить флаг %flag% с %count% объединённых участков (это перезапишет различия между ними)"
+  },
+  "merge": {
+    "usage": "Использование: /plot merge <north|south|east|west|all>",
+    "none": "Соседние участки не объединены.",
+    "merged_count": "Объединено соседних участков: %count%.",
+    "no_adjacent_claimed": "В этом направлении нет занятого соседнего участка.",
+    "owner_mismatch": "Соседний участок должен иметь того же владельца.",
+    "already_merged": "Эти участки уже объединены.",
+    "failed": "Не удалось объединить участки.",
+    "success": "Участки успешно объединены."
+  },
+  "unmerge": {
+    "usage": "Использование: /plot unmerge <north|south|east|west|all>",
+    "none": "Соседние участки не разъединены.",
+    "unmerged_count": "Разъединено соседних участков: %count%.",
+    "no_adjacent_claimed": "В этом направлении нет занятого соседнего участка.",
+    "owner_mismatch": "Соседний участок должен иметь того же владельца.",
+    "not_merged": "Эти участки не объединены.",
+    "failed": "Не удалось разъединить участки.",
+    "success": "Участки успешно разъединены."
+  },
+  "flag": {
+    "usage": "Использование: /plot flag <set|remove|list>",
+    "usage_set": "Использование: /plot flag set <flag> <value>",
+    "usage_remove": "Использование: /plot flag remove <flag>",
+    "usage_list": "Использование: /plot flag list",
+    "unknown": "Неизвестный флаг: %flag%",
+    "requires_mixin_bridge": "Флаг %flag% требует загруженных миксинов Plots (ранний мост + среда миксинов).",
+    "set": "Флаг %flag% установлен в %value%",
+    "invalid_value": "Неверное значение для флага %flag%: %value%",
+    "invalid_value_with_hint": "Неверное значение для флага %flag%: %value% (ожидается: %expected%)",
+    "value_hint": {
+      "generic": "корректное значение",
+      "boolean": "true/false",
+      "integer": "целое число",
+      "string": "текст",
+      "weather": "id погодного ассета (используй /weather list)",
+      "greet_message": "текст",
+      "allowed_cmds": "CSV список команд, напр: spawn,home,msg",
+      "blocked_cmds": "CSV список команд, напр: kill,tp,plot"
     },
-    "commandsystem": {
-        "command_not_recognized": "Команда не распознана: %command%",
-        "usage_header": "--- Использование Команды ---",
-        "arguments_header": "--- Аргументы ---",
-        "root_usage": "Использование: %root% <подкоманда>",
-        "subcommands_hint": "Используйте одну из подкоманд ниже.",
-        "subcommands_header": "--- Подкоманды ---",
-        "subcommand_item": "- %command%",
-        "help_title": "Plots",
-        "help_section_basic": "Основное",
-        "help_section_management": "Управление",
-        "help_section_trust_flags": "Доверие и Флаги",
-        "help_section_confirmation": "Подтверждение",
-        "help_sub_usage_title": "Правильный синтаксис",
-        "help_tip_root": "Подсказка: используйте /plot, чтобы увидеть все подкоманды."
-    },
-    "claim": {
-        "standing_on_road": "Вы стоите на дороге. Перейдите на участок, чтобы занять его.",
-        "plot_claimed": "Участок успешно занят на x=%x%, y=%y%.",
-        "plot_auto_claimed": "Участок автоматически занят на x=%x%, y=%y%.",
-        "plot_already_claimed": "Этот участок уже занят другим игроком.",
-        "max_plots_reached": "Вы достигли максимального лимита участков."
-    },
-    "delete": {
-        "usage": "Использование: /plot delete [gridX] [gridZ]",
-        "success": "Участок успешно удален.",
-        "need_permission": "Вам нужно право plots.delete.* для удаления участков по координатам."
-    },
-    "management": {
-        "not_found": "Участок в этой локации не найден.",
-        "renamed": "Участок переименован в %plot_name%.",
-        "rename_provide_name": "Пожалуйста, укажите название участка.",
-        "no_permission": "У вас нет прав управлять этим участком."
-    },
-    "rename": {
-        "usage": "/plot rename <name>"
-    },
-    "confirm": {
-        "usage_confirm": "Использование: /plot confirm",
-        "usage_cancel": "Использование: /plot cancel",
-        "request": "Ожидает подтверждения: %action%. Напишите %confirm_cmd% для продолжения или %cancel_cmd% для отмены. Истекает через %seconds%с.",
-        "command_confirm": "{#55ffff}/plot confirm{#3498db}",
-        "command_cancel": "{#55ffff}/plot cancel{#3498db}",
-        "command_deny": "{#55ffff}/plot deny{#3498db}",
-        "none": "У вас нет ожидающих действий для подтверждения.",
-        "expired": "Ожидающее действие истекло. Выполните команду снова.",
-        "confirmed": "Подтверждено: %action%.",
-        "cancelled": "Отменено: %action%.",
-        "action_rename": "переименовать участок в %plot_name%",
-        "action_delete": "удалить участок на x=%x%, y=%y%"
-    },
-    "merge": {
-        "usage": "Использование: /plot merge <north|south|east|west|all>",
-        "none": "Соседние участки не объединены.",
-        "merged_count": "Объединено соседних участков: %count%.",
-        "no_adjacent_claimed": "В этом направлении нет занятого соседнего участка.",
-        "owner_mismatch": "Соседний участок должен иметь того же владельца.",
-        "already_merged": "Эти участки уже объединены.",
-        "failed": "Не удалось объединить участки.",
-        "success": "Участки успешно объединены."
-    },
-    "unmerge": {
-        "usage": "Использование: /plot unmerge <north|south|east|west|all>",
-        "none": "Соседние участки не разъединены.",
-        "unmerged_count": "Разъединено соседних участков: %count%.",
-        "no_adjacent_claimed": "В этом направлении нет занятого соседнего участка.",
-        "owner_mismatch": "Соседний участок должен иметь того же владельца.",
-        "not_merged": "Эти участки не объединены.",
-        "failed": "Не удалось разъединить участки.",
-        "success": "Участки успешно разъединены."
-    },
-    "flag": {
-        "usage": "Использование: /plot flag <set|remove|list>",
-        "usage_set": "Использование: /plot flag set <flag> <value>",
-        "usage_remove": "Использование: /plot flag remove <flag>",
-        "usage_list": "Использование: /plot flag list",
-        "unknown": "Неизвестный флаг: %flag%",
-        "set": "Флаг %flag% установлен в %value%",
-        "invalid_value": "Неверное значение для флага %flag%: %value%",
-        "invalid_value_with_hint": "Неверное значение для флага %flag%: %value% (ожидается: %expected%)",
-        "value_hint": {
-            "generic": "корректное значение",
-            "boolean": "true/false",
-            "integer": "целое число",
-            "string": "текст",
-            "weather": "id погодного ассета (используй /weather list)",
-            "greet_message": "текст",
-            "allowed_cmds": "CSV список команд, напр: spawn,home,msg",
-            "blocked_cmds": "CSV список команд, напр: kill,tp,plot"
-        },
-        "removed": "Флаг %flag% удален (значение по умолчанию восстановлено)",
-        "list_header": "--- Доступные Флаги ---",
-        "list_item": "- %flag%: %value% %status%",
-        "list_footer": "----------------------"
-    },
-    "teleport": {
-        "usage": "Использование: /plot tp <name>",
-        "teleporting": "Телепортация на участок...",
-        "world_not_loaded": "Мир участков не загружен.",
-        "failed": "Ошибка телепортации: %error%",
-        "set_spawn": "Точка спавна мира %world% установлена.",
-        "set_spawn_error": "Не удалось установить точку спавна: %error%",
-        "position_unavailable": "Не удалось получить вашу позицию."
-    },
-    "info": {
-        "no_permission": "У вас нет прав на просмотр информации участка.",
-        "not_in_plot": "Вы не находитесь на занятом участке.",
-        "header": "{#55ffff}--- Информация об Участке ---",
-        "footer": "{#55ffff}-----------------------",
-        "label": {
-            "name": "Название: ",
-            "owner": "Владелец: ",
-            "grid": "Сетка: ",
-            "trusted": "Доверенные: ",
-            "created": "Создан: "
-        }
-    },
-    "list": {
-        "header": "{#55ffff}--- Ваши Участки (%count%) ---",
-        "item": "{#ffffff}- {#55ff55}%plot_name% {#95a5a6}(%x%, %z%)",
-        "empty": "У вас нет участков."
-    },
-    "trust": {
-        "usage": "Использование: /plot trust <player>",
-        "usage_untrust": "Использование: /plot untrust <player>",
-        "player_offline": "Игрок должен быть онлайн для изменения доверия.",
-        "cannot_owner": "Вы не можете изменить доверие владельца участка.",
-        "invalid_action": "Неверное действие. Используйте 'add' или 'remove'.",
-        "added": "Игрок %player% добавлен в доверенные.",
-        "removed": "Игрок %player% удален из доверенных.",
-        "already_trusted": "%player% уже в доверенных на этом участке.",
-        "not_trusted": "%player% не является доверенным на этом участке."
-    },
-    "notification": {
-        "hud_name_line": "{#55ffff}%plot_name%",
-        "hud_title": "УЧАСТОК",
-        "hud_hint": "Alt — Меню участка",
-        "hud_owner_line": "{#ffffff}Участок игрока %owner_name%",
-        "world_enter": {
-            "title": "Мир Участков",
-            "subtitle": "Стройте свои мечты здесь."
-        },
-        "plot_enter": {
-            "title": "%plot_name%",
-            "subtitle": "Участок игрока %owner_name%"
-        }
-    },
-    "hologram": {
-        "title": "%plot_name%",
-        "subtitle": "Владелец: %owner_name%"
-    },
-    "economy": {
-        "not_available": "Сейчас нет доступного совместимого экономического провайдера.",
-        "insufficient_funds": "Для этого действия нужно %amount%.",
-        "withdraw_failed": "Не удалось провести оплату. Попробуйте снова.",
-        "charged": "Списано %amount%.",
-        "reason": {
-            "claim": "Занятие участка",
-            "auto_claim": "Автоматическое занятие участка",
-            "merge": "Объединение участков",
-            "unmerge": "Разъединение участков"
-        }
-    },
-    "protection": {
-        "no_permission_break": "У вас нет прав ломать блоки здесь.",
-        "no_permission_place": "У вас нет прав ставить блоки здесь.",
-        "no_permission_place_liquid": "Нельзя ставить жидкости на границе участка, если они вытекут за его пределы.",
-        "no_permission_buildertools": "У вас нет прав использовать BuilderTools здесь.",
-        "no_permission_pvp": "PvP отключен на этом участке.",
-        "item_drop_disabled": "Выбрасывание предметов отключено на этом участке.",
-        "item_pickup_disabled": "Подбор предметов отключен на этом участке.",
-        "chat_disabled": "Чат отключен на этом участке."
+    "removed": "Флаг %flag% удален (значение по умолчанию восстановлено)",
+    "list_header": "--- Доступные Флаги ---",
+    "list_item": "- %flag%: %value% %status%",
+    "list_footer": "----------------------"
+  },
+  "teleport": {
+    "usage": "Использование: /plot tp <name>",
+    "teleporting": "Телепортация на участок...",
+    "world_not_loaded": "Мир участков не загружен.",
+    "world_not_managed": "'%world%' не является управляемым миром участков.",
+    "failed": "Ошибка телепортации: %error%",
+    "set_spawn": "Точка спавна мира %world% установлена.",
+    "set_spawn_error": "Не удалось установить точку спавна: %error%",
+    "position_unavailable": "Не удалось получить вашу позицию."
+  },
+  "info": {
+    "no_permission": "У вас нет прав на просмотр информации участка.",
+    "not_in_plot": "Вы не находитесь на занятом участке.",
+    "header": "{#55ffff}--- Информация об Участке ---",
+    "footer": "{#55ffff}-----------------------",
+    "label": {
+      "name": "Название: ",
+      "owner": "Владелец: ",
+      "grid": "Сетка: ",
+      "trusted": "Доверенные: ",
+      "created": "Создан: "
     }
+  },
+  "list": {
+    "header": "{#55ffff}--- Ваши Участки (%count%) ---",
+    "item": "{#ffffff}- {#55ff55}%plot_name% {#95a5a6}(%x%, %z%)",
+    "empty": "У вас нет участков."
+  },
+  "trust": {
+    "usage": "Использование: /plot trust <player>",
+    "usage_untrust": "Использование: /plot untrust <player>",
+    "player_offline": "Игрок должен быть онлайн для изменения доверия.",
+    "cannot_owner": "Вы не можете изменить доверие владельца участка.",
+    "invalid_action": "Неверное действие. Используйте 'add' или 'remove'.",
+    "added": "Игрок %player% добавлен в доверенные.",
+    "removed": "Игрок %player% удален из доверенных.",
+    "already_trusted": "%player% уже в доверенных на этом участке.",
+    "not_trusted": "%player% не является доверенным на этом участке."
+  },
+  "notification": {
+    "hud_name_line": "{#55ffff}%plot_name%",
+    "hud_hint": "Alt — Меню участка",
+    "hud_owner_line": "{#ffffff}Участок игрока %owner_name%",
+    "hud_info_line": "%status% • Доверенные: %trusted% • Объединено: %merged%",
+    "hud_status_owner": "Владелец",
+    "hud_status_trusted": "Доверенный",
+    "hud_status_visitor": "Посетитель",
+    "hud_size": "Размер",
+    "world_enter": {
+      "title": "Мир Участков",
+      "subtitle": "Стройте свои мечты здесь."
+    },
+    "plot_enter": {
+      "title": "%plot_name%",
+      "subtitle": "Участок игрока %owner_name%"
+    }
+  },
+  "hologram": {
+    "title": "%plot_name%",
+    "subtitle": "Владелец: %owner_name%"
+  },
+  "economy": {
+    "not_available": "Сейчас нет доступного совместимого экономического провайдера.",
+    "insufficient_funds": "Для этого действия нужно %amount%.",
+    "withdraw_failed": "Не удалось провести оплату. Попробуйте снова.",
+    "charged": "Списано %amount%.",
+    "reason": {
+      "claim": "Занятие участка",
+      "auto_claim": "Автоматическое занятие участка",
+      "merge": "Объединение участков",
+      "unmerge": "Разъединение участков"
+    }
+  },
+  "protection": {
+    "no_permission_break": "У вас нет прав ломать блоки здесь.",
+    "no_permission_interact": "У вас нет прав взаимодействовать здесь.",
+    "no_permission_place": "У вас нет прав ставить блоки здесь.",
+    "no_permission_place_liquid": "Нельзя ставить жидкости на границе участка, если они вытекут за его пределы.",
+    "no_permission_buildertools": "У вас нет прав использовать BuilderTools здесь.",
+    "no_permission_pvp": "PvP отключен на этом участке.",
+    "item_drop_disabled": "Выбрасывание предметов отключено на этом участке.",
+    "item_pickup_disabled": "Подбор предметов отключен на этом участке.",
+    "chat_disabled": "Чат отключен на этом участке."
+  },
+  "ui": {
+    "common": {
+      "success": "Успех",
+      "error": "Ошибка",
+      "ok": "OK",
+      "back": "Назад",
+      "prev": "Пред.",
+      "next": "След.",
+      "select": "Выбрать",
+      "close": "Закрыть",
+      "transfer": "Передать",
+      "delete": "Удалить",
+      "cancel": "Отмена",
+      "page_of": "Страница %page% / %total%"
+    },
+    "menu": {
+      "title": {
+        "trust": "ДОВЕРЕННЫЕ ИГРОКИ",
+        "flags": "ФЛАГИ УЧАСТКА",
+        "warps": "ВАРПЫ УЧАСТКА",
+        "plot": "УЧАСТОК"
+      },
+      "nav": {
+        "trust": "Доверенные",
+        "flags": "Флаги",
+        "warps": "Варпы",
+        "plot": "Участок"
+      },
+      "notice": {
+        "not_on_plot": "Вы не находитесь на участке.",
+        "read_only": "Только чтение: вы не владелец этого участка."
+      },
+      "section": {
+        "environment": "Окружение"
+      },
+      "flags": {
+        "save_messages": "Сохранить сообщения",
+        "bridge_required": "Этому флагу нужен мост TaleGuard. Установите TaleGuard, чтобы включить его; базовая защита продолжает работать."
+      },
+      "warps": {
+        "count": "Варпы: %count% / %max%",
+        "limit_reached": "Достигнут лимит варпов (макс. %max%).",
+        "removed": "Варп '%name%' удалён."
+      },
+      "msg": {
+        "messages_saved": "Сообщения участка сохранены.",
+        "merge_invalid_dir": "Неверное направление объединения.",
+        "merge_unavailable": "Объединение недоступно.",
+        "merge_failed": "Не удалось объединить.",
+        "merged": "Участок объединён в направлении: %dir%.",
+        "unmerge_unavailable": "Разъединение недоступно.",
+        "not_merged": "Этот участок ни с чем не объединён.",
+        "unmerge_failed": "Не удалось разъединить.",
+        "unmerged": "Разъединено связей: %count%.",
+        "spawn_outside": "Встаньте внутри участка, чтобы задать его точку спавна.",
+        "spawn_set": "Точка спавна участка установлена на вашу позицию."
+      },
+      "hero": {
+        "teleport": "ТЕЛЕПОРТ",
+        "set_spawn": "ЗАДАТЬ СПАВН",
+        "rename": "Переименовать",
+        "world": "Мир:",
+        "grid": "Сетка:"
+      },
+      "merge": {
+        "caption": "Объединение",
+        "center": "Этот участок",
+        "unmerge": "Разъединить",
+        "dir_north": "Север",
+        "dir_south": "Юг",
+        "dir_east": "Восток",
+        "dir_west": "Запад"
+      },
+      "danger": {
+        "caption": "Опасная зона",
+        "hint": "Эти действия нельзя отменить."
+      }
+    },
+    "weather": {
+      "title": "ПОГОДА УЧАСТКА",
+      "subtitle": "Выберите погоду внутри этого участка.",
+      "current": "Текущая: %weather%",
+      "default": "По умолчанию",
+      "active": "Активна",
+      "none": "Нет ресурсов погоды",
+      "set": "Погода изменена на %weather%.",
+      "label": "Погода",
+      "change": "Изменить"
+    },
+    "admin": {
+      "no_permission": "У вас нет прав использовать панель администратора.",
+      "nav": {
+        "settings": "Настройки",
+        "plots": "Участки",
+        "stats": "Статистика",
+        "worlds": "Миры"
+      },
+      "title": {
+        "settings": "ГЛОБАЛЬНЫЕ НАСТРОЙКИ",
+        "plots": "ВСЕ УЧАСТКИ",
+        "stats": "СТАТИСТИКА"
+      },
+      "settings": {
+        "note": "Изменения размеров сохраняются в config.json и действуют после перезапуска. Они влияют на вновь создаваемые участки; существующие сохраняют свою разметку.",
+        "editable": "РЕДАКТИРУЕМОЕ",
+        "readonly": "ТОЛЬКО ЧТЕНИЕ",
+        "plot_size_x": "Размер участка X",
+        "plot_size_z": "Размер участка Z",
+        "road_size_x": "Ширина дороги X",
+        "road_size_z": "Ширина дороги Z",
+        "world_name": "Название мира:",
+        "managed_world": "Управляемый мир:",
+        "default_name": "Название по умолчанию:",
+        "max_plots": "Максимум участков:",
+        "max_limit": "Предельный максимум:",
+        "holograms": "Голограммы:",
+        "economy": "Экономика:",
+        "save": "Сохранить настройки",
+        "saved": "Настройки сохранены в config.json — действуют после перезапуска.",
+        "no_changes": "Нет корректных изменений для применения.",
+        "unavailable": "Конфигурация недоступна."
+      },
+      "plots": {
+        "tp": "Тп",
+        "empty": "Нет занятых участков.",
+        "none": "Нет участков",
+        "page": "Страница %page% / %total%  (участков: %count%)",
+        "transfer_to": "Передать участок %plot% игроку:",
+        "transfer_enter_name": "Введите имя игрока для передачи.",
+        "player_offline": "Игрок '%player%' не в сети.",
+        "plot_gone": "Участок больше не существует.",
+        "transferred": "Участок передан игроку %player%.",
+        "transfer_failed": "Не удалось передать участок.",
+        "tp_failed": "Не удалось телепортироваться на участок."
+      },
+      "stats": {
+        "total": "Всего участков:",
+        "claimed": "Занято:",
+        "unclaimed": "Свободно:",
+        "owners": "Уникальных владельцев:",
+        "top_owners": "ТОП ВЛАДЕЛЬЦЕВ",
+        "no_data": "Нет данных."
+      }
+    }
+  }
 }
