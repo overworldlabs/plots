@@ -1,54 +1,38 @@
-.gradle
+# Build output
 build/
+.gradle/
+.gradle-local/
+bin/
+out/
 build_output.txt
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+# Local Hytale server run directory
+run/
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
-.vscode/
-
-### Mac OS ###
-.DS_Store
-
+# Vendored jars (HytaleServer.jar, integration APIs) — not redistributable
 libs/
 
-### Logs ###
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+
+# Logs
 *.log
 
-### Node.js ###
-node_modules/
-package-lock.json
+# Internal planning — the public changelog lives in docs/guide/changelog.md
+CHANGELOG.md
+
+# Docs (VitePress)
 docs/node_modules/
-docs/package-lock.json
+docs/.vitepress/dist/
+docs/.vitepress/cache/
