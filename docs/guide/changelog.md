@@ -32,6 +32,15 @@ menu and HUD, and moves its protection onto the shared **TaleGuard** bridge.
 **Integrations**
 - **PlaceholderAPI** expansion — expose plot ownership and counts in scoreboards, tab lists and chat. See [PlaceholderAPI](/guide/integrations/placeholders).
 
+**What's new popup**
+- Admins get the release notes in-game once per version, three seconds after joining; `/plot changelog` re-opens them on demand.
+
+**Polish**
+- `/plot help` now opens Hytale's own command UI, so it stays in sync with the subcommands instead of drifting from a hand-written page.
+- The menu's Merge and Danger tabs are one **Plot** tab, and the nav rail no longer leaves a column of dead space.
+- List rows, pagination bars and footer buttons line up: the widget templates force their own heights, so rows are sized to match instead of guessing.
+- Spanish and Russian are complete — they were missing every menu string and showed raw keys such as `ui.menu.nav.trust`.
+
 **Under the hood**
 - Ported to the current Hytale server build (`org.joml` vectors and the new world/entity APIs).
 - Package renamed from `com.overworldlabs.plots` to **`dev.stoshe.plots`**. Plugins compiled against the 1.1.x API must update their imports — see [API Usage](/guide/api/api-usage).
