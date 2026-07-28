@@ -1,6 +1,8 @@
 package dev.stoshe.plots;
 import com.google.gson.GsonBuilder;
 import com.google.gson.Gson;
+import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import dev.stoshe.plots.api.IPlotManager;
 import dev.stoshe.plots.api.IPlotRepository;
 import dev.stoshe.plots.api.IRadarManager;
@@ -62,6 +64,8 @@ public class Plots extends JavaPlugin {
     private PlotEconomyService economyService;
     private dev.stoshe.plots.menu.PlotMenuKeybindManager menuKeybindManager;
     private dev.stoshe.plots.manager.KnownPlayersService knownPlayers;
+    private dev.stoshe.plots.manager.ChangelogManager changelogManager;
+    private UpdateNotificationSystem updateNotificationSystem;
 
     public Plots(@Nonnull JavaPluginInit init) {
         super(init);
@@ -132,6 +136,7 @@ public class Plots extends JavaPlugin {
         // World generator is registered earlier, in preLoad(), so it exists before
         // the Universe module loads saved worlds. See preLoad().
         registerSystems();
+        registerListeners();
 
         // Basic protection (block break/place/interact, containers, mobs, item
         // drop/pickup, etc.) is always enforced by the ECS protection systems
@@ -242,6 +247,11 @@ public class Plots extends JavaPlugin {
     private void initializeManagers(@Nonnull File dataDir, @Nonnull PlotConfig config) {
         knownPlayers = new dev.stoshe.plots.manager.KnownPlayersService(dataDir);
 
+        // Release notes for the admin "what's new" popup. The fetch is async and best-effort:
+        // if GitHub is unreachable the popup simply never shows.
+        changelogManager = new dev.stoshe.plots.manager.ChangelogManager(dataDir);
+        changelogManager.fetch(getVersion());
+
         PrefabManager prefabManager = new PrefabManager(dataDir);
         serviceRegistry.register(PrefabManager.class, prefabManager);
 
@@ -309,6 +319,26 @@ public class Plots extends JavaPlugin {
     }
 
     /**
+     * Drops a player's per-session join state when they leave, so the update notice and the
+     * changelog popup are re-evaluated on their next join. Without this, closing the popup would
+     * keep it hidden for the rest of the server's uptime — "Don't show again" is the only action
+     * meant to persist.
+     */
+    private void registerListeners() {
+        try {
+            getEventRegistry().register(PlayerDisconnectEvent.class, event -> {
+                PlayerRef playerRef = event.getPlayerRef();
+
+                if (playerRef != null && updateNotificationSystem != null) {
+                    updateNotificationSystem.forget(playerRef.getUuid());
+                }
+            });
+        } catch (Exception e) {
+            Console.warning("Failed to register disconnect listener: " + e.getMessage());
+        }
+    }
+
+    /**
      * Register all entity systems
      */
     private void registerSystems() {
@@ -324,7 +354,8 @@ public class Plots extends JavaPlugin {
         registry.registerSystem(new ServerBlockProtectionSystem(plotManager, worldManager));
 
         registry.registerSystem(new PlotNotificationSystem(plotManager, worldManager));
-        registry.registerSystem(new UpdateNotificationSystem(getVersion()));
+        updateNotificationSystem = new UpdateNotificationSystem(getVersion());
+        registry.registerSystem(updateNotificationSystem);
         registry.registerSystem(new dev.stoshe.plots.system.PlotSetupNudgeSystem());
         registry.registerSystem(new RadarMarkerSystem(getRadarManager()));
 
@@ -518,6 +549,11 @@ public class Plots extends JavaPlugin {
     @Nonnull
     public dev.stoshe.plots.manager.KnownPlayersService getKnownPlayers() {
         return knownPlayers;
+    }
+
+    @Nonnull
+    public dev.stoshe.plots.manager.ChangelogManager getChangelogManager() {
+        return changelogManager;
     }
 
     public IWorldManager getWorldManager() {

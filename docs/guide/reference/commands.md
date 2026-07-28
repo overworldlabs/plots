@@ -29,7 +29,7 @@ Commands can be executed with `/plot`, `/plots`, `/plotme`, or `/p`. Admin-only 
 | `/plot menu` | Opens the plot management menu (UI). | `plots` |
 | `/plot warps` | Browse public plot warps. | `plots` |
 | `/plot worlds` | Opens a modal listing plot worlds, with teleport buttons. | `plots` |
-| `/plot help` | Opens a modal listing the plot commands. | `plots` |
+| `/plot help` | Opens Hytale's native command help, scoped to `/plot`. | `plots` |
 | `/plot spawn [world]` | Teleports you to a plot world's spawn (current/default world if omitted). | `plots.spawn` |
 | `/plot confirm` | Confirms a pending plot action. | `plots` |
 | `/plot cancel` | Cancels a pending plot action. | `plots` |
@@ -42,6 +42,7 @@ Commands can be executed with `/plot`, `/plots`, `/plotme`, or `/p`. Admin-only 
 | `/plot delete [x z]` | Deletes the current plot or one at specific grid coordinates. | `plots.delete` (others: `plots.delete.*`) |
 | `/plot setspawn` | Sets the global spawn point for the plot world. | `plots.*` |
 | `/plot refresh` | Reloads the plots runtime config and caches. | `plots.*` |
+| `/plot changelog` | Re-opens the "what's new" popup with the latest release notes. | `plots.*` |
 | `/plot debug bridge` | Shows bridge/mixin diagnostic state. | `plots.*` |
 
 ::: tip

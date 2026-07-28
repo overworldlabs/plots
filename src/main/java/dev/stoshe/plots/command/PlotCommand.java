@@ -101,6 +101,7 @@ public class PlotCommand extends AbstractCommandCollection {
         addSubCommand(new PlotWarpsCommand(plotManager));
         addSubCommand(new PlotWorldsCommand(plotManager));
         addSubCommand(new PlotHelpCommand(plotManager));
+        addSubCommand(new dev.stoshe.plots.command.sub.PlotChangelogCommand());
     }
 
     @Override

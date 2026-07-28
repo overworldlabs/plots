@@ -6,12 +6,17 @@ import com.hypixel.hytale.server.core.command.system.CommandSender;
 import com.hypixel.hytale.component.Archetype;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.stoshe.plots.Plots;
 import dev.stoshe.plots.integration.mixin.MixinBridgeStatus;
+import dev.stoshe.plots.manager.ChangelogManager;
+import dev.stoshe.plots.ui.PlotChangelogPage;
 import dev.stoshe.plots.util.ChatUtil;
 import dev.stoshe.plots.util.PermissionUtil;
 import dev.stoshe.plots.util.UpdateChecker;
@@ -105,9 +110,42 @@ public class UpdateNotificationSystem extends EntityTickingSystem<EntityStore> {
                 playerRef.sendMessage(ChatUtil.colorize(
                         "{#ffaa00}[Plots] {#ffffff}Join our Discord: {#55ffff}https://discord.gg/rC9eSzH3tf"));
             }
+
+            showChangelogIfNew(uuid, playerRef, store);
+
             // Mark as notified by setting time to a high value
             playerJoinTime.put(uuid, 999999.0f);
         }
+    }
+
+    /**
+     * Admin-only "what's new" popup, once per release. "Close" is meant to be temporary — the state
+     * below is per session, so it shows again on the next join; only "Don't show again", which
+     * {@link ChangelogManager} persists, keeps it hidden until a newer version ships.
+     */
+    private void showChangelogIfNew(@Nonnull UUID uuid, @Nonnull PlayerRef playerRef,
+            @Nonnull Store<EntityStore> store) {
+        ChangelogManager changelog = Plots.getInstance().getChangelogManager();
+        if (!changelog.shouldAutoShow(uuid)) {
+            return;
+        }
+
+        Ref<EntityStore> ref = playerRef.getReference();
+        Player player = store.getComponent(ref, Player.getComponentType());
+
+        if (player != null) {
+            PlotChangelogPage.open(player, ref, store, playerRef, Plots.getInstance());
+        }
+    }
+
+    /**
+     * Forgets a player's per-session state on disconnect, so the update notice and the changelog
+     * popup are re-evaluated on their next join.
+     */
+    public void forget(UUID uuid) {
+        playerJoinTime.remove(uuid);
+        missingMixinBridgeNotified.remove(uuid);
+        mixinsNotAppliedNotified.remove(uuid);
     }
 
     @Override

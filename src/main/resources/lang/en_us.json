@@ -201,6 +201,14 @@
     "item_pickup_disabled": "Item pickup is disabled in this plot!",
     "chat_disabled": "Chatting is disabled in this plot!"
   },
+  "changelog": {
+    "title": "WHAT'S NEW",
+    "version": "Plots v%version%",
+    "btn_close": "Close",
+    "btn_dismiss": "Don't show until next version",
+    "more": "See the full release notes on GitHub.",
+    "unavailable": "No changelog available — couldn't fetch the release notes from GitHub."
+  },
   "ui": {
     "common": {
       "success": "Success",

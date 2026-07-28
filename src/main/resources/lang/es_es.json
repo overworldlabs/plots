@@ -201,6 +201,14 @@
     "item_pickup_disabled": "Recoger objetos esta desactivado en este plot.",
     "chat_disabled": "El chat esta desactivado en este plot."
   },
+  "changelog": {
+    "title": "NOVEDADES",
+    "version": "Plots v%version%",
+    "btn_close": "Cerrar",
+    "btn_dismiss": "No mostrar hasta la próxima versión",
+    "more": "Consulta las notas completas de la versión en GitHub.",
+    "unavailable": "No hay changelog disponible — no se pudieron obtener las notas de la versión desde GitHub."
+  },
   "ui": {
     "common": {
       "success": "Éxito",

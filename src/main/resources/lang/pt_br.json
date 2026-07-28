@@ -201,6 +201,14 @@
     "item_pickup_disabled": "Pegar itens está desativado neste terreno!",
     "chat_disabled": "O chat está desativado neste terreno!"
   },
+  "changelog": {
+    "title": "NOVIDADES",
+    "version": "Plots v%version%",
+    "btn_close": "Fechar",
+    "btn_dismiss": "Não mostrar até a próxima versão",
+    "more": "Veja as notas completas da release no GitHub.",
+    "unavailable": "Nenhum changelog disponível — não foi possível buscar as notas da release no GitHub."
+  },
   "ui": {
     "common": {
       "success": "Sucesso",

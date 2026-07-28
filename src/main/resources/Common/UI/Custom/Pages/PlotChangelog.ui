@@ -1,0 +1,59 @@
+// Admin-only "what's new" popup: the latest GitHub release notes, flattened to plain text by
+// PlotChangelogPage.java (which owns these ids). Same widget library as the plot menu.
+$C = "../PlotsCommon.ui";
+$Sounds = "../PlotsSounds.ui";
+
+$C.@PageOverlay {}
+
+$C.@Container {
+  Anchor: (Width: 560, Height: 470);
+
+  #Title {
+    $C.@Title #ChangelogTitle { @Text = "WHAT'S NEW"; }
+  }
+
+  #Content {
+    LayoutMode: Top;
+    Padding: (Top: 16, Bottom: 20, Left: 24, Right: 24);
+
+    Label #ChangelogSubtitle {
+      Anchor: (Horizontal: 0, Height: 20, Bottom: 8);
+      Style: (...$C.@DefaultLabelStyle, FontSize: 13, TextColor: #7a9cc6, HorizontalAlignment: Center, VerticalAlignment: Center);
+      Text: "";
+    }
+
+    Group #ChangelogScroll {
+      Anchor: (Horizontal: 0, Bottom: 14);
+      FlexWeight: 1;
+      LayoutMode: TopScrolling;
+      ScrollbarStyle: $C.@DefaultScrollbarStyle;
+
+      Label #ChangelogBody {
+        Anchor: (Horizontal: 0, Top: 0);
+        Style: (...$C.@DefaultLabelStyle, FontSize: 11, TextColor: #d0dce6, HorizontalAlignment: Start, VerticalAlignment: Start, Wrap: true);
+        Text: "";
+      }
+    }
+
+    // @SecondaryTextButton forces Height: @DefaultButtonHeight (44), so the bar is 44 and no
+    // height is declared here — one would be dropped after the @Anchor spread.
+    Group {
+      Anchor: (Horizontal: 0, Height: 44);
+      LayoutMode: Left;
+
+      $C.@SecondaryTextButton #BtnChangelogDismiss {
+        @Sounds = $Sounds.@ButtonsLight;
+        FlexWeight: 1;
+        Text: "Don't show until next version";
+      }
+
+      Group { Anchor: (Width: 8); }
+
+      $C.@SecondaryTextButton #BtnChangelogClose {
+        @Sounds = $Sounds.@ButtonsLight;
+        FlexWeight: 1;
+        Text: "Close";
+      }
+    }
+  }
+}
