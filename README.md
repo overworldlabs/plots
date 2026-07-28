@@ -9,7 +9,7 @@
 
 <p align="center">
   <a href="https://stoshelabs.github.io/plots/"><img src="https://img.shields.io/badge/docs-online-8B2BFF?style=for-the-badge" alt="Documentation"></a>
-  <img src="https://img.shields.io/badge/version-1.2.0-2ea44f?style=for-the-badge" alt="version 1.2.0">
+  <a href="https://github.com/stoshelabs/plots/releases/latest"><img src="https://img.shields.io/github/v/release/stoshelabs/plots?style=for-the-badge&label=version&color=2ea44f" alt="Latest release"></a>
   <img src="https://img.shields.io/badge/Hytale-server%20plugin-22D3EE?style=for-the-badge" alt="Hytale server plugin">
 </p>
 
@@ -27,37 +27,34 @@
 
 ## Overview
 
-Plots turns a Hytale world into a **plot server**. It generates a grid of parcels separated by
-roads, hands each player a claim they own outright, and keeps everything outside that claim
-protected — roads, neighbours, and the rest of the world.
+Plots turns a Hytale world into a **plot server**. It generates a grid of parcels separated by roads,
+hands each player a claim they own outright, and keeps everything outside that claim protected —
+roads, neighbours, and the rest of the world.
 
-The protection is the part that matters. Plots enforces it across the packet, mask and
-chunk-accessor paths, so a builder with **BuilderTools** cannot extrude or brush their way past a
-plot border — the flow most plot plugins leave open.
+The protection is the part that matters. Plots enforces it across the packet, mask and chunk-accessor
+paths, so a builder with **BuilderTools** cannot extrude or brush their way past a plot border — the
+flow most plot plugins leave open.
 
 - **Grid world generation** — configurable plot and road sizes, borders, and prefab-driven terrain
-- **Full claim workflow** — claim, auto-claim, rename, transfer (offline players included), delete, trust/untrust, list/info
-- **Strict protection** — break, place, interact, liquid, mobs and item flow, with explicit staff bypass permissions
-- **BuilderTools-safe** — mask, accessor and packet paths covered, including extrude and scripted brushes
+- **Full claim workflow** — claim, auto-claim, rename, transfer (offline players included), trust, merge/unmerge
+- **BuilderTools-safe protection** — break, place, interact, liquid, mobs and item flow, with staff bypass permissions
 - **Multi-world** — several plot worlds side by side, each with its own grid and rules
-- **Plot flags** — per-plot PvP, damage, weather, chat and item toggles, plus merge/unmerge with road restoration
 - **In-game menu &amp; HUD** — the everyday actions without memorising commands, plus per-plot warps and spawn points
 - **Integrations** — optional economy charging, Hylograms ownership signs, PlaceholderAPI, SQL persistence
 - **Public API** — query plots and hook claim/unclaim/trust/rename events from your own plugin
-- **Localized** — English, Portuguese, Spanish and Russian, every string overridable
 
 ---
 
 ## Quick start
 
-1. Drop `Plots-1.2.0.jar` into your server's `mods/` folder.
+1. Drop `Plots-<version>.jar` from the **[latest release](https://github.com/stoshelabs/plots/releases/latest)** into your server's `mods/` folder.
 2. Start the server once to generate `config.json` and the language files.
 3. Run `/plot worlds` and create your first plot world (or follow the setup prompt shown on join).
 4. Head into that world and run `/plot auto` to claim a plot and start building.
 
 Aliases `/plots`, `/plotme` and `/p` all work. The
-**[Getting Started](https://stoshelabs.github.io/plots/guide/intro/getting-started)** guide covers
-this in full, including plot/road sizing and economy setup.
+**[Getting Started](https://stoshelabs.github.io/plots/guide/intro/getting-started)** guide covers this
+in full, including plot/road sizing and economy setup.
 
 ---
 
@@ -76,16 +73,6 @@ Everything lives on the docs site — mechanics, every config key, and the full 
 
 ---
 
-## Downloads &amp; community
-
-- [**GitHub Releases**](https://github.com/stoshelabs/plots/releases) — stable builds and source
-- [**Modtale**](https://modtale.net/mod/plots-f9ee11f8-1fa2-4bb2-aa9b-d726474c712b)
-- [**CurseForge**](https://www.curseforge.com/hytale/mods/plot)
-- [**Discord**](https://discord.gg/rC9eSzH3tf) — support, announcements and community
-- [**Crowdin**](https://crowdin.com/project/hytaleplots) — help us localize
-
----
-
 ## Building from source
 
 ```sh
@@ -98,4 +85,5 @@ Pages automatically on push to `main`.
 
 ---
 
-<sub>Built for Hytale by <a href="https://github.com/gitgusilva">Gustavo Will</a> · Stoshe Labs · <a href="LICENSE">MIT</a></sub>
+<sub>Built for Hytale by <a href="https://github.com/gitgusilva">Gustavo Will</a> · Stoshe Labs · <a href="LICENSE">MIT</a><br>
+Also on <a href="https://modtale.net/mod/plots-f9ee11f8-1fa2-4bb2-aa9b-d726474c712b">Modtale</a> &amp; <a href="https://www.curseforge.com/hytale/mods/plot">CurseForge</a> · <a href="https://discord.gg/rC9eSzH3tf">Discord</a> · help translate on <a href="https://crowdin.com/project/hytaleplots">Crowdin</a></sub>
