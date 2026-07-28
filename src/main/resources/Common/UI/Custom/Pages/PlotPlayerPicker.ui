@@ -20,8 +20,10 @@ $C.@Container {
       Text: "";
     }
 
+    // @TextField forces Height 38 and @SmallSecondaryTextButton forces 32, so the bar
+    // is 38 tall and the button sits in a Middle group that centres it against the field.
     Group {
-      Anchor: (Horizontal: 0, Height: 34, Bottom: 8);
+      Anchor: (Horizontal: 0, Height: 38, Bottom: 8);
       LayoutMode: Left;
 
       $C.@TextField #PickerSearchField {
@@ -31,9 +33,14 @@ $C.@Container {
 
       Group { Anchor: (Width: 8); }
 
-      $C.@SmallSecondaryTextButton #PickerSubmitButton {
-        @Anchor = (Width: 130, Vertical: 0);
-        Text: "Submit";
+      Group {
+        Anchor: (Width: 130, Vertical: 0);
+        LayoutMode: Middle;
+
+        $C.@SmallSecondaryTextButton #PickerSubmitButton {
+          @Anchor = (Horizontal: 0);
+          Text: "Submit";
+        }
       }
     }
 
@@ -63,21 +70,21 @@ $C.@Container {
       LayoutMode: TopScrolling;
       ScrollbarStyle: $C.@DefaultScrollbarStyle;
 
-      Group #PickerRow0 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #PickerName0 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction0 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
-      Group #PickerRow1 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #PickerName1 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction1 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
-      Group #PickerRow2 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #PickerName2 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction2 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
-      Group #PickerRow3 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #PickerName3 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction3 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
-      Group #PickerRow4 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #PickerName4 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction4 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
-      Group #PickerRow5 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #PickerName5 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction5 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
-      Group #PickerRow6 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #PickerName6 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction6 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
-      Group #PickerRow7 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #PickerName7 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction7 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
-      Group #PickerRow8 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #PickerName8 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction8 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
-      Group #PickerRow9 { Anchor: (Height: 34, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10); Visible: false; Label #PickerName9 { Anchor: (Height: 18, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction9 { @Anchor = (Width: 110, Height: 28); Text: "Select"; } }
+      Group #PickerRow0 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #PickerName0 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction0 { @Anchor = (Width: 110); Text: "Select"; } }
+      Group #PickerRow1 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #PickerName1 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction1 { @Anchor = (Width: 110); Text: "Select"; } }
+      Group #PickerRow2 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #PickerName2 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction2 { @Anchor = (Width: 110); Text: "Select"; } }
+      Group #PickerRow3 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #PickerName3 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction3 { @Anchor = (Width: 110); Text: "Select"; } }
+      Group #PickerRow4 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #PickerName4 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction4 { @Anchor = (Width: 110); Text: "Select"; } }
+      Group #PickerRow5 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #PickerName5 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction5 { @Anchor = (Width: 110); Text: "Select"; } }
+      Group #PickerRow6 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #PickerName6 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction6 { @Anchor = (Width: 110); Text: "Select"; } }
+      Group #PickerRow7 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #PickerName7 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction7 { @Anchor = (Width: 110); Text: "Select"; } }
+      Group #PickerRow8 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #PickerName8 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction8 { @Anchor = (Width: 110); Text: "Select"; } }
+      Group #PickerRow9 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 10, Vertical: 3); Visible: false; Label #PickerName9 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } Group { Anchor: (Width: 8); } $C.@SmallSecondaryTextButton #PickerAction9 { @Anchor = (Width: 110); Text: "Select"; } }
     }
 
     $C.@SecondaryTextButton #PickerBackButton {
       @Sounds = $Sounds.@ButtonsCancel;
-      @Anchor = (Height: 36, Bottom: 4);
+      @Anchor = (Bottom: 4);
       Text: "Back";
     }
   }

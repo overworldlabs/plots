@@ -627,18 +627,22 @@ $Sounds = "PlotsSounds.ui";
 };
 
 // One flag row: label on the left, checkbox on the right, subtle card background.
+// The checkbox is a fixed 22x22 and cannot stretch, so the vertical padding is
+// set to leave a content box exactly that tall — that is what centres it in the
+// row, whatever the default cross-axis alignment of LayoutMode: Left happens to
+// be. The label then stretches over the same box and centres its own text.
 @FlagRow = Group {
   @Text = "";
 
   LayoutMode: Left;
   Anchor: (Horizontal: 0, Height: 36, Bottom: 4);
   Background: (TexturePath: "Common/ContainerPanelPatch.png", Border: 4, Color: #16202d);
-  Padding: (Left: 12, Right: 10);
+  Padding: (Left: 12, Right: 10, Vertical: 7);
 
   Label {
     Text: @Text;
     Style: (FontSize: 13, TextColor: #c4d2e0, VerticalAlignment: Center);
-    Anchor: (Height: 20, Vertical: 0);
+    Anchor: (Vertical: 0);
     FlexWeight: 1;
   }
 };

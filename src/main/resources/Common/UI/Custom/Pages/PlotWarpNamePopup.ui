@@ -34,12 +34,11 @@ $C.@Container {
     Group { FlexWeight: 1; }
 
     Group {
-      Anchor: (Horizontal: 0, Height: 40);
+      Anchor: (Horizontal: 0, Height: 44);
       LayoutMode: Left;
 
       $C.@SecondaryTextButton #BtnWarpNameCancel {
         @Sounds = $Sounds.@ButtonsLight;
-        @Anchor = (Height: 36);
         FlexWeight: 1;
         Text: "Cancel";
       }
@@ -48,7 +47,6 @@ $C.@Container {
 
       $C.@TextButton #BtnWarpNameSave {
         @Sounds = $Sounds.@ButtonsLight;
-        @Anchor = (Height: 36);
         FlexWeight: 1;
         Text: "Save";
       }

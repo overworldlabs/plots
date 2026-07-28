@@ -32,42 +32,42 @@ $C.@DecoratedContainer #RightContainer {
       LayoutMode: TopScrolling;
       ScrollbarStyle: $C.@DefaultScrollbarStyle;
 
-      Group #WlRow0 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WlRowName0 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp0 { @Anchor = (Width: 100, Height: 28); Text: "Teleport"; } }
-      Group #WlRow1 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WlRowName1 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp1 { @Anchor = (Width: 100, Height: 28); Text: "Teleport"; } }
-      Group #WlRow2 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WlRowName2 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp2 { @Anchor = (Width: 100, Height: 28); Text: "Teleport"; } }
-      Group #WlRow3 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WlRowName3 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp3 { @Anchor = (Width: 100, Height: 28); Text: "Teleport"; } }
-      Group #WlRow4 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WlRowName4 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp4 { @Anchor = (Width: 100, Height: 28); Text: "Teleport"; } }
-      Group #WlRow5 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WlRowName5 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp5 { @Anchor = (Width: 100, Height: 28); Text: "Teleport"; } }
-      Group #WlRow6 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WlRowName6 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp6 { @Anchor = (Width: 100, Height: 28); Text: "Teleport"; } }
-      Group #WlRow7 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WlRowName7 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp7 { @Anchor = (Width: 100, Height: 28); Text: "Teleport"; } }
-      Group #WlRow8 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WlRowName8 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp8 { @Anchor = (Width: 100, Height: 28); Text: "Teleport"; } }
-      Group #WlRow9 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WlRowName9 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp9 { @Anchor = (Width: 100, Height: 28); Text: "Teleport"; } }
+      Group #WlRow0 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WlRowName0 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp0 { @Anchor = (Width: 100); Text: "Teleport"; } }
+      Group #WlRow1 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WlRowName1 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp1 { @Anchor = (Width: 100); Text: "Teleport"; } }
+      Group #WlRow2 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WlRowName2 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp2 { @Anchor = (Width: 100); Text: "Teleport"; } }
+      Group #WlRow3 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WlRowName3 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp3 { @Anchor = (Width: 100); Text: "Teleport"; } }
+      Group #WlRow4 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WlRowName4 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp4 { @Anchor = (Width: 100); Text: "Teleport"; } }
+      Group #WlRow5 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WlRowName5 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp5 { @Anchor = (Width: 100); Text: "Teleport"; } }
+      Group #WlRow6 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WlRowName6 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp6 { @Anchor = (Width: 100); Text: "Teleport"; } }
+      Group #WlRow7 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WlRowName7 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp7 { @Anchor = (Width: 100); Text: "Teleport"; } }
+      Group #WlRow8 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WlRowName8 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp8 { @Anchor = (Width: 100); Text: "Teleport"; } }
+      Group #WlRow9 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WlRowName9 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WlRowTp9 { @Anchor = (Width: 100); Text: "Teleport"; } }
     }
 
     Group {
-      Anchor: (Horizontal: 0, Height: 36, Bottom: 6);
+      Anchor: (Horizontal: 0, Height: 32, Bottom: 6);
       LayoutMode: Left;
 
       $C.@SmallSecondaryTextButton #WlPrev {
-        @Anchor = (Width: 120, Vertical: 0);
+        @Anchor = (Width: 120);
         Text: "Prev";
       }
 
       Label #WlPageLabel {
-        Anchor: (Height: 18, Vertical: 0);
+        Anchor: (Vertical: 0);
         FlexWeight: 1;
         Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #cbd9e8, HorizontalAlignment: Center, VerticalAlignment: Center);
         Text: "";
       }
 
       $C.@SmallSecondaryTextButton #WlNext {
-        @Anchor = (Width: 120, Vertical: 0);
+        @Anchor = (Width: 120);
         Text: "Next";
       }
     }
 
     $C.@SecondaryTextButton #WlBack {
-      @Anchor = (Horizontal: 0, Height: 38);
+      @Anchor = (Horizontal: 0);
       Text: "Back";
     }
   }

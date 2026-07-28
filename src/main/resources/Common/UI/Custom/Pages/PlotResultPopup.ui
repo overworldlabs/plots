@@ -34,7 +34,7 @@ $C.@Container {
     Group { FlexWeight: 1; }
 
     $C.@TextButton #BtnResultOk {
-      @Anchor = (Horizontal: 0, Height: 38);
+      @Anchor = (Horizontal: 0);
       Text: "OK";
     }
   }

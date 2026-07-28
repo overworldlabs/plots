@@ -24,18 +24,18 @@ $C.@DecoratedContainer #RightContainer {
       Anchor: (Horizontal: 0, Height: 40, Bottom: 8);
       LayoutMode: Left;
       Background: (Color: #3a2330);
-      Padding: (Left: 10, Right: 6);
+      Padding: (Left: 10, Right: 6, Vertical: 4);
       Visible: false;
 
       Label #WaConfirmText {
-        Anchor: (Height: 16, Vertical: 0);
+        Anchor: (Vertical: 0);
         FlexWeight: 1;
         Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffd0d0, VerticalAlignment: Center);
         Text: "";
       }
-      $C.@SmallSecondaryTextButton #WaConfirmNo { @Anchor = (Width: 90, Height: 28); Text: "Cancel"; }
+      $C.@SmallSecondaryTextButton #WaConfirmNo { @Anchor = (Width: 90); Text: "Cancel"; }
       Group { Anchor: (Width: 6); }
-      $C.@SmallSecondaryTextButton #WaConfirmYes { @Anchor = (Width: 90, Height: 28); Text: "Delete"; }
+      $C.@SmallSecondaryTextButton #WaConfirmYes { @Anchor = (Width: 90); Text: "Delete"; }
     }
 
     Label #WaEmpty {
@@ -51,52 +51,50 @@ $C.@DecoratedContainer #RightContainer {
       LayoutMode: TopScrolling;
       ScrollbarStyle: $C.@DefaultScrollbarStyle;
 
-      Group #WaRow0 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WaRowName0 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete0 { @Anchor = (Width: 100, Height: 28); Text: "Delete"; } }
-      Group #WaRow1 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WaRowName1 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete1 { @Anchor = (Width: 100, Height: 28); Text: "Delete"; } }
-      Group #WaRow2 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WaRowName2 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete2 { @Anchor = (Width: 100, Height: 28); Text: "Delete"; } }
-      Group #WaRow3 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WaRowName3 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete3 { @Anchor = (Width: 100, Height: 28); Text: "Delete"; } }
-      Group #WaRow4 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WaRowName4 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete4 { @Anchor = (Width: 100, Height: 28); Text: "Delete"; } }
-      Group #WaRow5 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WaRowName5 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete5 { @Anchor = (Width: 100, Height: 28); Text: "Delete"; } }
-      Group #WaRow6 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WaRowName6 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete6 { @Anchor = (Width: 100, Height: 28); Text: "Delete"; } }
-      Group #WaRow7 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WaRowName7 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete7 { @Anchor = (Width: 100, Height: 28); Text: "Delete"; } }
-      Group #WaRow8 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WaRowName8 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete8 { @Anchor = (Width: 100, Height: 28); Text: "Delete"; } }
-      Group #WaRow9 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6); Visible: false; Label #WaRowName9 { Anchor: (Height: 16, Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete9 { @Anchor = (Width: 100, Height: 28); Text: "Delete"; } }
+      Group #WaRow0 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WaRowName0 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete0 { @Anchor = (Width: 100); Text: "Delete"; } }
+      Group #WaRow1 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WaRowName1 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete1 { @Anchor = (Width: 100); Text: "Delete"; } }
+      Group #WaRow2 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WaRowName2 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete2 { @Anchor = (Width: 100); Text: "Delete"; } }
+      Group #WaRow3 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WaRowName3 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete3 { @Anchor = (Width: 100); Text: "Delete"; } }
+      Group #WaRow4 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WaRowName4 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete4 { @Anchor = (Width: 100); Text: "Delete"; } }
+      Group #WaRow5 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WaRowName5 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete5 { @Anchor = (Width: 100); Text: "Delete"; } }
+      Group #WaRow6 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WaRowName6 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete6 { @Anchor = (Width: 100); Text: "Delete"; } }
+      Group #WaRow7 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WaRowName7 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete7 { @Anchor = (Width: 100); Text: "Delete"; } }
+      Group #WaRow8 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WaRowName8 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete8 { @Anchor = (Width: 100); Text: "Delete"; } }
+      Group #WaRow9 { Anchor: (Height: 38, Horizontal: 0, Bottom: 4); LayoutMode: Left; Background: (Color: #223149); Padding: (Left: 10, Right: 6, Vertical: 3); Visible: false; Label #WaRowName9 { Anchor: (Vertical: 0); FlexWeight: 1; Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #ffffff, VerticalAlignment: Center); Text: ""; } $C.@SmallSecondaryTextButton #WaRowDelete9 { @Anchor = (Width: 100); Text: "Delete"; } }
     }
 
     Group {
-      Anchor: (Horizontal: 0, Height: 36, Bottom: 6);
+      Anchor: (Horizontal: 0, Height: 32, Bottom: 6);
       LayoutMode: Left;
 
       $C.@SmallSecondaryTextButton #WaPrev {
-        @Anchor = (Width: 120, Vertical: 0);
+        @Anchor = (Width: 120);
         Text: "Prev";
       }
 
       Label #WaPageLabel {
-        Anchor: (Height: 18, Vertical: 0);
+        Anchor: (Vertical: 0);
         FlexWeight: 1;
         Style: (...$C.@DefaultLabelStyle, FontSize: 12, TextColor: #cbd9e8, HorizontalAlignment: Center, VerticalAlignment: Center);
         Text: "";
       }
 
       $C.@SmallSecondaryTextButton #WaNext {
-        @Anchor = (Width: 120, Vertical: 0);
+        @Anchor = (Width: 120);
         Text: "Next";
       }
     }
 
     Group {
-      Anchor: (Horizontal: 0, Height: 40, Bottom: 6);
+      Anchor: (Horizontal: 0, Height: 44, Bottom: 6);
       LayoutMode: Left;
 
       $C.@TextButton #WaCreate {
-        @Anchor = (Height: 36);
         FlexWeight: 1;
         Text: "Create World";
       }
       Group { Anchor: (Width: 8); }
       $C.@SecondaryTextButton #WaBack {
-        @Anchor = (Height: 36);
         FlexWeight: 1;
         Text: "Back";
       }
